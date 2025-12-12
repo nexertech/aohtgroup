@@ -38,7 +38,7 @@
                                 <td class="px-6 py-4 text-gray-500 font-mono text-sm">#{{ $blog->id }}</td>
                                 <td class="px-6 py-4">
                                      @if($blog->thumbnail)
-                                        <img src="{{ asset('storage/' . $blog->thumbnail) }}" alt="Thumbnail" class="h-10 w-10 rounded-lg object-cover border border-gray-200">
+                                        <img src="{{ asset('storage/' . $blog->thumbnail) }}" alt="Thumbnail" class="h-10 w-10 rounded-full object-cover border border-gray-200">
                                      @else
                                         <div class="h-10 w-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 font-bold text-xs">
                                             N/A

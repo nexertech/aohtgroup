@@ -34,12 +34,18 @@ class TeamMemberController extends Controller
             'name' => 'required|string|max:150',
             'designation' => 'nullable|string|max:150',
             'bio' => 'nullable|string',
-            'photo' => 'nullable|string|max:255', // Assuming photo URL or path input for now
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'facebook' => 'nullable|string|max:255',
             'linkedin' => 'nullable|string|max:255',
             'instagram' => 'nullable|string|max:255',
             'sequence' => 'integer',
         ]);
+
+        if ($request->hasFile('photo')) {
+            $imageName = time() . '.' . $request->photo->extension();
+            $request->photo->move(public_path('images/team'), $imageName);
+            $validatedData['photo'] = 'images/team/' . $imageName;
+        }
 
         TeamMember::create($validatedData);
 
@@ -71,12 +77,22 @@ class TeamMemberController extends Controller
             'name' => 'required|string|max:150',
             'designation' => 'nullable|string|max:150',
             'bio' => 'nullable|string',
-            'photo' => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'facebook' => 'nullable|string|max:255',
             'linkedin' => 'nullable|string|max:255',
             'instagram' => 'nullable|string|max:255',
             'sequence' => 'integer',
         ]);
+
+        if ($request->hasFile('photo')) {
+            // Delete old photo
+            if ($teamMember->photo && file_exists(public_path($teamMember->photo))) {
+                unlink(public_path($teamMember->photo));
+            }
+            $imageName = time() . '.' . $request->photo->extension();
+            $request->photo->move(public_path('images/team'), $imageName);
+            $validatedData['photo'] = 'images/team/' . $imageName;
+        }
 
         $teamMember->update($validatedData);
 
@@ -88,6 +104,9 @@ class TeamMemberController extends Controller
      */
     public function destroy(TeamMember $teamMember)
     {
+        if ($teamMember->photo && file_exists(public_path($teamMember->photo))) {
+            unlink(public_path($teamMember->photo));
+        }
         $teamMember->delete();
 
         return redirect()->route('admin.team-members.index')->with('success', 'Team Member deleted successfully.');

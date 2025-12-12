@@ -46,6 +46,21 @@
         </div>
     </div>
     @stack('scripts')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                const alerts = document.querySelectorAll('[role="alert"]');
+                alerts.forEach(function (alert) {
+                    alert.style.transition = 'opacity 0.3s ease-out';
+                    alert.style.opacity = '0';
+                    setTimeout(function () {
+                        alert.remove();
+                    }, 500);
+                });
+            }, 5000);
+        });
+    </script>
 </body>
 
 </html>

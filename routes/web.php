@@ -27,8 +27,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('email-templates', App\Http\Controllers\Admin\EmailTemplateController::class);
 
     // Pages Management
-    Route::get('pages/home', [App\Http\Controllers\Admin\HomePageController::class, 'index'])->name('pages.home');
-    Route::put('pages/home', [App\Http\Controllers\Admin\HomePageController::class, 'update'])->name('pages.home.update');
     Route::get('pages/about', [App\Http\Controllers\Admin\AboutPageController::class, 'index'])->name('pages.about');
     Route::put('pages/about', [App\Http\Controllers\Admin\AboutPageController::class, 'update'])->name('pages.about.update');
 

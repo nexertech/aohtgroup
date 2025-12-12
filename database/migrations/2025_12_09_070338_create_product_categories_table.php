@@ -14,6 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->string('category_name', 150);
             $table->string('slug', 150)->unique();
+            $table->string('image')->nullable();
+            $table->integer('sequence')->default(0);
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->foreign('parent_id')->references('id')->on('product_categories')->onDelete('cascade');
             $table->timestamps();

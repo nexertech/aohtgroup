@@ -147,10 +147,10 @@
 
         <!-- Pages with Sub-menu -->
         <div
-            x-data="{ open: {{ request()->routeIs('admin.contact-messages.*') || request()->routeIs('admin.job-openings.*') || request()->routeIs('admin.job-applications.*') || request()->routeIs('admin.email-templates.*') || request()->routeIs('admin.activity-logs.*') || request()->routeIs('admin.error-logs.*') || request()->routeIs('admin.visitors.*') ? 'true' : 'false' }} }">
+            x-data="{ open: {{ request()->routeIs('admin.contact-messages.*') || request()->routeIs('admin.job-openings.*') || request()->routeIs('admin.job-applications.*') || request()->routeIs('admin.email-templates.*') || request()->routeIs('admin.activity-logs.*') || request()->routeIs('admin.error-logs.*') || request()->routeIs('admin.visitors.*') || request()->routeIs('admin.pages.*') || request()->routeIs('admin.clients.*') || request()->routeIs('admin.certificates.*') ? 'true' : 'false' }} }">
             <div class="flex items-center">
-                <a href="{{ route('admin.pages.home') }}" @click.prevent="open = !open"
-                    class="flex-1 flex items-center px-4 py-3 text-white hover:bg-gray-800 hover:text-white rounded-l-lg transition-colors duration-200 {{ request()->routeIs('admin.contact-messages.*') || request()->routeIs('admin.job-openings.*') || request()->routeIs('admin.job-applications.*') || request()->routeIs('admin.email-templates.*') || request()->routeIs('admin.activity-logs.*') || request()->routeIs('admin.error-logs.*') || request()->routeIs('admin.visitors.*') ? 'bg-gray-800 text-white' : '' }}">
+                <a href="#" @click.prevent="open = !open"
+                    class="flex-1 flex items-center px-4 py-3 text-white hover:bg-gray-800 hover:text-white rounded-l-lg transition-colors duration-200 {{ request()->routeIs('admin.contact-messages.*') || request()->routeIs('admin.job-openings.*') || request()->routeIs('admin.job-applications.*') || request()->routeIs('admin.email-templates.*') || request()->routeIs('admin.activity-logs.*') || request()->routeIs('admin.error-logs.*') || request()->routeIs('admin.visitors.*') || request()->routeIs('admin.pages.*') || request()->routeIs('admin.clients.*') || request()->routeIs('admin.certificates.*') ? 'bg-gray-800 text-white' : '' }}">
                     <svg class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -172,16 +172,6 @@
                 x-transition:leave="transition ease-in duration-150"
                 x-transition:leave-start="opacity-100 transform scale-100"
                 x-transition:leave-end="opacity-0 transform scale-95" class="ml-8 mt-2 space-y-1">
-
-                <!-- Home Link -->
-                <a href="{{ route('admin.pages.home') }}"
-                    class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.pages.home') ? 'bg-gray-800 text-white' : '' }}">
-                    <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    Home Page
-                </a>
 
                 <!-- About Us Link -->
                 <a href="{{ route('admin.pages.about') }}"

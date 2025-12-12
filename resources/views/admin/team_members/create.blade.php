@@ -8,7 +8,7 @@
             </h2>
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg border border-gray-100">
                 <div class="p-8 text-gray-900">
-                    <form method="POST" action="{{ route('admin.team-members.store') }}">
+                    <form method="POST" action="{{ route('admin.team-members.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -48,11 +48,10 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <!-- Photo -->
                             <div>
-                                <label for="photo" class="block text-sm font-medium text-gray-700 mb-2">Photo
-                                    URL</label>
-                                <input type="text" name="photo" id="photo"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 bg-gray-50 focus:bg-white transition-colors duration-200"
-                                    placeholder="https://example.com/photo.jpg">
+                                <label for="photo" class="block text-sm font-medium text-gray-700 mb-2">Photo</label>
+                                <input type="file" name="photo" id="photo" accept="image/*"
+                                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                <p class="text-xs text-gray-500 mt-1">Recommended size: Square aspect ratio.</p>
                                 @error('photo')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
