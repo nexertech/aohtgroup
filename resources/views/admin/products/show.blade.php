@@ -70,6 +70,10 @@
                                 <p class="text-gray-900">{{ $product->category->category_name ?? 'N/A' }}</p>
                             </div>
                             <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Subcategory</p>
+                                <p class="text-gray-900">{{ $product->subcategory->category_name ?? 'N/A' }}</p>
+                            </div>
+                            <div>
                                 <p class="text-sm font-medium text-gray-500 mb-1">Created At</p>
                                 <p class="text-gray-900">{{ $product->created_at->format('M d, Y H:i') }}</p>
                             </div>
@@ -96,13 +100,16 @@
                         <h2 class="text-lg font-semibold text-gray-800">Main Image</h2>
                     </div>
                     <div class="p-6">
-                        @if( $product->main_image)
+                        @if($product->main_image)
                             <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}"
                                 class="w-full h-auto rounded-lg shadow-sm">
                         @else
                             <div class="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
                                 <div class="text-center">
-                                    <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
                                     <p>No image uploaded</p>
                                 </div>
                             </div>

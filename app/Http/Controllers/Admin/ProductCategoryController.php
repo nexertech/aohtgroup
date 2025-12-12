@@ -29,6 +29,12 @@ class ProductCategoryController extends Controller
         return view('admin.product_categories.create', compact('categories'));
     }
 
+    public function getSubcategories($id)
+    {
+        $subcategories = ProductCategory::where('parent_id', $id)->get();
+        return response()->json($subcategories);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

@@ -127,13 +127,22 @@
                             <dt class="text-xs font-medium text-gray-500 uppercase">Slug</dt>
                             <dd class="mt-1 text-sm text-gray-900 font-mono" id="modalCategorySlug">--</dd>
                         </div>
+                        <div>
+                            <dt class="text-xs font-medium text-gray-500 uppercase">Subcategories</dt>
+                            <dd class="mt-1 text-sm text-gray-900">
+                                <ul id="modalViewSubcategories" class="list-disc list-inside text-gray-600">
+                                    <!-- Populated by JS -->
+                                </ul>
+                                <span id="modalNoSubcategories" class="text-gray-400 italic hidden">None</span>
+                            </dd>
+                        </div>
                     </div>
                 </div>
                 <!-- <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                            <button type="button"
-                                                class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                                onclick="closeViewModal()">Close</button>
-                                        </div> -->
+                                                    <button type="button"
+                                                        class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                                                        onclick="closeViewModal()">Close</button>
+                                                </div> -->
             </div>
         </div>
     </div>
@@ -197,6 +206,21 @@
             document.getElementById('modalCategoryName').innerText = category.category_name;
             document.getElementById('modalCategorySlug').innerText = category.slug;
 
+            const subList = document.getElementById('modalViewSubcategories');
+            const noSubMsg = document.getElementById('modalNoSubcategories');
+            subList.innerHTML = '';
+
+            if (category.children && category.children.length > 0) {
+                noSubMsg.classList.add('hidden');
+                category.children.forEach(child => {
+                    let li = document.createElement('li');
+                    li.innerText = child.category_name;
+                    subList.appendChild(li);
+                });
+            } else {
+                noSubMsg.classList.remove('hidden');
+            }
+
             document.getElementById('viewCategoryModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
 
@@ -222,9 +246,9 @@
                     const li = document.createElement('li');
                     li.className = 'py-3 flex justify-between items-center';
                     li.innerHTML = `
-                                        <span class="text-sm font-medium text-gray-900">${child.category_name}</span>
-                                        <span class="text-xs text-gray-500 font-mono">${child.slug}</span>
-                                    `;
+                                                <span class="text-sm font-medium text-gray-900">${child.category_name}</span>
+                                                <span class="text-xs text-gray-500 font-mono">${child.slug}</span>
+                                            `;
                     list.appendChild(li);
                 });
             } else {
@@ -240,5 +264,12 @@
             document.getElementById('subCategoryModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
+
+        document.getElementById('modalCategoryNameInput').addEventListener('input', function () {
+            let slug = this.value.toLowerCase()
+                .replace(/[^\w ]+/g, '')
+                .replace(/ +/g, '-');
+            document.getElementById('modalSlugInput').value = slug;
+        });
     </script>
 @endsection

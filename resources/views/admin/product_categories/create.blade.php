@@ -67,4 +67,12 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('category_name').addEventListener('input', function () {
+            let slug = this.value.toLowerCase()
+                .replace(/[^\w ]+/g, '')
+                .replace(/ +/g, '-');
+            document.getElementById('slug').value = slug;
+        });
+    </script>
 </x-admin-layout>
