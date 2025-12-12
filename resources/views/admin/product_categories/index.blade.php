@@ -33,7 +33,12 @@
                         @forelse($categories as $category)
                             <tr class="hover:bg-gray-50 transition duration-200">
                                 <td class="px-6 py-4 text-gray-500">{{ $loop->iteration }}</td>
-                                <td class="px-6 py-4 font-medium text-gray-700">{{ $category->category_name }}</td>
+                                <td class="px-6 py-4 font-medium text-gray-700">
+                                    <button onclick='openSubCategoryModal(@json($category))'
+                                        class="text-indigo-600 hover:text-indigo-900 hover:underline focus:outline-none">
+                                        {{ $category->category_name }}
+                                    </button>
+                                </td>
                                 <td class="px-6 py-4 text-gray-600">{{ $category->slug }}</td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
@@ -125,10 +130,64 @@
                     </div>
                 </div>
                 <!-- <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button type="button"
-                        class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                        onclick="closeViewModal()">Close</button>
-                </div> -->
+                                            <button type="button"
+                                                class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                                                onclick="closeViewModal()">Close</button>
+                                        </div> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Subcategory Modal -->
+    <div id="subCategoryModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+        aria-modal="true">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm"></div>
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div
+                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div class="bg-indigo-600 px-4 py-3 sm:px-6 flex justify-between items-center">
+                    <h3 class="text-base font-semibold leading-6 text-white" id="subModalTitle">Subcategories</h3>
+                    <button type="button" class="text-indigo-100 hover:text-white focus:outline-none"
+                        onclick="closeSubCategoryModal()">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="px-4 py-5 sm:p-6">
+                    <!-- Add Subcategory Form -->
+                    <div class="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h4 class="text-sm font-medium text-gray-900 mb-3">Add New Subcategory</h4>
+                        <form action="{{ route('admin.product-categories.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="parent_id" id="modalParentId">
+                            <div class="space-y-3">
+                                <div>
+                                    <label for="modalCategoryName" class="sr-only">Name</label>
+                                    <input type="text" name="category_name" id="modalCategoryNameInput"
+                                        placeholder="Category Name" required
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="text" name="slug" id="modalSlugInput" placeholder="Slug (Optional)"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <button type="submit"
+                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        Add
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <h4 class="text-sm font-medium text-gray-900 mb-2">Existing Subcategories</h4>
+                    <ul id="subCategoryList" class="divide-y divide-gray-100 border-t border-gray-200">
+                        <!-- List items will be injected here -->
+                    </ul>
+                    <div id="noSubCategories" class="text-center text-gray-500 py-4 hidden">
+                        No subcategories found.
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -146,6 +205,39 @@
 
         function closeViewModal() {
             document.getElementById('viewCategoryModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        function openSubCategoryModal(category) {
+            document.getElementById('subModalTitle').innerText = 'Subcategories of ' + category.category_name;
+            document.getElementById('modalParentId').value = category.id; // Set hidden parent_id
+
+            const list = document.getElementById('subCategoryList');
+            list.innerHTML = ''; // Clear existing
+
+            const noSubs = document.getElementById('noSubCategories');
+
+            if (category.children && category.children.length > 0) {
+                noSubs.classList.add('hidden');
+                category.children.forEach(child => {
+                    const li = document.createElement('li');
+                    li.className = 'py-3 flex justify-between items-center';
+                    li.innerHTML = `
+                                        <span class="text-sm font-medium text-gray-900">${child.category_name}</span>
+                                        <span class="text-xs text-gray-500 font-mono">${child.slug}</span>
+                                    `;
+                    list.appendChild(li);
+                });
+            } else {
+                noSubs.classList.remove('hidden');
+            }
+
+            document.getElementById('subCategoryModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            document.querySelector('#subCategoryModal .backdrop-blur-sm').addEventListener('click', closeSubCategoryModal);
+        }
+
+        function closeSubCategoryModal() {
+            document.getElementById('subCategoryModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
     </script>

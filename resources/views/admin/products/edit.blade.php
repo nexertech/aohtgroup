@@ -38,7 +38,8 @@
                                 <option value="">Select Category</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
-                                        {{ $category->category_name }}</option>
+                                        {{ $category->category_name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('category_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror

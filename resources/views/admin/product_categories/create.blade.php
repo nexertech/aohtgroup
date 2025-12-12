@@ -34,6 +34,22 @@
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
+
+                            <!-- Parent Category -->
+                            <div class="md:col-span-2">
+                                <label for="parent_id" class="block text-sm font-medium text-gray-700 mb-2">Parent
+                                    Category (Optional)</label>
+                                <select name="parent_id" id="parent_id"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 bg-gray-50 focus:bg-white transition-colors duration-200">
+                                    <option value="">None (Top Level)</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('parent_id')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
 
                         <div class="flex justify-end pt-4 border-t border-gray-100">

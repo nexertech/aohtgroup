@@ -4,15 +4,15 @@
     <div class="container-fluid p-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-semibold text-gray-800">Company Information</h1>
-            <a href="{{ route('admin.company-info.create') }}"
+            {{-- <a href="{{ route('admin.company-info.create') }}"
                 class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg> Add Info
-            </a>
+            </a> --}}
         </div>
 
-        @if(session('success'))
+        @if (session('success'))
             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
                 <p>{{ session('success') }}</p>
             </div>
@@ -39,7 +39,7 @@
                                 <td class="px-6 py-4 text-gray-600">{{ $info->phone }}</td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <button onclick='openViewModal(@json($info))'
+                                        {{-- <button onclick='openViewModal(@json($info))'
                                             class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition duration-200"
                                             title="View">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,7 +48,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
-                                        </button>
+                                        </button> --}}
                                         <a href="{{ route('admin.company-info.edit', $info->id) }}"
                                             class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition duration-200"
                                             title="Edit">
@@ -57,7 +57,7 @@
                                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
                                         </a>
-                                        <form action="{{ route('admin.company-info.destroy', $info->id) }}" method="POST"
+                                        {{-- <form action="{{ route('admin.company-info.destroy', $info->id) }}" method="POST"
                                             class="inline-block"
                                             onsubmit="return confirm('Are you sure you want to delete this info?');">
                                             @csrf
@@ -70,7 +70,7 @@
                                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
                                             </button>
-                                        </form>
+                                        </form> --}}
                                     </div>
                                 </td>
                             </tr>
@@ -91,7 +91,7 @@
                     </tbody>
                 </table>
             </div>
-            @if($companyInfos->hasPages())
+            @if ($companyInfos->hasPages())
                 <div class="px-6 py-4 border-t border-gray-100">
                     {{ $companyInfos->links() }}
                 </div>
@@ -155,10 +155,10 @@
                     </div>
                 </div>
                 <!-- <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                        <button type="button"
-                            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                            onclick="closeViewModal()">Close</button>
-                    </div> -->
+                            <button type="button"
+                                class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                                onclick="closeViewModal()">Close</button>
+                        </div> -->
             </div>
         </div>
     </div>
