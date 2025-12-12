@@ -10,7 +10,7 @@
         <p class="auth-subtitle">Login to your account</p>
       </div>
 
-      <form method="POST" action="{{ route('login') }}" class="auth-form">
+      <form method="POST" action="{{ route('frontend.login') }}" class="auth-form">
         @csrf
 
         <!-- Email -->
@@ -66,7 +66,7 @@
         <div class="auth-links">
           <a href="{{ route('password.request') }}" class="auth-link">Forgot Password?</a>
           <span class="auth-separator">•</span>
-          <a href="{{ route('register') }}" class="auth-link">Create Account</a>
+          <a href="{{ route('frontend.register') }}" class="auth-link">Create Account</a>
         </div>
       </form>
     </div>

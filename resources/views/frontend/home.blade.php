@@ -196,6 +196,20 @@
           <div class="col-span-full text-center py-10 text-gray-400">No categories available.</div>
         @endif
       </div>
+
+      @if(isset($totalCategories) && $totalCategories > 7)
+        <div class="flex justify-center mt-12">
+          <a href="{{ route('frontend.categories') }}"
+            class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10 transition duration-150 ease-in-out">
+            Show More
+            <svg class="ml-2 -mr-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+          </a>
+        </div>
+      @endif
     </div>
   </section>
 
@@ -342,7 +356,8 @@
                 <div class="blog-date">{{ $blog->published_at ? $blog->published_at->format('M d, Y') : '' }}</div>
                 <h3 class="blog-title">{{ $blog->title }}</h3>
                 <p class="blog-excerpt">
-                  {{ \Illuminate\Support\Str::limit(strip_tags($blog->summary ?? $blog->content), 110) }}</p>
+                  {{ \Illuminate\Support\Str::limit(strip_tags($blog->summary ?? $blog->content), 110) }}
+                </p>
                 <a href="#" class="blog-link">Read More →</a>
               </div>
             </div>

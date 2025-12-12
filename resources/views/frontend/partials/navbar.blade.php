@@ -33,7 +33,7 @@
             <path d="M16 10a4 4 0 0 1-8 0"></path>
           </svg>
         </a>
-        <a class="icon-link-text" href="{{ route('login') }}" title="Login">
+        <a class="icon-link-text" href="{{ route('frontend.login') }}" title="Login">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
             <polyline points="10 17 15 12 10 7"></polyline>
@@ -41,7 +41,7 @@
           </svg>
           <span>Login</span>
         </a>
-        <a class="icon-link-text" href="{{ route('register') }}" title="Register">
+        <a class="icon-link-text" href="{{ route('frontend.register') }}" title="Register">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
