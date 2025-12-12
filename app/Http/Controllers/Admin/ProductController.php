@@ -25,7 +25,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = ProductCategory::all();
+        $categories = ProductCategory::whereNull('parent_id')->get();
         return view('admin.products.create', compact('categories'));
     }
 
@@ -37,6 +37,7 @@ class ProductController extends Controller
         $request->validate([
             'product_name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:product_categories,id',
+            'subcategory_id' => 'nullable|exists:product_categories,id',
             'description' => 'nullable|string',
             'client' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
@@ -73,7 +74,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $categories = ProductCategory::all();
+        $categories = ProductCategory::whereNull('parent_id')->get();
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
@@ -85,6 +86,7 @@ class ProductController extends Controller
         $request->validate([
             'product_name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:product_categories,id',
+            'subcategory_id' => 'nullable|exists:product_categories,id',
             'description' => 'nullable|string',
             'client' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',

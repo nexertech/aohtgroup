@@ -37,7 +37,7 @@ class BlogController extends Controller
             'title' => 'required|string|max:255',
             'summary' => 'nullable|string',
             'content' => 'nullable|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|boolean',
             'published_at' => 'nullable|date',
@@ -47,12 +47,11 @@ class BlogController extends Controller
         $data['slug'] = Str::slug($request->title);
         $data['author_id'] = Auth::id();
 
-        if ($request->hasFile('thumbnail')) {
-            $data['thumbnail'] = $request->file('thumbnail')->store('blogs/thumbnails', 'public');
-        }
-
+        // Thumbnail is now same as banner
         if ($request->hasFile('banner_image')) {
-            $data['banner_image'] = $request->file('banner_image')->store('blogs/banners', 'public');
+            $path = $request->file('banner_image')->store('blogs/banners', 'public');
+            $data['banner_image'] = $path;
+            $data['thumbnail'] = $path;
         }
 
         Blog::create($data);
@@ -85,29 +84,34 @@ class BlogController extends Controller
             'title' => 'required|string|max:255',
             'summary' => 'nullable|string',
             'content' => 'nullable|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|boolean',
             'published_at' => 'nullable|date',
         ]);
 
         $data = $request->except(['thumbnail', 'banner_image']);
+
         // Only update slug if title changed, or keep it same. 
         // For SEO, usually better to keep old slug unless explicitly changing.
         if ($blog->title !== $request->title) {
             $data['slug'] = Str::slug($request->title);
         }
 
-        if ($request->hasFile('thumbnail')) {
-            if ($blog->thumbnail)
-                Storage::disk('public')->delete($blog->thumbnail);
-            $data['thumbnail'] = $request->file('thumbnail')->store('blogs/thumbnails', 'public');
-        }
-
+        // Thumbnail is now same as banner
         if ($request->hasFile('banner_image')) {
-            if ($blog->banner_image)
+            // Delete old banner and thumbnail if they exist
+            if ($blog->banner_image) {
                 Storage::disk('public')->delete($blog->banner_image);
-            $data['banner_image'] = $request->file('banner_image')->store('blogs/banners', 'public');
+            }
+            if ($blog->thumbnail && $blog->thumbnail !== $blog->banner_image) {
+                // Only delete thumbnail if it's a different file (legacy support)
+                Storage::disk('public')->delete($blog->thumbnail);
+            }
+
+            $path = $request->file('banner_image')->store('blogs/banners', 'public');
+            $data['banner_image'] = $path;
+            $data['thumbnail'] = $path;
         }
 
         $blog->update($data);

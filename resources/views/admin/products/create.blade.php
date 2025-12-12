@@ -42,6 +42,16 @@
                             @error('category_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
+                        <!-- Subcategory -->
+                        <div>
+                            <label for="subcategory_id" class="block text-sm font-medium text-gray-700 mb-1">Subcategory</label>
+                            <select name="subcategory_id" id="subcategory_id" disabled
+                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm bg-gray-100">
+                                <option value="">Select Subcategory</option>
+                            </select>
+                            @error('subcategory_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
                         <!-- Client -->
                         <div>
                             <label for="client" class="block text-sm font-medium text-gray-700 mb-1">Client</label>
@@ -118,4 +128,41 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.getElementById('category_id').addEventListener('change', function() {
+            var categoryId = this.value;
+            var subCategorySelect = document.getElementById('subcategory_id');
+            
+            // Reset
+            subCategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+            subCategorySelect.disabled = true;
+            subCategorySelect.classList.add('bg-gray-100');
+
+            if(categoryId) {
+                fetch(`{{ url('admin/get-subcategories') }}/${categoryId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if(data.length > 0) {
+                            subCategorySelect.disabled = false;
+                            subCategorySelect.classList.remove('bg-gray-100');
+                            data.forEach(subcategory => {
+                                var option = document.createElement('option');
+                                option.value = subcategory.id;
+                                option.text = subcategory.category_name;
+                                subCategorySelect.appendChild(option);
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error fetching subcategories:', error));
+            }
+        });
+    </script>
+    @endpush
 @endsection

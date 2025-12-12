@@ -14,6 +14,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('team-members', App\Http\Controllers\Admin\TeamMemberController::class);
     Route::resource('services', App\Http\Controllers\Admin\ServiceController::class);
     Route::resource('product-categories', App\Http\Controllers\Admin\ProductCategoryController::class);
+    Route::get('get-subcategories/{id}', [App\Http\Controllers\Admin\ProductCategoryController::class, 'getSubcategories'])->name('get-subcategories');
     Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
     Route::resource('product-galleries', App\Http\Controllers\Admin\ProductGalleryController::class);
     Route::resource('blogs', App\Http\Controllers\Admin\BlogController::class);
@@ -21,7 +22,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('job-openings', App\Http\Controllers\Admin\JobOpeningController::class);
     Route::resource('job-applications', App\Http\Controllers\Admin\JobApplicationController::class);
     Route::resource('sliders', App\Http\Controllers\Admin\SliderController::class);
-    Route::resource('pages', App\Http\Controllers\Admin\PageController::class);
     Route::resource('email-templates', App\Http\Controllers\Admin\EmailTemplateController::class);
 
     // Logs

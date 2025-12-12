@@ -5,13 +5,13 @@
         <div class="max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-semibold text-gray-800">Edit Product</h1>
-                <a href="{{ route('admin.products.index') }}"
+                <!-- <a href="{{ route('admin.products.index') }}"
                     class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg> Back
-                </a>
+                </a> -->
             </div>
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -38,10 +38,25 @@
                                 <option value="">Select Category</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
-                                        {{ $category->category_name }}</option>
+                                        {{ $category->category_name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('category_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- Subcategory -->
+                        <div>
+                            <label for="subcategory_id" class="block text-sm font-medium text-gray-700 mb-1">Subcategory</label>
+                            <select name="subcategory_id" id="subcategory_id" {{ $product->subcategory_id ? '' : 'disabled' }}
+                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm {{ $product->subcategory_id ? '' : 'bg-gray-100' }}">
+                                <option value="">Select Subcategory</option>
+                                @if($product->category_id && $product->subcategory)
+                                    <option value="{{ $product->subcategory_id }}" selected>{{ $product->subcategory->category_name }}</option>
+                                @endif
+                                <!-- Options will be populated via JS if category changes -->
+                            </select>
+                            @error('subcategory_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
                         <!-- Client -->
@@ -126,4 +141,56 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        const getSubcategoriesRoute = "{{ url('admin/get-subcategories') }}";
+        const currentSubcategoryId = "{{ $product->subcategory_id }}";
+
+        function loadSubcategories(categoryId, selectedId = null) {
+            var subCategorySelect = document.getElementById('subcategory_id');
+            
+            // Clear current options except the placeholder
+            subCategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+            subCategorySelect.disabled = true;
+            subCategorySelect.classList.add('bg-gray-100');
+
+            if(categoryId) {
+                fetch(`${getSubcategoriesRoute}/${categoryId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if(data.length > 0) {
+                            subCategorySelect.disabled = false;
+                            subCategorySelect.classList.remove('bg-gray-100');
+                            data.forEach(subcategory => {
+                                var option = document.createElement('option');
+                                option.value = subcategory.id;
+                                option.text = subcategory.category_name;
+                                if(selectedId && subcategory.id == selectedId) {
+                                    option.selected = true;
+                                }
+                                subCategorySelect.appendChild(option);
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error fetching subcategories:', error));
+            }
+        }
+
+        document.getElementById('category_id').addEventListener('change', function() {
+            loadSubcategories(this.value);
+        });
+
+        // Trigger on load if category is selected (to populate full list with selected item)
+        const initialCategoryId = document.getElementById('category_id').value;
+        if(initialCategoryId) {
+            loadSubcategories(initialCategoryId, currentSubcategoryId);
+        }
+    </script>
+    @endpush
 @endsection

@@ -12,9 +12,11 @@ class ProductCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = ProductCategory::latest()->paginate(10);
+        // Always show top-level categories, but eager load children for the modal
+        $categories = ProductCategory::with('children')->whereNull('parent_id')->latest()->paginate(10);
+
         return view('admin.product_categories.index', compact('categories'));
     }
 
@@ -23,7 +25,14 @@ class ProductCategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.product_categories.create');
+        $categories = ProductCategory::whereNull('parent_id')->get();
+        return view('admin.product_categories.create', compact('categories'));
+    }
+
+    public function getSubcategories($id)
+    {
+        $subcategories = ProductCategory::where('parent_id', $id)->get();
+        return response()->json($subcategories);
     }
 
     /**
@@ -34,6 +43,7 @@ class ProductCategoryController extends Controller
         $validatedData = $request->validate([
             'category_name' => 'required|string|max:150',
             'slug' => 'required|string|max:150|unique:product_categories',
+            'parent_id' => 'nullable|exists:product_categories,id',
         ]);
 
         if ($request->missing('slug') || is_null($request->slug)) {
@@ -58,7 +68,8 @@ class ProductCategoryController extends Controller
      */
     public function edit(ProductCategory $productCategory)
     {
-        return view('admin.product_categories.edit', compact('productCategory'));
+        $categories = ProductCategory::whereNull('parent_id')->where('id', '!=', $productCategory->id)->get();
+        return view('admin.product_categories.edit', compact('productCategory', 'categories'));
     }
 
     /**
@@ -69,6 +80,7 @@ class ProductCategoryController extends Controller
         $validatedData = $request->validate([
             'category_name' => 'required|string|max:150',
             'slug' => 'required|string|max:150|unique:product_categories,slug,' . $productCategory->id,
+            'parent_id' => 'nullable|exists:product_categories,id',
         ]);
 
         $productCategory->update($validatedData);
