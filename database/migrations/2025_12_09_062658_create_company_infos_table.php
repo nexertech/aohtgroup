@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('company_name')->nullable();
             $table->string('tagline')->nullable();
             $table->longText('about')->nullable();
+            $table->string('about_image')->nullable();
             $table->longText('mission')->nullable();
             $table->longText('vision')->nullable();
             $table->longText('history')->nullable();

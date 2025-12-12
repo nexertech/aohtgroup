@@ -23,8 +23,16 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('contact-messages', App\Http\Controllers\Admin\ContactMessageController::class);
     Route::resource('job-openings', App\Http\Controllers\Admin\JobOpeningController::class);
     Route::resource('job-applications', App\Http\Controllers\Admin\JobApplicationController::class);
+    Route::resource('clients', App\Http\Controllers\Admin\ClientController::class);
+    Route::resource('certificates', App\Http\Controllers\Admin\CertificateController::class);
     Route::resource('sliders', App\Http\Controllers\Admin\SliderController::class);
     Route::resource('email-templates', App\Http\Controllers\Admin\EmailTemplateController::class);
+
+    // Pages Management
+    Route::get('pages/home', [App\Http\Controllers\Admin\HomePageController::class, 'index'])->name('pages.home');
+    Route::put('pages/home', [App\Http\Controllers\Admin\HomePageController::class, 'update'])->name('pages.home.update');
+    Route::get('pages/about', [App\Http\Controllers\Admin\AboutPageController::class, 'index'])->name('pages.about');
+    Route::put('pages/about', [App\Http\Controllers\Admin\AboutPageController::class, 'update'])->name('pages.about.update');
 
     // Logs
     Route::get('activity-logs', [App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');

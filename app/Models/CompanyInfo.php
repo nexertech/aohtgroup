@@ -15,6 +15,7 @@ class CompanyInfo extends Model
         'company_name',
         'tagline',
         'about',
+        'about_image',
         'mission',
         'vision',
         'history',
