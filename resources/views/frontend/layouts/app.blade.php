@@ -161,7 +161,7 @@
       overflow: hidden;
       margin-top: 80px;
       width: 100%;
-      height: 700px;
+      height: 830px;
     }
     
     .slides {

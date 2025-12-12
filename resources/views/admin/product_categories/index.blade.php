@@ -24,8 +24,10 @@
                     <thead>
                         <tr class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 font-semibold">
                             <th class="px-6 py-4">#</th>
+                            <th class="px-6 py-4">Image</th>
                             <th class="px-6 py-4">Name</th>
                             <th class="px-6 py-4">Slug</th>
+                            <th class="px-6 py-4">Sequence</th>
                             <th class="px-6 py-4 text-right">Actions</th>
                         </tr>
                     </thead>
@@ -33,6 +35,13 @@
                         @forelse($categories as $category)
                             <tr class="hover:bg-gray-50 transition duration-200">
                                 <td class="px-6 py-4 text-gray-500">{{ $loop->iteration }}</td>
+                                <td class="px-6 py-4">
+                                    @if($category->image)
+                                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->category_name }}" class="h-10 w-10 rounded-full object-cover">
+                                    @else
+                                        <span class="text-gray-400">No Image</span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4 font-medium text-gray-700">
                                     <button onclick='openSubCategoryModal(@json($category))'
                                         class="text-indigo-600 hover:text-indigo-900 hover:underline focus:outline-none">
@@ -40,6 +49,7 @@
                                     </button>
                                 </td>
                                 <td class="px-6 py-4 text-gray-600">{{ $category->slug }}</td>
+                                <td class="px-6 py-4 text-gray-600">{{ $category->sequence }}</td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
                                         <button onclick='openViewModal(@json($category))'

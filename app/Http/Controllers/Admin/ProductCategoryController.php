@@ -44,10 +44,17 @@ class ProductCategoryController extends Controller
             'category_name' => 'required|string|max:150',
             'slug' => 'required|string|max:150|unique:product_categories',
             'parent_id' => 'nullable|exists:product_categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'sequence' => 'nullable|integer',
         ]);
 
         if ($request->missing('slug') || is_null($request->slug)) {
             $validatedData['slug'] = Str::slug($validatedData['category_name']);
+        }
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('categories', 'public');
+            $validatedData['image'] = $imagePath;
         }
 
         ProductCategory::create($validatedData);
@@ -81,7 +88,18 @@ class ProductCategoryController extends Controller
             'category_name' => 'required|string|max:150',
             'slug' => 'required|string|max:150|unique:product_categories,slug,' . $productCategory->id,
             'parent_id' => 'nullable|exists:product_categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'sequence' => 'nullable|integer',
         ]);
+
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($productCategory->image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($productCategory->image);
+            }
+            $imagePath = $request->file('image')->store('categories', 'public');
+            $validatedData['image'] = $imagePath;
+        }
 
         $productCategory->update($validatedData);
 
@@ -93,6 +111,9 @@ class ProductCategoryController extends Controller
      */
     public function destroy(ProductCategory $productCategory)
     {
+        if ($productCategory->image) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($productCategory->image);
+        }
         $productCategory->delete();
 
         return redirect()->route('admin.product-categories.index')->with('success', 'Product Category deleted successfully.');

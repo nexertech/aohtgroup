@@ -73,70 +73,121 @@
 <section class="categories-section">
   <div class="container-custom">
     <div class="section-header">
-      <h2 class="section-title">Sale</h2>
+      <h2 class="section-title">Categories</h2>
     </div>
     <div class="categories-grid">
-      <!-- Column 1: Kids -->
-      <div class="category-column">
-        <div class="category-card category-auto">
-          <div class="category-image">
-            <img src="{{ asset('assets/categories/kids.webp') }}" alt="Kids">
+      @if(isset($categories) && $categories->count() > 0)
+          <!-- Column 1: Item 1 -->
+          @if(isset($categories[0]))
+          <div class="category-column">
+            <div class="category-card category-auto">
+              <div class="category-image">
+                @if($categories[0]->image)
+                  <img src="{{ asset('storage/' . $categories[0]->image) }}" alt="{{ $categories[0]->category_name }}">
+                @else
+                  <div class="image-placeholder"><span>{{ substr($categories[0]->category_name, 0, 1) }}</span></div>
+                @endif
+              </div>
+              <div class="category-label">{{ strtoupper($categories[0]->category_name) }}</div>
+            </div>
           </div>
-          <div class="category-label">KIDS</div>
-        </div>
-      </div>
+          @endif
 
-      <!-- Column 2: Ready to Wear & Ideas Home -->
-      <div class="category-column">
-        <div class="category-card category-half">
-          <div class="category-image">
-            <img src="{{ asset('assets/categories/Ready.webp') }}" alt="Ready to Wear">
+          <!-- Column 2: Item 2 & 3 -->
+          @if(isset($categories[1]) || isset($categories[2]))
+          <div class="category-column">
+            @if(isset($categories[1]))
+            <div class="category-card category-half">
+              <div class="category-image">
+                @if($categories[1]->image)
+                  <img src="{{ asset('storage/' . $categories[1]->image) }}" alt="{{ $categories[1]->category_name }}">
+                @else
+                  <div class="image-placeholder"><span>{{ substr($categories[1]->category_name, 0, 1) }}</span></div>
+                @endif
+              </div>
+              <div class="category-label">{{ strtoupper($categories[1]->category_name) }}</div>
+            </div>
+            @endif
+            @if(isset($categories[2]))
+            <div class="category-card category-half">
+              <div class="category-image">
+                @if($categories[2]->image)
+                  <img src="{{ asset('storage/' . $categories[2]->image) }}" alt="{{ $categories[2]->category_name }}">
+                @else
+                  <div class="image-placeholder"><span>{{ substr($categories[2]->category_name, 0, 1) }}</span></div>
+                @endif
+              </div>
+              <div class="category-label">{{ strtoupper($categories[2]->category_name) }}</div>
+            </div>
+            @endif
           </div>
-          <div class="category-label">READY TO WEAR</div>
-        </div>
-        <div class="category-card category-half">
-          <div class="category-image">
-            <img src="{{ asset('assets/categories/home.webp') }}" alt="AOHT Home">
-          </div>
-          <div class="category-label">AOHT HOME</div>
-        </div>
-      </div>
+          @endif
 
-      <!-- Column 3: Salt by Ideas (Center Large) -->
-      <div class="category-column">
-        <div class="category-card category-full">
-          <div class="category-image">
-            <img src="{{ asset('assets/categories/salt.webp') }}" alt="Salt by Aoht">
+          <!-- Column 3: Item 4 (Center Large) -->
+          @if(isset($categories[3]))
+          <div class="category-column">
+            <div class="category-card category-full">
+              <div class="category-image">
+                @if($categories[3]->image)
+                  <img src="{{ asset('storage/' . $categories[3]->image) }}" alt="{{ $categories[3]->category_name }}">
+                @else
+                  <div class="image-placeholder"><span>{{ substr($categories[3]->category_name, 0, 1) }}</span></div>
+                @endif
+              </div>
+              <div class="category-label">{{ strtoupper($categories[3]->category_name) }}</div>
+            </div>
           </div>
-          <div class="category-label">SALT BY AOHT</div>
-        </div>
-      </div>
+          @endif
 
-      <!-- Column 4: Women's Unstitched & Accessories -->
-      <div class="category-column">
-        <div class="category-card category-half">
-          <div class="category-image">
-            <img src="{{ asset('assets/categories/womens-women.webp') }}" alt="Women's Unstitched">
+          <!-- Column 4: Item 5 & 6 -->
+          @if(isset($categories[4]) || isset($categories[5]))
+          <div class="category-column">
+            @if(isset($categories[4]))
+            <div class="category-card category-half">
+              <div class="category-image">
+                @if($categories[4]->image)
+                  <img src="{{ asset('storage/' . $categories[4]->image) }}" alt="{{ $categories[4]->category_name }}">
+                @else
+                  <div class="image-placeholder"><span>{{ substr($categories[4]->category_name, 0, 1) }}</span></div>
+                @endif
+              </div>
+              <div class="category-label">{{ strtoupper($categories[4]->category_name) }}</div>
+            </div>
+            @endif
+            @if(isset($categories[5]))
+            <div class="category-card category-half">
+              <div class="category-image">
+                @if($categories[5]->image)
+                  <img src="{{ asset('storage/' . $categories[5]->image) }}" alt="{{ $categories[5]->category_name }}">
+                @else
+                  <div class="image-placeholder"><span>{{ substr($categories[5]->category_name, 0, 1) }}</span></div>
+                @endif
+              </div>
+              <div class="category-label">{{ strtoupper($categories[5]->category_name) }}</div>
+            </div>
+            @endif
           </div>
-          <div class="category-label">WOMEN'S UNSTITCHED</div>
-        </div>
-        <div class="category-card category-half">
-          <div class="category-image">
-            <img src="{{ asset('assets/categories/accessories.jpg') }}" alt="Accessories">
-          </div>
-          <div class="category-label">ACCESSORIES</div>
-        </div>
-      </div>
+          @endif
 
-      <!-- Column 5: Men Eastern -->
-      <div class="category-column">
-        <div class="category-card category-auto">
-          <div class="category-image">
-            <img src="{{ asset('assets/categories/men-eastern.jpg') }}" alt="Men Eastern">
+          <!-- Column 5: Item 7 -->
+          @if(isset($categories[6]))
+          <div class="category-column">
+            <div class="category-card category-auto">
+              <div class="category-image">
+                @if($categories[6]->image)
+                  <img src="{{ asset('storage/' . $categories[6]->image) }}" alt="{{ $categories[6]->category_name }}">
+                @else
+                  <div class="image-placeholder"><span>{{ substr($categories[6]->category_name, 0, 1) }}</span></div>
+                @endif
+              </div>
+              <div class="category-label">{{ strtoupper($categories[6]->category_name) }}</div>
+            </div>
           </div>
-          <div class="category-label">MEN EASTERN</div>
-        </div>
-      </div>
+          @endif
+      @else
+        <!-- Fallback to static if no categories found (Optional: remove this else block if you want it empty) -->
+        <div class="col-span-full text-center py-10 text-gray-400">No categories available.</div>
+      @endif
     </div>
   </div>
 </section>
@@ -202,7 +253,7 @@
 @endif
 
 <!-- STATISTICS SECTION -->
-<section class="stats-section">
+<!-- <section class="stats-section"> -->
   <div class="container-custom">
     <div class="stats-grid">
       <div class="stat-card">
@@ -292,22 +343,5 @@
 </section>
 @endif
 
-<!-- CTA SECTION -->
-<section class="cta-section">
-  <div class="container-custom">
-    <div class="cta-content">
-      <h2 class="cta-title">{{ $company->company_name ?? 'AOHT Group' }}</h2>
-      <p class="cta-text">{{ $company->tagline ?? 'Integrated business solutions across Hospitality, Technology, Real Estate, HR, and Consultancy.' }}</p>
-    </div>
-    <div class="cta-contact">
-      <p class="cta-label">Get in Touch</p>
-      <p class="cta-details">
-        <span>📞 {{ $company->phone ?? '+92 300 1234567' }}</span>
-        <span>✉️ {{ $company->email ?? 'info@aohtgroup.com' }}</span>
-      </p>
-      <a href="#" class="btn btn-light">Contact Us</a>
-    </div>
-  </div>
-</section>
 
 @endsection

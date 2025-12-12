@@ -13,6 +13,8 @@ class ProductCategory extends Model
         'category_name',
         'slug',
         'parent_id',
+        'image',
+        'sequence',
     ];
 
     public function parent()

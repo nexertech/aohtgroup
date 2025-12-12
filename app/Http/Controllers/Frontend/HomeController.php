@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Blog;
 use App\Models\CompanyInfo;
 use App\Models\TeamMember;
+use App\Models\ProductCategory;
 
 class HomeController extends Controller
 {
@@ -20,8 +21,9 @@ class HomeController extends Controller
         $products = Product::where('status', 1)->latest()->take(6)->get();
         $blogs = Blog::where('status', 1)->latest('published_at')->take(3)->get();
         $teamMembers = TeamMember::orderBy('sequence')->take(4)->get();
+        $categories = ProductCategory::whereNull('parent_id')->orderBy('sequence')->take(7)->get();
         $company = CompanyInfo::first();
 
-        return view('frontend.home', compact('sliders', 'services', 'products', 'blogs', 'teamMembers', 'company'));
+        return view('frontend.home', compact('sliders', 'services', 'products', 'blogs', 'teamMembers', 'company', 'categories'));
     }
 }
