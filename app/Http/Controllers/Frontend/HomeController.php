@@ -22,8 +22,16 @@ class HomeController extends Controller
         $blogs = Blog::where('status', 1)->latest('published_at')->take(3)->get();
         $teamMembers = TeamMember::orderBy('sequence')->take(4)->get();
         $categories = ProductCategory::whereNull('parent_id')->orderBy('sequence')->take(7)->get();
+        $totalCategories = ProductCategory::whereNull('parent_id')->count();
         $company = CompanyInfo::first();
 
-        return view('frontend.home', compact('sliders', 'services', 'products', 'blogs', 'teamMembers', 'company', 'categories'));
+        return view('frontend.home', compact('sliders', 'services', 'products', 'blogs', 'teamMembers', 'company', 'categories', 'totalCategories'));
+    }
+
+    public function categories()
+    {
+        $categories = ProductCategory::whereNull('parent_id')->orderBy('sequence')->get();
+        $company = CompanyInfo::first();
+        return view('frontend.categories', compact('categories', 'company'));
     }
 }

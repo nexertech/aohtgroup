@@ -10,7 +10,7 @@
         <p class="auth-subtitle">Register for a new account</p>
       </div>
 
-      <form method="POST" action="{{ route('register') }}" class="auth-form">
+      <form method="POST" action="{{ route('frontend.register') }}" class="auth-form">
         @csrf
 
         <!-- Name -->
@@ -87,7 +87,7 @@
         <!-- Links -->
         <div class="auth-links">
           <span>Already have an account?</span>
-          <a href="{{ route('login') }}" class="auth-link">Login Here</a>
+          <a href="{{ route('frontend.login') }}" class="auth-link">Login Here</a>
         </div>
       </form>
     </div>
