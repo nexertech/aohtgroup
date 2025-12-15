@@ -37,7 +37,8 @@
                                 <td class="px-6 py-4 text-gray-500">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4">
                                     @if($category->image)
-                                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->category_name }}" class="h-10 w-10 rounded-full object-cover">
+                                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->category_name }}"
+                                            class="h-10 w-10 rounded-full object-cover">
                                     @else
                                         <span class="text-gray-400">No Image</span>
                                     @endif
@@ -149,10 +150,10 @@
                     </div>
                 </div>
                 <!-- <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                                    <button type="button"
-                                                        class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                                        onclick="closeViewModal()">Close</button>
-                                                </div> -->
+                                                        <button type="button"
+                                                            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                                                            onclick="closeViewModal()">Close</button>
+                                                    </div> -->
             </div>
         </div>
     </div>
@@ -177,23 +178,39 @@
                     <!-- Add Subcategory Form -->
                     <div class="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
                         <h4 class="text-sm font-medium text-gray-900 mb-3">Add New Subcategory</h4>
-                        <form action="{{ route('admin.product-categories.store') }}" method="POST">
+                        <form action="{{ route('admin.product-categories.store') }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="parent_id" id="modalParentId">
                             <div class="space-y-3">
                                 <div>
-                                    <label for="modalCategoryName" class="sr-only">Name</label>
+                                    <label for="modalCategoryNameInput"
+                                        class="block text-xs font-medium text-gray-700 mb-1">Name</label>
                                     <input type="text" name="category_name" id="modalCategoryNameInput"
                                         placeholder="Category Name" required
                                         class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                 </div>
+
+                                <div>
+                                    <label for="modalImageInput" class="block text-xs font-medium text-gray-700 mb-1">Image
+                                        (Optional)</label>
+                                    <input type="file" name="image" id="modalImageInput" accept="image/*"
+                                        class="block w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                </div>
+
                                 <div class="flex gap-2">
-                                    <input type="text" name="slug" id="modalSlugInput" placeholder="Slug (Optional)"
-                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    <button type="submit"
-                                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        Add
-                                    </button>
+                                    <div class="grow">
+                                        <label for="modalSlugInput"
+                                            class="block text-xs font-medium text-gray-700 mb-1">Slug</label>
+                                        <input type="text" name="slug" id="modalSlugInput" placeholder="Slug (Optional)"
+                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    </div>
+                                    <div class="flex items-end">
+                                        <button type="submit"
+                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            Add
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -256,9 +273,9 @@
                     const li = document.createElement('li');
                     li.className = 'py-3 flex justify-between items-center';
                     li.innerHTML = `
-                                                <span class="text-sm font-medium text-gray-900">${child.category_name}</span>
-                                                <span class="text-xs text-gray-500 font-mono">${child.slug}</span>
-                                            `;
+                                                    <span class="text-sm font-medium text-gray-900">${child.category_name}</span>
+                                                    <span class="text-xs text-gray-500 font-mono">${child.slug}</span>
+                                                `;
                     list.appendChild(li);
                 });
             } else {

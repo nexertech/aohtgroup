@@ -75,11 +75,42 @@
                     </svg>
                     Edit About Page Content
                 </h2>
-                <form action="{{ route('admin.pages.about.update') }}" method="POST">
+                <form action="{{ route('admin.pages.about.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
                     <div class="space-y-6">
+                        <!-- Image Upload Section -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">About Us Image</label>
+                            <div class="mt-1 flex items-center space-x-4">
+                                <div class="shrink-0">
+                                    @if($companyInfo->about_image)
+                                        <img class="h-16 w-16 object-cover rounded-md border border-gray-200" 
+                                             src="{{ asset($companyInfo->about_image) }}" 
+                                             alt="Current Image">
+                                    @else
+                                        <span class="inline-block h-16 w-16 rounded-md overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400">
+                                            <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                            </svg>
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="flex-1">
+                                    <input type="file" name="about_image" id="about_image" accept="image/*"
+                                        class="block w-full text-sm text-slate-500
+                                          file:mr-4 file:py-2 file:px-4
+                                          file:rounded-full file:border-0
+                                          file:text-sm file:font-semibold
+                                          file:bg-blue-50 file:text-blue-700
+                                          hover:file:bg-blue-100
+                                        "/>
+                                    <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 2MB</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <div>
                             <label for="mission" class="block text-sm font-semibold text-gray-700 mb-1">Our Mission</label>
                             <textarea name="mission" id="mission" rows="4"

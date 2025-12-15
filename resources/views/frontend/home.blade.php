@@ -80,14 +80,15 @@
   <section class="categories-section">
     <div class="container-custom">
       <div class="section-header">
-        <h2 class="section-title">Categories</h2>
+        <h2 class="section-title">Popular Categories</h2>
       </div>
       <div class="categories-grid">
         @if(isset($categories) && $categories->count() > 0)
           <!-- Column 1: Item 1 -->
           @if(isset($categories[0]))
             <div class="category-column">
-              <div class="category-card category-auto">
+              <a href="{{ route('frontend.category.detail', $categories[0]->slug) }}"
+                class="category-card category-auto block">
                 <div class="category-image">
                   @if($categories[0]->image)
                     <img src="{{ asset('storage/' . $categories[0]->image) }}" alt="{{ $categories[0]->category_name }}">
@@ -96,7 +97,7 @@
                   @endif
                 </div>
                 <div class="category-label">{{ strtoupper($categories[0]->category_name) }}</div>
-              </div>
+              </a>
             </div>
           @endif
 
@@ -104,7 +105,8 @@
           @if(isset($categories[1]) || isset($categories[2]))
             <div class="category-column">
               @if(isset($categories[1]))
-                <div class="category-card category-half">
+                <a href="{{ route('frontend.category.detail', $categories[1]->slug) }}"
+                  class="category-card category-half block">
                   <div class="category-image">
                     @if($categories[1]->image)
                       <img src="{{ asset('storage/' . $categories[1]->image) }}" alt="{{ $categories[1]->category_name }}">
@@ -113,10 +115,11 @@
                     @endif
                   </div>
                   <div class="category-label">{{ strtoupper($categories[1]->category_name) }}</div>
-                </div>
+                </a>
               @endif
               @if(isset($categories[2]))
-                <div class="category-card category-half">
+                <a href="{{ route('frontend.category.detail', $categories[2]->slug) }}"
+                  class="category-card category-half block">
                   <div class="category-image">
                     @if($categories[2]->image)
                       <img src="{{ asset('storage/' . $categories[2]->image) }}" alt="{{ $categories[2]->category_name }}">
@@ -125,7 +128,7 @@
                     @endif
                   </div>
                   <div class="category-label">{{ strtoupper($categories[2]->category_name) }}</div>
-                </div>
+                </a>
               @endif
             </div>
           @endif
@@ -133,7 +136,8 @@
           <!-- Column 3: Item 4 (Center Large) -->
           @if(isset($categories[3]))
             <div class="category-column">
-              <div class="category-card category-full">
+              <a href="{{ route('frontend.category.detail', $categories[3]->slug) }}"
+                class="category-card category-full block">
                 <div class="category-image">
                   @if($categories[3]->image)
                     <img src="{{ asset('storage/' . $categories[3]->image) }}" alt="{{ $categories[3]->category_name }}">
@@ -142,7 +146,7 @@
                   @endif
                 </div>
                 <div class="category-label">{{ strtoupper($categories[3]->category_name) }}</div>
-              </div>
+              </a>
             </div>
           @endif
 
@@ -213,34 +217,7 @@
     </div>
   </section>
 
-  <!-- SERVICES SECTION -->
-  @if(!empty($services) && $services->count())
-    <section class="services-section">
-      <div class="container-custom">
-        <div class="section-header">
-          <h2 class="section-title">Our Services</h2>
-          <p class="section-subtitle">Comprehensive solutions tailored to your business needs</p>
-        </div>
-        <div class="services-grid">
-          @foreach($services as $service)
-            <div class="service-card">
-              <div class="service-icon">
-                @if($service->icon)
-                  <img src="{{ asset('storage/' . $service->icon) }}" alt="{{ $service->service_name }}">
-                @else
-                  <div class="icon-placeholder">{{ strtoupper(substr($service->service_name, 0, 1)) }}</div>
-                @endif
-              </div>
-              <h3 class="service-title">{{ $service->service_name }}</h3>
-              <p class="service-description">{{ \Illuminate\Support\Str::limit(strip_tags($service->description), 140) }}</p>
-              <a href="#" class="service-link">Learn More →</a>
-            </div>
-          @endforeach
-        </div>
-      </div>
-    </section>
-  @endif
-
+ 
   <!-- FEATURED PROJECTS -->
   @if(!empty($products) && $products->count())
     <section class="projects-section">
@@ -265,7 +242,7 @@
                 <h3 class="project-title">{{ $product->product_name }}</h3>
                 <p class="project-description">{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 120) }}
                 </p>
-                <a href="#" class="project-link">View Details →</a>
+                <a href="{{ route('frontend.products.detail', $product->slug) }}" class="project-link">View Details →</a>
               </div>
             </div>
           @endforeach
@@ -273,6 +250,35 @@
       </div>
     </section>
   @endif
+
+   <!-- SERVICES SECTION -->
+  @if(!empty($services) && $services->count())
+    <section class="services-section">
+      <div class="container-custom">
+        <div class="section-header">
+          <h2 class="section-title">Our Services</h2>
+          <p class="section-subtitle">Comprehensive solutions tailored to your business needs</p>
+        </div>
+        <div class="services-grid">
+          @foreach($services as $service)
+            <div class="service-card">
+              <div class="service-icon">
+                @if($service->icon)
+                  <img src="{{ asset('storage/' . $service->icon) }}" alt="{{ $service->service_name }}">
+                @else
+                  <div class="icon-placeholder">{{ strtoupper(substr($service->service_name, 0, 1)) }}</div>
+                @endif
+              </div>
+              <h3 class="service-title">{{ $service->service_name }}</h3>
+              <p class="service-description">{{ \Illuminate\Support\Str::limit(strip_tags($service->description), 140) }}</p>
+              <a href="{{ route('frontend.services.detail', $service->slug) }}" class="service-link">Learn More →</a>
+            </div>
+          @endforeach
+        </div>
+      </div>
+    </section>
+  @endif
+
 
   <!-- STATISTICS SECTION -->
   <!-- <section class="stats-section"> -->
@@ -358,7 +364,7 @@
                 <p class="blog-excerpt">
                   {{ \Illuminate\Support\Str::limit(strip_tags($blog->summary ?? $blog->content), 110) }}
                 </p>
-                <a href="#" class="blog-link">Read More →</a>
+                <a href="{{ route('frontend.news.detail', $blog->id) }}" class="blog-link">Read More →</a>
               </div>
             </div>
           @endforeach

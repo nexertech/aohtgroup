@@ -114,6 +114,13 @@
                     </svg>
                     Product Categories
                 </a>
+                <a href="{{ route('admin.product-categories.sub-index') }}"
+                    class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.product-categories.sub-index') ? 'bg-gray-800 text-white' : '' }}">
+                    <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                    Subcategories
+                </a>
                 <a href="{{ route('admin.product-galleries.index') }}"
                     class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.product-galleries.*') ? 'bg-gray-800 text-white' : '' }}">
                     <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

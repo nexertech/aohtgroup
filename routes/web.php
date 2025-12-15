@@ -14,6 +14,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('team-members', App\Http\Controllers\Admin\TeamMemberController::class);
     Route::resource('services', App\Http\Controllers\Admin\ServiceController::class);
     Route::resource('product-categories', App\Http\Controllers\Admin\ProductCategoryController::class);
+    Route::get('sub-categories', [App\Http\Controllers\Admin\ProductCategoryController::class, 'subIndex'])->name('product-categories.sub-index');
     Route::get('get-subcategories/{id}', [App\Http\Controllers\Admin\ProductCategoryController::class, 'getSubcategories'])->name('get-subcategories');
     Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
     Route::resource('product-galleries', App\Http\Controllers\Admin\ProductGalleryController::class);

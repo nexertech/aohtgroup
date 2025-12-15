@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('subcategory_id')->nullable();
             $table->longText('description')->nullable();
+            $table->decimal('price', 10, 2)->nullable();
             $table->string('client')->nullable();
             $table->string('location')->nullable();
             $table->date('start_date')->nullable();

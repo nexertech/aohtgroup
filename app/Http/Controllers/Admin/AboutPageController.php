@@ -25,14 +25,31 @@ class AboutPageController extends Controller
             'mission' => 'nullable|string',
             'vision' => 'nullable|string',
             'history' => 'nullable|string',
+            'about_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $companyInfo = CompanyInfo::first();
 
+        // Prepare data
+        $data = $request->only(['mission', 'vision', 'history']);
+
+        // Handle Image Upload
+        if ($request->hasFile('about_image')) {
+            // Delete old image if exists
+            if ($companyInfo && $companyInfo->about_image && file_exists(public_path($companyInfo->about_image))) {
+                @unlink(public_path($companyInfo->about_image));
+            }
+
+            // Upload new image
+            $imageName = time() . '_about.' . $request->about_image->extension();
+            $request->about_image->move(public_path('images/company'), $imageName);
+            $data['about_image'] = 'images/company/' . $imageName;
+        }
+
         if (!$companyInfo) {
-            $companyInfo = CompanyInfo::create($request->all());
+            CompanyInfo::create($data);
         } else {
-            $companyInfo->update($request->only(['mission', 'vision', 'history']));
+            $companyInfo->update($data);
         }
 
         return redirect()->route('admin.pages.about')->with('success', 'About Page content updated successfully.');

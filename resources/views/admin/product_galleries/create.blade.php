@@ -6,11 +6,11 @@
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-semibold text-gray-800">Add Gallery Image</h1>
                 <!-- <a href="{{ route('admin.product-galleries.index') }}"
-                            class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-300 flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                            </svg> Back
-                        </a> -->
+                                class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-300 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg> Back
+                            </a> -->
             </div>
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -36,11 +36,11 @@
                     </div>
 
                     <div class="mb-6">
-                        <label for="image_path" class="block text-sm font-medium text-gray-700 mb-2">Image <span
+                        <label for="image_path" class="block text-sm font-medium text-gray-700 mb-2">Images <span
                                 class="text-red-500">*</span></label>
-                        <input type="file" name="image_path" id="image_path"
+                        <input type="file" name="image_path[]" id="image_path"
                             class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                            accept="image/*" required>
+                            accept="image/*" multiple required>
                         @error('image_path')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror

@@ -35,20 +35,25 @@ class ProductGalleryController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'image_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_path' => 'required',
+            'image_path.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'caption' => 'nullable|string|max:255',
         ]);
 
-        $data = $request->only(['product_id', 'caption']);
+        $data = $request->except('image_path');
 
         if ($request->hasFile('image_path')) {
-            $path = $request->file('image_path')->store('product_galleries', 'public');
-            $data['image_path'] = $path;
+            foreach ($request->file('image_path') as $file) {
+                $path = $file->store('product_galleries', 'public');
+                ProductGallery::create([
+                    'product_id' => $request->product_id,
+                    'image_path' => $path,
+                    'caption' => $request->caption,
+                ]);
+            }
         }
 
-        ProductGallery::create($data);
-
-        return redirect()->route('admin.product-galleries.index')->with('success', 'Gallery image added successfully.');
+        return redirect()->route('admin.product-galleries.index')->with('success', 'Gallery images added successfully.');
     }
 
     /**

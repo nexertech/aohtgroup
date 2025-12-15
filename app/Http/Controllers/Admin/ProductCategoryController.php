@@ -20,6 +20,12 @@ class ProductCategoryController extends Controller
         return view('admin.product_categories.index', compact('categories'));
     }
 
+    public function subIndex(Request $request)
+    {
+        $categories = ProductCategory::with('parent')->whereNotNull('parent_id')->latest()->paginate(10);
+        return view('admin.product_categories.sub_index', compact('categories'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
