@@ -14,7 +14,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('team-members', App\Http\Controllers\Admin\TeamMemberController::class);
     Route::resource('services', App\Http\Controllers\Admin\ServiceController::class);
     Route::resource('product-categories', App\Http\Controllers\Admin\ProductCategoryController::class);
+    Route::get('sub-categories', [App\Http\Controllers\Admin\ProductCategoryController::class, 'subIndex'])->name('product-categories.sub-index');
     Route::get('get-subcategories/{id}', [App\Http\Controllers\Admin\ProductCategoryController::class, 'getSubcategories'])->name('get-subcategories');
+    Route::post('product-categories/ajax-store', [App\Http\Controllers\Admin\ProductCategoryController::class, 'ajaxStore'])->name('product-categories.ajax-store');
+    Route::put('product-categories/ajax-update/{id}', [App\Http\Controllers\Admin\ProductCategoryController::class, 'ajaxUpdate'])->name('product-categories.ajax-update');
+    Route::delete('product-categories/ajax-destroy/{id}', [App\Http\Controllers\Admin\ProductCategoryController::class, 'ajaxDestroy'])->name('product-categories.ajax-destroy');
     Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
     Route::resource('product-galleries', App\Http\Controllers\Admin\ProductGalleryController::class);
     Route::resource('blogs', App\Http\Controllers\Admin\BlogController::class);

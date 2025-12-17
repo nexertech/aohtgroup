@@ -24,7 +24,7 @@ class ClientController extends Controller
     {
         $request->validate([
             'name' => 'nullable|string|max:255',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'url' => 'nullable|url',
         ]);
 
@@ -51,7 +51,7 @@ class ClientController extends Controller
     {
         $request->validate([
             'name' => 'nullable|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'url' => 'nullable|url',
         ]);
 

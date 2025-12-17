@@ -20,3 +20,16 @@ Route::get('/register', function () {
 })->name('frontend.register');
 
 Route::post('/register', [RegisteredUserController::class, 'store']);
+
+// Dynamic Pages Routes
+Route::get('/about', [HomeController::class, 'about'])->name('frontend.about');
+Route::get('/companies', [HomeController::class, 'companies'])->name('frontend.companies');
+Route::get('/category/{slug}', [HomeController::class, 'categoryDetail'])->name('frontend.category.detail');
+Route::get('/services', [HomeController::class, 'services'])->name('frontend.services');
+Route::get('/services/{slug}', [HomeController::class, 'serviceDetail'])->name('frontend.services.detail');
+Route::get('/careers', [HomeController::class, 'careers'])->name('frontend.careers');
+Route::post('/careers/apply', [HomeController::class, 'applyJob'])->name('frontend.careers.apply');
+Route::get('/news', [HomeController::class, 'news'])->name('frontend.news');
+Route::get('/news/{id}', [HomeController::class, 'newsDetail'])->name('frontend.news.detail');
+Route::get('/products/{slug}', [HomeController::class, 'productDetail'])->name('frontend.products.detail');
+Route::get('/contact', [HomeController::class, 'contact'])->name('frontend.contact');

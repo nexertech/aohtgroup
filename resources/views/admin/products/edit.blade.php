@@ -104,6 +104,15 @@
                             @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
+                        <!-- Price -->
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                            <input type="number" name="price" id="price" step="0.01" min="0"
+                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
+                                value="{{ old('price', $product->price) }}" placeholder="0.00">
+                            @error('price') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
                         <!-- Main Image -->
                         <div class="md:col-span-2">
                             <label for="main_image" class="block text-sm font-medium text-gray-700 mb-1">Main Image</label>

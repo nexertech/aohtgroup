@@ -20,6 +20,12 @@ class ProductCategoryController extends Controller
         return view('admin.product_categories.index', compact('categories'));
     }
 
+    public function subIndex(Request $request)
+    {
+        $categories = ProductCategory::with('parent')->whereNotNull('parent_id')->latest()->paginate(10);
+        return view('admin.product_categories.sub_index', compact('categories'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -44,7 +50,7 @@ class ProductCategoryController extends Controller
             'category_name' => 'required|string|max:150',
             'slug' => 'required|string|max:150|unique:product_categories',
             'parent_id' => 'nullable|exists:product_categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'sequence' => 'nullable|integer',
         ]);
 
@@ -88,7 +94,7 @@ class ProductCategoryController extends Controller
             'category_name' => 'required|string|max:150',
             'slug' => 'required|string|max:150|unique:product_categories,slug,' . $productCategory->id,
             'parent_id' => 'nullable|exists:product_categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'sequence' => 'nullable|integer',
         ]);
 
@@ -117,5 +123,76 @@ class ProductCategoryController extends Controller
         $productCategory->delete();
 
         return redirect()->route('admin.product-categories.index')->with('success', 'Product Category deleted successfully.');
+    }
+    public function ajaxStore(Request $request)
+    {
+        $validatedData = $request->validate([
+            'category_name' => 'required|string|max:150',
+            'slug' => 'required|string|max:150|unique:product_categories',
+            'parent_id' => 'required|exists:product_categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'sequence' => 'nullable|integer',
+        ]);
+
+        if ($request->missing('slug') || is_null($request->slug)) {
+            $validatedData['slug'] = Str::slug($validatedData['category_name']);
+        }
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('categories', 'public');
+            $validatedData['image'] = $imagePath;
+        }
+
+        $subcategory = ProductCategory::create($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Subcategory created successfully',
+            'subcategory' => $subcategory
+        ]);
+    }
+
+    public function ajaxUpdate(Request $request, $id)
+    {
+        $subcategory = ProductCategory::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'category_name' => 'required|string|max:150',
+            'slug' => 'required|string|max:150|unique:product_categories,slug,' . $id,
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'sequence' => 'nullable|integer',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($subcategory->image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($subcategory->image);
+            }
+            $imagePath = $request->file('image')->store('categories', 'public');
+            $validatedData['image'] = $imagePath;
+        }
+
+        $subcategory->update($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Subcategory updated successfully',
+            'subcategory' => $subcategory
+        ]);
+    }
+
+    public function ajaxDestroy($id)
+    {
+        $subcategory = ProductCategory::findOrFail($id);
+
+        if ($subcategory->image) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($subcategory->image);
+        }
+
+        $subcategory->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Subcategory deleted successfully'
+        ]);
     }
 }

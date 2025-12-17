@@ -15,6 +15,7 @@ class Product extends Model
         'category_id',
         'subcategory_id',
         'description',
+        'price',
         'client',
         'location',
         'start_date',
@@ -35,5 +36,10 @@ class Product extends Model
     public function subcategory()
     {
         return $this->belongsTo(ProductCategory::class, 'subcategory_id');
+    }
+
+    public function galleries()
+    {
+        return $this->hasMany(ProductGallery::class);
     }
 }
