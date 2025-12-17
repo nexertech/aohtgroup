@@ -9,8 +9,13 @@
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                         @if($service->banner_image)
                             <div class="h-64 md:h-80 w-full overflow-hidden">
-                                <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->service_name }}"
-                                    class="w-full h-full object-cover">
+                                @if(\Illuminate\Support\Str::startsWith($service->banner_image, ['http://', 'https://']))
+                                    <img src="{{ $service->banner_image }}" alt="{{ $service->service_name }}"
+                                        class="w-full h-full object-cover">
+                                @else
+                                    <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->service_name }}"
+                                        class="w-full h-full object-cover">
+                                @endif
                             </div>
                         @else
                             <div
@@ -23,8 +28,16 @@
                             <div class="flex items-center gap-4 mb-6">
                                 @if($service->icon)
                                     <div class="w-16 h-16 bg-indigo-50 rounded-lg flex items-center justify-center p-2">
-                                        <img src="{{ asset('storage/' . $service->icon) }}"
-                                            class="w-full h-full object-contain">
+                                        @if(\Illuminate\Support\Str::contains($service->icon, ['http://', 'https://']) || \Illuminate\Support\Str::contains($service->icon, ['.jpg', '.png', '.jpeg', '.svg', '.webp']))
+                                            @if(\Illuminate\Support\Str::startsWith($service->icon, ['http://', 'https://']))
+                                                <img src="{{ $service->icon }}" class="w-full h-full object-contain">
+                                            @else
+                                                <img src="{{ asset('storage/' . $service->icon) }}"
+                                                    class="w-full h-full object-contain">
+                                            @endif
+                                        @else
+                                            <i class="{{ $service->icon }}" style="font-size: 2rem; color: #4f46e5;"></i>
+                                        @endif
                                     </div>
                                 @endif
                                 <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900">{{ $service->service_name }}
@@ -37,7 +50,7 @@
 
                             <div class="mt-8 pt-8 border-t border-gray-100">
                                 <h3 class="text-lg font-bold text-gray-900 mb-4">Interested in this service?</h3>
-                                <a href="#"
+                                <a href="{{ route('frontend.contact') }}"
                                     class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors">
                                     Contact Us Today
                                 </a>
@@ -57,7 +70,15 @@
                                     @if($other->icon)
                                         <div
                                             class="w-10 h-10 flex-shrink-0 bg-indigo-50 rounded-md p-1 mr-3 flex items-center justify-center">
-                                            <img src="{{ asset('storage/' . $other->icon) }}" class="w-6 h-6 object-contain">
+                                            @if(\Illuminate\Support\Str::contains($other->icon, ['http://', 'https://']) || \Illuminate\Support\Str::contains($other->icon, ['.jpg', '.png', '.jpeg', '.svg', '.webp']))
+                                                @if(\Illuminate\Support\Str::startsWith($other->icon, ['http://', 'https://']))
+                                                    <img src="{{ $other->icon }}" class="w-6 h-6 object-contain">
+                                                @else
+                                                    <img src="{{ asset('storage/' . $other->icon) }}" class="w-6 h-6 object-contain">
+                                                @endif
+                                            @else
+                                                <i class="{{ $other->icon }}" style="font-size: 1.25rem; color: #4f46e5;"></i>
+                                            @endif
                                         </div>
                                     @else
                                         <div

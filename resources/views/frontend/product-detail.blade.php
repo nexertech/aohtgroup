@@ -32,9 +32,9 @@
 
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div class="grid grid-cols-1 lg:grid-cols-2">
-                <!-- Left: Thumbnails + Main Image -->
-                <div class="flex flex-col lg:flex-row gap-4 p-4 lg:p-6">
-                    <!-- Thumbnail Sidebar -->
+                <!-- Left: Product Images -->
+                <div class="h-full bg-gray-50 flex gap-4 p-4 lg:p-6" style="min-height: 800px;">
+                    <!-- Thumbnails (Vertical) -->
                     @php
                         $allImages = [];
                         if($product->main_image) {
@@ -44,35 +44,32 @@
                             $allImages[] = ['path' => 'storage/' . $gallery->image_path, 'is_main' => false, 'caption' => $gallery->caption];
                         }
                     @endphp
-                    
+
                     @if(count($allImages) > 1)
-                        <div class="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-96 order-2 lg:order-1">
-                            @foreach($allImages as $index => $image)
-                                <div class="thumbnail-item flex-shrink-0 w-20 h-20 rounded-lg border-2 cursor-pointer transition-all duration-200 overflow-hidden {{ $index === 0 ? 'border-indigo-600' : 'border-gray-200 hover:border-indigo-400' }}"
-                                     onclick="changeMainImage('{{ asset($image['path']) }}', this)">
-                                    <img src="{{ asset($image['path']) }}" 
-                                         alt="{{ $image['caption'] ?? $product->product_name }}" 
-                                         class="w-full h-full object-cover">
-                                </div>
-                            @endforeach
-                        </div>
+                    <div class="hidden lg:flex flex-col gap-4">
+                        @foreach($allImages as $index => $image)
+                            <div class="w-20 h-28 rounded-md overflow-hidden cursor-pointer border-2 {{ $index === 0 ? 'border-indigo-600' : 'border-transparent hover:border-gray-300' }}"
+                                 onclick="changeMainImage('{{ asset($image['path']) }}', this)">
+                                <img src="{{ asset($image['path']) }}" class="w-full h-full object-cover object-top">
+                            </div>
+                        @endforeach
+                    </div>
                     @endif
 
-                    <!-- Main Image Display -->
-                    <div class="flex-1 h-96 lg:h-auto bg-gray-200 relative rounded-lg overflow-hidden order-1 lg:order-2">
-                        @if($product->main_image || $product->galleries->count() > 0)
+                    <!-- Main Image Area -->
+                    <div class="flex-1 relative overflow-hidden rounded-lg bg-gray-200">
+                         @if($product->main_image || $product->galleries->count() > 0)
                             @php
                                 $displayImage = $product->main_image ?? 'storage/' . $product->galleries->first()->image_path;
                             @endphp
+                            <!-- Forced Portrait Aspect Ratio via Height -->
                             <img id="mainProductImage" 
                                  src="{{ asset($displayImage) }}" 
                                  alt="{{ $product->product_name }}" 
-                                 class="absolute inset-0 w-full h-full object-cover">
+                                 class="absolute inset-0 w-full h-full object-cover object-top">
                         @else
                             <div class="absolute inset-0 flex items-center justify-center text-gray-400">
-                                <svg class="w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                </svg>
+                                <svg class="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
                         @endif
                     </div>
@@ -116,11 +113,11 @@
                         {!! $product->description !!}
                     </div>
 
-                    <div class="mt-auto">
+                    <!-- <div class="mt-auto">
                         <a href="{{ route('frontend.contact') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                             Inquire About This Product
                         </a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -149,9 +146,9 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach($relatedProducts as $related)
                         <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
-                            <div class="h-48 bg-gray-200 overflow-hidden relative">
+                            <div class="h-[500px] bg-gray-200 overflow-hidden relative">
                                 @if($related->main_image)
-                                    <img src="{{ asset($related->main_image) }}" alt="{{ $related->product_name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                    <img src="{{ asset($related->main_image) }}" alt="{{ $related->product_name }}" class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
                                         <span>No Image</span>

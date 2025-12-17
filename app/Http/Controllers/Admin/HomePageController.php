@@ -24,7 +24,7 @@ class HomePageController extends Controller
     {
         $request->validate([
             'about' => 'nullable|string',
-            'about_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'about_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:3072',
         ]);
 
         $companyInfo = CompanyInfo::first();

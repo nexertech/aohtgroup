@@ -25,7 +25,7 @@ class AboutPageController extends Controller
             'mission' => 'nullable|string',
             'vision' => 'nullable|string',
             'history' => 'nullable|string',
-            'about_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'about_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
         ]);
 
         $companyInfo = CompanyInfo::first();

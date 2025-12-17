@@ -40,24 +40,26 @@ class HomeController extends Controller
     public function categoryDetail($slug)
     {
         $company = CompanyInfo::first();
-        $category = ProductCategory::where('slug', $slug)->firstOrFail();
+        // Eager load parent for breadcrumbs
+        $category = ProductCategory::where('slug', $slug)->with('parent')->firstOrFail();
 
         // Check if this is a leaf node (subcategory with no children)
         $subcategories = ProductCategory::where('parent_id', $category->id)->get();
 
-        // If no subcategories, it's a leaf node - show products
+        // If no subcategories, it's a leaf node - fetch products but use the main category detail view
+        $products = collect();
         if ($subcategories->count() === 0) {
-            $products = Product::where('category_id', $category->id)
-                ->orWhere('subcategory_id', $category->id)
+            $products = Product::where(function ($query) use ($category) {
+                $query->where('category_id', $category->id)
+                    ->orWhere('subcategory_id', $category->id);
+            })
                 ->where('status', 1)
                 ->latest()
                 ->get();
-
-            return view('frontend.subcategory-products', compact('company', 'category', 'products'));
         }
 
-        // Otherwise, show subcategories
-        return view('frontend.category-detail', compact('company', 'category', 'subcategories'));
+        // Just return the same consistent view
+        return view('frontend.category-detail', compact('company', 'category', 'subcategories', 'products'));
     }
 
     public function about()

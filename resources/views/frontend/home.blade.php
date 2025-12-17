@@ -217,13 +217,13 @@
     </div>
   </section>
 
- 
+
   <!-- FEATURED PROJECTS -->
   @if(!empty($products) && $products->count())
     <section class="projects-section">
       <div class="container-custom">
         <div class="section-header">
-          <h2 class="section-title">Featured Products</h2>
+          <h2 class="section-title"> Products</h2>
           <p class="section-subtitle">Showcasing our latest achievements and innovations</p>
         </div>
         <div class="projects-grid">
@@ -251,7 +251,7 @@
     </section>
   @endif
 
-   <!-- SERVICES SECTION -->
+  <!-- SERVICES SECTION -->
   @if(!empty($services) && $services->count())
     <section class="services-section">
       <div class="container-custom">
@@ -261,17 +261,41 @@
         </div>
         <div class="services-grid">
           @foreach($services as $service)
-            <div class="service-card">
-              <div class="service-icon">
-                @if($service->icon)
-                  <img src="{{ asset('storage/' . $service->icon) }}" alt="{{ $service->service_name }}">
-                @else
-                  <div class="icon-placeholder">{{ strtoupper(substr($service->service_name, 0, 1)) }}</div>
-                @endif
+            <div class="service-card hover:shadow-xl transition-all duration-300" style="padding: 0;">
+              @if($service->banner_image)
+                <div class="h-40 w-full overflow-hidden rounded-t-2xl">
+                  @if(\Illuminate\Support\Str::startsWith($service->banner_image, ['http://', 'https://']))
+                    <img src="{{ $service->banner_image }}" alt="{{ $service->service_name }}"
+                      class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                  @else
+                    <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->service_name }}"
+                      class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                  @endif
+                </div>
+              @endif
+
+              <div class="p-8">
+                <div class="service-icon">
+                  @if($service->icon)
+                    @if(\Illuminate\Support\Str::contains($service->icon, ['http://', 'https://']) || \Illuminate\Support\Str::contains($service->icon, ['.jpg', '.png', '.jpeg', '.svg', '.webp']))
+                      @if(\Illuminate\Support\Str::startsWith($service->icon, ['http://', 'https://']))
+                        <img src="{{ $service->icon }}" alt="{{ $service->service_name }}">
+                      @else
+                        <img src="{{ asset('storage/' . $service->icon) }}" alt="{{ $service->service_name }}">
+                      @endif
+                    @else
+                      <!-- Assume FontAwesome Class -->
+                      <i class="{{ $service->icon }}" style="font-size: 2rem; color: white;"></i>
+                    @endif
+                  @else
+                    <div class="icon-placeholder">{{ strtoupper(substr($service->service_name, 0, 1)) }}</div>
+                  @endif
+                </div>
+                <h3 class="service-title">{{ $service->service_name }}</h3>
+                <p class="service-description">{{ \Illuminate\Support\Str::limit(strip_tags($service->description), 140) }}
+                </p>
+                <a href="{{ route('frontend.services.detail', $service->slug) }}" class="service-link">Learn More →</a>
               </div>
-              <h3 class="service-title">{{ $service->service_name }}</h3>
-              <p class="service-description">{{ \Illuminate\Support\Str::limit(strip_tags($service->description), 140) }}</p>
-              <a href="{{ route('frontend.services.detail', $service->slug) }}" class="service-link">Learn More →</a>
             </div>
           @endforeach
         </div>

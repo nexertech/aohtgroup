@@ -43,12 +43,12 @@ class ProductController extends Controller
             'location' => 'nullable|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
-            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:3072',
             'status' => 'boolean',
         ]);
 
         $data = $request->all();
-        $data['slug'] = Str::slug($request->product_name);
+        $data['slug'] = $this->generateUniqueSlug($request->product_name);
 
         if ($request->hasFile('main_image')) {
             $imageName = time() . '.' . $request->main_image->extension();
@@ -92,12 +92,12 @@ class ProductController extends Controller
             'location' => 'nullable|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
-            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:3072',
             'status' => 'boolean',
         ]);
 
         $data = $request->all();
-        $data['slug'] = Str::slug($request->product_name);
+        $data['slug'] = $this->generateUniqueSlug($request->product_name, $product->id);
 
         // Handle checkbox for status (if unchecked it's absent from request)
         $data['status'] = $request->has('status') ? 1 : 0;
@@ -130,5 +130,27 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+    }
+
+    /**
+     * Generate a unique slug for the product.
+     *
+     * @param string $name
+     * @param int|null $ignoreId
+     * @return string
+     */
+    private function generateUniqueSlug($name, $ignoreId = null)
+    {
+        $slug = Str::slug($name);
+        $originalSlug = $slug;
+        $count = 1;
+
+        // Check if slug exists
+        while (Product::where('slug', $slug)->where('id', '!=', $ignoreId)->exists()) {
+            $slug = $originalSlug . '-' . $count;
+            $count++;
+        }
+
+        return $slug;
     }
 }

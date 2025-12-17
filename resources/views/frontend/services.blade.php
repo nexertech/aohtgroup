@@ -14,8 +14,13 @@
                             class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
                             @if($service->banner_image)
                                 <div class="h-48 overflow-hidden">
-                                    <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->service_name }}"
-                                        class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                                    @if(Str::startsWith($service->banner_image, ['http://', 'https://']))
+                                        <img src="{{ $service->banner_image }}" alt="{{ $service->service_name }}"
+                                            class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                                    @else
+                                        <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->service_name }}"
+                                            class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                                    @endif
                                 </div>
                             @endif
 
@@ -23,7 +28,15 @@
                                 <div class="flex items-center gap-4 mb-4">
                                     @if($service->icon)
                                         <div class="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
-                                            <img src="{{ asset('storage/' . $service->icon) }}" class="w-8 h-8 object-contain">
+                                            @if(\Illuminate\Support\Str::contains($service->icon, ['http://', 'https://']) || \Illuminate\Support\Str::contains($service->icon, ['.jpg', '.png', '.jpeg', '.svg', '.webp']))
+                                                @if(\Illuminate\Support\Str::startsWith($service->icon, ['http://', 'https://']))
+                                                    <img src="{{ $service->icon }}" class="w-8 h-8 object-contain">
+                                                @else
+                                                    <img src="{{ asset('storage/' . $service->icon) }}" class="w-8 h-8 object-contain">
+                                                @endif
+                                            @else
+                                                <i class="{{ $service->icon }} text-2xl"></i>
+                                            @endif
                                         </div>
                                     @endif
                                     <h3 class="text-2xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">

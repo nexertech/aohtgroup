@@ -44,7 +44,8 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-700">
-                                    <button onclick='openSubCategoryModal(@json($category))'
+                                    <button onclick="openSubCategoryModal({{ $category->id }}, this.getAttribute('data-name'))"
+                                        data-name="{{ $category->category_name }}"
                                         class="text-indigo-600 hover:text-indigo-900 hover:underline focus:outline-none">
                                         {{ $category->category_name }}
                                     </button>
@@ -53,16 +54,7 @@
                                 <td class="px-6 py-4 text-gray-600">{{ $category->sequence }}</td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-2">
-                                        <button onclick='openViewModal(@json($category))'
-                                            class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition duration-200"
-                                            title="View">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                        </button>
+                                        {{-- View Button Removed --}}
                                         <a href="{{ route('admin.product-categories.edit', $category->id) }}"
                                             class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition duration-200"
                                             title="Edit">
@@ -90,7 +82,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                                <td colspan="6" class="px-6 py-8 text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
@@ -112,51 +104,6 @@
             @endif
         </div>
     </div>
-    <!-- View Category Modal -->
-    <div id="viewCategoryModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title"
-        role="dialog" aria-modal="true">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm"></div>
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <div
-                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md">
-                <div class="bg-indigo-600 px-4 py-3 sm:px-6 flex justify-between items-center">
-                    <h3 class="text-base font-semibold leading-6 text-white" id="modal-title">Category Details</h3>
-                    <button type="button" class="text-indigo-100 hover:text-white focus:outline-none"
-                        onclick="closeViewModal()">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="px-4 py-5 sm:p-6">
-                    <div class="space-y-4">
-                        <div>
-                            <dt class="text-xs font-medium text-gray-500 uppercase">Category Name</dt>
-                            <dd class="mt-1 text-sm text-gray-900" id="modalCategoryName">--</dd>
-                        </div>
-                        <div>
-                            <dt class="text-xs font-medium text-gray-500 uppercase">Slug</dt>
-                            <dd class="mt-1 text-sm text-gray-900 font-mono" id="modalCategorySlug">--</dd>
-                        </div>
-                        <div>
-                            <dt class="text-xs font-medium text-gray-500 uppercase">Subcategories</dt>
-                            <dd class="mt-1 text-sm text-gray-900">
-                                <ul id="modalViewSubcategories" class="list-disc list-inside text-gray-600">
-                                    <!-- Populated by JS -->
-                                </ul>
-                                <span id="modalNoSubcategories" class="text-gray-400 italic hidden">None</span>
-                            </dd>
-                        </div>
-                    </div>
-                </div>
-                <!-- <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                                        <button type="button"
-                                                            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                                            onclick="closeViewModal()">Close</button>
-                                                    </div> -->
-            </div>
-        </div>
-    </div>
 
     <!-- Subcategory Modal -->
     <div id="subCategoryModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog"
@@ -164,64 +111,134 @@
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm"></div>
         <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <div
-                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                <div class="bg-indigo-600 px-4 py-3 sm:px-6 flex justify-between items-center">
-                    <h3 class="text-base font-semibold leading-6 text-white" id="subModalTitle">Subcategories</h3>
-                    <button type="button" class="text-indigo-100 hover:text-white focus:outline-none"
-                        onclick="closeSubCategoryModal()">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+                class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-5xl">
+
+                <!-- Expanded Header with Add Button -->
+                <div class="px-6 py-6 border-b border-gray-100 flex justify-between items-center bg-white">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Subcategories</h3>
+                        <p class="text-sm text-gray-500 mt-1">Manage subcategories for <span
+                                class="font-semibold text-indigo-600" id="subModalSubtitle">--</span></p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button type="button" onclick="toggleForm(true)"
+                            class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                            + Add Subcategory
+                        </button>
+                        <button type="button" class="text-gray-400 hover:text-gray-500 transition-colors"
+                            onclick="closeSubCategoryModal()">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-                <div class="px-4 py-5 sm:p-6">
-                    <!-- Add Subcategory Form -->
-                    <div class="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                        <h4 class="text-sm font-medium text-gray-900 mb-3">Add New Subcategory</h4>
-                        <form action="{{ route('admin.product-categories.store') }}" method="POST"
-                            enctype="multipart/form-data">
+
+                <div class="p-6 bg-gray-50/30">
+
+                    <!-- Add/Edit Form (Collapsible) -->
+                    <div id="formContainer"
+                        class="hidden mb-6 bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-300">
+                        <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-2">
+                            <h4 class="text-lg font-semibold text-gray-800" id="formTitle">Add New Subcategory</h4>
+                            <button type="button" onclick="toggleForm(false)" class="text-gray-400 hover:text-red-500">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <form id="subcategoryForm" onsubmit="saveSubcategory(event)" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="parent_id" id="modalParentId">
-                            <div class="space-y-3">
+                            <input type="hidden" name="subcategory_id" id="modalSubcategoryId">
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="modalCategoryNameInput"
-                                        class="block text-xs font-medium text-gray-700 mb-1">Name</label>
-                                    <input type="text" name="category_name" id="modalCategoryNameInput"
-                                        placeholder="Category Name" required
-                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Name <span
+                                            class="text-red-500">*</span></label>
+                                    <input type="text" name="category_name" id="modalCategoryNameInput" required
+                                        class="block w-full rounded-lg border-gray-300 bg-gray-50 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 </div>
 
                                 <div>
-                                    <label for="modalImageInput" class="block text-xs font-medium text-gray-700 mb-1">Image
-                                        (Optional)</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+                                    <input type="text" name="slug" id="modalSlugInput" placeholder="Auto-generated"
+                                        class="block w-full rounded-lg border-gray-300 bg-gray-50 text-gray-500 cursor-not-allowed focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Image</label>
                                     <input type="file" name="image" id="modalImageInput" accept="image/*"
-                                        class="block w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                                 </div>
 
-                                <div class="flex gap-2">
-                                    <div class="grow">
-                                        <label for="modalSlugInput"
-                                            class="block text-xs font-medium text-gray-700 mb-1">Slug</label>
-                                        <input type="text" name="slug" id="modalSlugInput" placeholder="Slug (Optional)"
-                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    </div>
-                                    <div class="flex items-end">
-                                        <button type="submit"
-                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Add
-                                        </button>
-                                    </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Sequence</label>
+                                    <input type="number" name="sequence" id="modalSequenceInput" placeholder="0"
+                                        class="block w-full rounded-lg border-gray-300 bg-gray-50 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 </div>
+                            </div>
+
+                            <div class="flex justify-end gap-3 mt-6">
+                                <button type="button" onclick="toggleForm(false)"
+                                    class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Cancel
+                                </button>
+                                <button type="submit" id="saveButton"
+                                    class="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Add Subcategory
+                                </button>
                             </div>
                         </form>
                     </div>
 
-                    <h4 class="text-sm font-medium text-gray-900 mb-2">Existing Subcategories</h4>
-                    <ul id="subCategoryList" class="divide-y divide-gray-100 border-t border-gray-200">
-                        <!-- List items will be injected here -->
-                    </ul>
-                    <div id="noSubCategories" class="text-center text-gray-500 py-4 hidden">
-                        No subcategories found.
+                    <!-- Table Section -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr
+                                        class="bg-gray-50/50 border-b border-gray-100 text-xs uppercase text-gray-400 font-bold tracking-wider">
+                                        <th class="px-6 py-4">#</th>
+                                        <th class="px-6 py-4">Image</th>
+                                        <th class="px-6 py-4">Name</th>
+                                        <th class="px-6 py-4">Parent Category</th>
+                                        <th class="px-6 py-4">Slug</th>
+                                        <th class="px-6 py-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="subCategoryTableBody" class="divide-y divide-gray-100">
+                                    <!-- Rows injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- States -->
+                        <div id="loadingSubcategories" class="hidden text-center py-12 text-indigo-600">
+                            <svg class="animate-spin h-8 w-8 mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                                </circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            <span class="text-sm font-medium">Loading Data...</span>
+                        </div>
+
+                        <div id="noSubCategories"
+                            class="hidden flex flex-col items-center justify-center py-12 text-center">
+                            <div class="bg-gray-50 rounded-full p-4 mb-3">
+                                <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h7" />
+                                </svg>
+                            </div>
+                            <h3 class="text-gray-900 font-medium text-sm">No subcategories found</h3>
+                            <p class="text-gray-500 text-xs mt-1">Get started by adding a new subcategory.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -229,58 +246,21 @@
     </div>
 
     <script>
-        function openViewModal(category) {
-            document.getElementById('modalCategoryName').innerText = category.category_name;
-            document.getElementById('modalCategorySlug').innerText = category.slug;
+        // --- View Modal Logic Removed ---
 
-            const subList = document.getElementById('modalViewSubcategories');
-            const noSubMsg = document.getElementById('modalNoSubcategories');
-            subList.innerHTML = '';
+        // --- Subcategory AJAX Logic ---
+        let currentParentId = null;
 
-            if (category.children && category.children.length > 0) {
-                noSubMsg.classList.add('hidden');
-                category.children.forEach(child => {
-                    let li = document.createElement('li');
-                    li.innerText = child.category_name;
-                    subList.appendChild(li);
-                });
-            } else {
-                noSubMsg.classList.remove('hidden');
-            }
+        function openSubCategoryModal(id, name) {
+            currentParentId = id;
+            document.getElementById('subModalSubtitle').innerText = name;
+            document.getElementById('modalParentId').value = id;
 
-            document.getElementById('viewCategoryModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            toggleForm(false);
+            document.getElementById('subcategoryForm').reset();
+            document.getElementById('modalSubcategoryId').value = '';
 
-            document.querySelector('#viewCategoryModal .backdrop-blur-sm').addEventListener('click', closeViewModal);
-        }
-
-        function closeViewModal() {
-            document.getElementById('viewCategoryModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-        function openSubCategoryModal(category) {
-            document.getElementById('subModalTitle').innerText = 'Subcategories of ' + category.category_name;
-            document.getElementById('modalParentId').value = category.id; // Set hidden parent_id
-
-            const list = document.getElementById('subCategoryList');
-            list.innerHTML = ''; // Clear existing
-
-            const noSubs = document.getElementById('noSubCategories');
-
-            if (category.children && category.children.length > 0) {
-                noSubs.classList.add('hidden');
-                category.children.forEach(child => {
-                    const li = document.createElement('li');
-                    li.className = 'py-3 flex justify-between items-center';
-                    li.innerHTML = `
-                                                    <span class="text-sm font-medium text-gray-900">${child.category_name}</span>
-                                                    <span class="text-xs text-gray-500 font-mono">${child.slug}</span>
-                                                `;
-                    list.appendChild(li);
-                });
-            } else {
-                noSubs.classList.remove('hidden');
-            }
+            fetchSubcategories(id);
 
             document.getElementById('subCategoryModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -290,6 +270,158 @@
         function closeSubCategoryModal() {
             document.getElementById('subCategoryModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
+        }
+
+        function fetchSubcategories(parentId) {
+            const tbody = document.getElementById('subCategoryTableBody');
+            const noSubs = document.getElementById('noSubCategories');
+            const loading = document.getElementById('loadingSubcategories');
+            const parentName = document.getElementById('subModalSubtitle').innerText;
+
+            tbody.innerHTML = '';
+            noSubs.classList.add('hidden');
+            loading.classList.remove('hidden');
+
+            fetch("{{ url('admin/get-subcategories') }}/" + parentId)
+                .then(response => response.json())
+                .then(data => {
+                    loading.classList.add('hidden');
+
+                    if (data.length > 0) {
+                        data.forEach((sub, index) => {
+                            const tr = document.createElement('tr');
+                            tr.className = 'hover:bg-gray-50 transition-colors';
+
+                            const editBtn = `<button type="button" onclick='editSubcategory(${JSON.stringify(sub).replace(/'/g, "&#39;")})' class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition duration-200" title="Edit"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></button>`;
+
+                            const deleteBtn = `<button type="button" onclick="deleteSubcategory(${sub.id})" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition duration-200" title="Delete"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>`;
+
+                            const imageHtml = sub.image
+                                ? `<img src="/storage/${sub.image}" class="w-10 h-10 rounded-full object-cover border border-gray-100">`
+                                : `<div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-400 font-bold">NA</div>`;
+
+                            const parentBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">${parentName}</span>`;
+
+                            tr.innerHTML = `
+                                    <td class="px-6 py-4 text-gray-500 text-sm whitespace-nowrap">${index + 1}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">${imageHtml}</td>
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${sub.category_name}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">${parentBadge}</td>
+                                    <td class="px-6 py-4 text-gray-500 text-sm font-mono whitespace-nowrap">${sub.slug}</td>
+                                    <td class="px-6 py-4 text-right whitespace-nowrap">
+                                        <div class="flex items-center justify-end gap-2">
+                                            ${editBtn}
+                                            ${deleteBtn}
+                                        </div>
+                                    </td>
+                                `;
+                            tbody.appendChild(tr);
+                        });
+                    } else {
+                        noSubs.classList.remove('hidden');
+                    }
+                })
+                .catch(err => {
+                    console.error('Error fetching subcategories:', err);
+                    loading.classList.add('hidden');
+                });
+        }
+
+        function toggleForm(show) {
+            const container = document.getElementById('formContainer');
+            if (show) {
+                container.classList.remove('hidden');
+                // Reset edit mode titles just in case
+                if (document.getElementById('modalSubcategoryId').value === '') {
+                    document.getElementById('formTitle').innerText = 'Add New Subcategory';
+                    document.getElementById('saveButton').innerText = 'Add Subcategory';
+                }
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        async function saveSubcategory(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('subcategoryForm');
+            const formData = new FormData(form);
+            const subId = document.getElementById('modalSubcategoryId').value;
+
+            let url = "{{ route('admin.product-categories.ajax-store') }}";
+            let method = 'POST';
+
+            if (subId) {
+                url = "{{ url('admin/product-categories/ajax-update') }}/" + subId;
+                formData.append('_method', 'PUT');
+            }
+
+            const saveBtn = document.getElementById('saveButton');
+            const originalText = saveBtn.innerText;
+            saveBtn.disabled = true;
+            saveBtn.innerText = 'Saving...';
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST', // Always POST for Laravel FormData with _method
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    toggleForm(false);
+                    document.getElementById('subcategoryForm').reset();
+                    document.getElementById('modalSubcategoryId').value = '';
+                    fetchSubcategories(currentParentId);
+                } else {
+                    alert('Error: ' + (result.message || 'Unknown error'));
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Something went wrong.');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerText = originalText;
+            }
+        }
+
+        function editSubcategory(sub) {
+            document.getElementById('formTitle').innerText = 'Edit Subcategory';
+            document.getElementById('saveButton').innerText = 'Update Subcategory';
+
+            document.getElementById('modalSubcategoryId').value = sub.id;
+            document.getElementById('modalCategoryNameInput').value = sub.category_name;
+            document.getElementById('modalSlugInput').value = sub.slug;
+            document.getElementById('modalSequenceInput').value = sub.sequence || '';
+
+            toggleForm(true);
+            document.getElementById('formContainer').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteSubcategory(id) {
+            if (!confirm('Are you sure you want to delete this subcategory?')) return;
+
+            fetch("{{ url('admin/product-categories/ajax-destroy') }}/" + id, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        fetchSubcategories(currentParentId);
+                    } else {
+                        alert('Failed to delete.');
+                    }
+                })
+                .catch(err => console.error(err));
         }
 
         document.getElementById('modalCategoryNameInput').addEventListener('input', function () {

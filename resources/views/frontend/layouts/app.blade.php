@@ -12,6 +12,8 @@
 
   <!-- Tailwind CDN -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
@@ -185,7 +187,7 @@
       overflow: hidden;
       /* margin-top: 80px; Removed because main has padding-top now */
       width: 100%;
-      height: 800px;
+      height: 500px;
     }
 
     .slides {
@@ -713,7 +715,7 @@
 
     .project-image {
       width: 100%;
-      height: 220px;
+      height: 500px;
       overflow: hidden;
     }
 
@@ -721,6 +723,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: top;
       transition: transform 0.4s;
     }
 
