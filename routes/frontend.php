@@ -28,6 +28,7 @@ Route::get('/category/{slug}', [HomeController::class, 'categoryDetail'])->name(
 Route::get('/services', [HomeController::class, 'services'])->name('frontend.services');
 Route::get('/services/{slug}', [HomeController::class, 'serviceDetail'])->name('frontend.services.detail');
 Route::get('/careers', [HomeController::class, 'careers'])->name('frontend.careers');
+Route::post('/careers/apply', [HomeController::class, 'applyJob'])->name('frontend.careers.apply');
 Route::get('/news', [HomeController::class, 'news'])->name('frontend.news');
 Route::get('/news/{id}', [HomeController::class, 'newsDetail'])->name('frontend.news.detail');
 Route::get('/products/{slug}', [HomeController::class, 'productDetail'])->name('frontend.products.detail');

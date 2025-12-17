@@ -20,7 +20,7 @@ class HomeController extends Controller
     {
         $sliders = Slider::where('status', 1)->orderBy('sequence')->get();
         $services = Service::where('status', 1)->orderBy('sequence')->get();
-        $products = Product::where('status', 1)->latest()->take(6)->get();
+        $products = Product::where('status', 1)->latest()->get();
         $blogs = Blog::where('status', 1)->latest('published_at')->take(3)->get();
         $teamMembers = TeamMember::orderBy('sequence')->take(4)->get();
         $categories = ProductCategory::whereNull('parent_id')->orderBy('sequence')->take(7)->get();
@@ -76,8 +76,9 @@ class HomeController extends Controller
     public function companies()
     {
         $company = CompanyInfo::first();
+        $companies = CompanyInfo::latest()->get(); // Fetch all company info records
         $clients = Client::latest()->get();
-        return view('frontend.companies', compact('company', 'clients'));
+        return view('frontend.companies', compact('company', 'companies', 'clients'));
     }
 
     public function services()
@@ -98,7 +99,7 @@ class HomeController extends Controller
     public function careers()
     {
         $company = CompanyInfo::first();
-        $jobs = JobOpening::where('status', 'Open')->orWhere('status', 'Active')->latest()->get();
+        $jobs = JobOpening::where('status', 1)->latest()->get();
         // Note: Check JobOpening status values. Assuming 'Open' or boolean or 'Active'. 
         // Model definition didn't show enum, but let's assume 'Active' or 1 based on other models.
         // Actually Service has status 1. Let's check JobOpening status type in db if possible, but safely we can just fetch all for now or check valid statuses.
@@ -135,6 +136,28 @@ class HomeController extends Controller
             ->get();
 
         return view('frontend.product-detail', compact('company', 'product', 'relatedProducts'));
+    }
+
+    public function applyJob(Request $request)
+    {
+        $request->validate([
+            'job_id' => 'required|exists:job_openings,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:100',
+            'cv_file' => 'required|file|mimes:pdf,doc,docx|max:2048',
+            'cover_letter' => 'nullable|string',
+        ]);
+
+        $data = $request->except('cv_file');
+
+        if ($request->hasFile('cv_file')) {
+            $data['cv_file'] = $request->file('cv_file')->store('job_applications', 'public');
+        }
+
+        \App\Models\JobApplication::create($data);
+
+        return redirect()->back()->with('success', 'Application submitted successfully. We will get back to you soon.');
     }
 
     public function contact()

@@ -3,6 +3,24 @@
 @section('content')
     <div class="bg-gray-100 py-12">
         <div class="container-custom">
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">
+                    <strong class="font-bold">Success!</strong>
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+                    <strong class="font-bold">Error!</strong>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <h1 class="text-4xl font-extrabold text-gray-900 mb-6 text-center">Careers</h1>
             <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">Join our dynamic team and help us shape the future.
             </p>
@@ -40,7 +58,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <button
+                                <button onclick="openApplyModal({{ $job->id }}, '{{ addslashes($job->title) }}')"
                                     class="mt-4 md:mt-0 bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
                                     Apply Now
                                 </button>
@@ -66,4 +84,88 @@
             @endif
         </div>
     </div>
+
+    <!-- Application Modal -->
+    <div id="applyModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+        aria-modal="true">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeApplyModal()"></div>
+
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <div
+                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-xl font-semibold leading-6 text-gray-900" id="modal-title">Apply for <span
+                                    id="modalJobTitle" class="text-indigo-600"></span></h3>
+                            <div class="mt-4">
+                                <form action="{{ route('frontend.careers.apply') }}" method="POST"
+                                    enctype="multipart/form-data" id="applyForm">
+                                    @csrf
+                                    <input type="hidden" name="job_id" id="modalJobId">
+
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label for="name" class="block text-sm font-medium text-gray-700">Full
+                                                Name</label>
+                                            <input type="text" name="name" id="name" required
+                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2">
+                                        </div>
+
+                                        <div>
+                                            <label for="email" class="block text-sm font-medium text-gray-700">Email
+                                                Address</label>
+                                            <input type="email" name="email" id="email" required
+                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2">
+                                        </div>
+
+                                        <div>
+                                            <label for="phone" class="block text-sm font-medium text-gray-700">Phone
+                                                Number</label>
+                                            <input type="text" name="phone" id="phone"
+                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2">
+                                        </div>
+
+                                        <div>
+                                            <label for="cv_file" class="block text-sm font-medium text-gray-700">Upload CV /
+                                                Resume (PDF, DOC)</label>
+                                            <input type="file" name="cv_file" id="cv_file" required accept=".pdf,.doc,.docx"
+                                                class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                        </div>
+
+                                        <div>
+                                            <label for="cover_letter" class="block text-sm font-medium text-gray-700">Cover
+                                                Letter (Optional)</label>
+                                            <textarea name="cover_letter" id="cover_letter" rows="3"
+                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+                                        <button type="submit"
+                                            class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2">Submit
+                                            Application</button>
+                                        <button type="button" onclick="closeApplyModal()"
+                                            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openApplyModal(jobId, jobTitle) {
+            document.getElementById('modalJobId').value = jobId;
+            document.getElementById('modalJobTitle').innerText = jobTitle;
+            document.getElementById('applyModal').classList.remove('hidden');
+        }
+
+        function closeApplyModal() {
+            document.getElementById('applyModal').classList.add('hidden');
+        }
+    </script>
 @endsection

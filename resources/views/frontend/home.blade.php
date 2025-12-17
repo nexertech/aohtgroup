@@ -227,26 +227,69 @@
           <p class="section-subtitle">Showcasing our latest achievements and innovations</p>
         </div>
         <div class="projects-grid">
-          @foreach($products as $product)
-            <div class="project-card">
+          @foreach($products as $index => $product)
+            <div class="project-card product-item" style="{{ $index >= 6 ? 'display: none;' : '' }}">
               <div class="project-image">
-                @if($product->main_image)
-                  <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}">
-                @else
-                  <div class="image-placeholder">
-                    <span>📦</span>
-                  </div>
-                @endif
+                <a href="{{ route('frontend.products.detail', $product->slug) }}" class="block w-full h-full">
+                  @if($product->main_image)
+                    <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}">
+                  @else
+                    <div class="image-placeholder">
+                      <span>📦</span>
+                    </div>
+                  @endif
+                </a>
               </div>
               <div class="project-content">
                 <h3 class="project-title">{{ $product->product_name }}</h3>
                 <p class="project-description">{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 120) }}
                 </p>
-                <a href="{{ route('frontend.products.detail', $product->slug) }}" class="project-link">View Details →</a>
+                <!-- View Details link removed as requested -->
               </div>
             </div>
           @endforeach
         </div>
+
+        @if($products->count() > 6)
+          <div class="text-center mt-8">
+            <button id="toggleProductsBtn"
+              class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10 transition duration-150 ease-in-out">
+              Show More
+            </button>
+          </div>
+
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              const toggleBtn = document.getElementById('toggleProductsBtn');
+              const products = document.querySelectorAll('.product-item');
+
+              if (toggleBtn) {
+                toggleBtn.addEventListener('click', function () {
+                  const isShowingAll = this.innerText === 'Show Less';
+
+                  if (isShowingAll) {
+                    // Hide products > 6
+                    products.forEach((el, index) => {
+                      if (index >= 6) el.style.display = 'none';
+                    });
+                    this.innerText = 'Show More';
+
+                    // Scroll back to projects section
+                    document.querySelector('.projects-section').scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    // Show all products
+                    products.forEach(el => el.style.display = 'block'); // assuming default display is block or compatible with grid
+                    // If grid container uses default flow for items, removing 'none' usually works. 
+                    // But specifically for grid items, 'display: block' might break layout if not careful? 
+                    // Actually, 'display: unset' or just empty string is safer for "reverting to css".
+                    products.forEach(el => el.style.display = '');
+                    this.innerText = 'Show Less';
+                  }
+                });
+              }
+            });
+          </script>
+        @endif
       </div>
     </section>
   @endif
@@ -305,28 +348,28 @@
 
 
   <!-- STATISTICS SECTION -->
-  <!-- <section class="stats-section"> -->
-  <div class="container-custom">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-number">5000+</div>
-        <div class="stat-label">Textile Products</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">100+</div>
-        <div class="stat-label">Global Partners</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">50+</div>
-        <div class="stat-label">Countries Served</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">10M+</div>
-        <div class="stat-label">Garments Delivered</div>
-      </div>
-    </div>
-  </div>
-  </section>
+  <!-- <section class="stats-section">
+          <div class="container-custom">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-number">5000+</div>
+                <div class="stat-label">Textile Products</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">Global Partners</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Countries Served</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">10M+</div>
+                <div class="stat-label">Garments Delivered</div>
+              </div>
+            </div>
+          </div>
+        </section> -->
 
   <!-- TEAM MEMBERS SECTION -->
   @if(!empty($teamMembers) && $teamMembers->count())
@@ -338,7 +381,8 @@
         </div>
         <div class="team-grid">
           @foreach($teamMembers as $member)
-            <div class="team-card">
+            <div class="team-card cursor-pointer transform hover:scale-105 transition duration-300"
+              onclick="openTeamModal('{{ $member->name }}', '{{ $member->designation ?? $member->position }}', '{{ $member->photo ? asset($member->photo) : '' }}', '{{ e($member->bio) }}', '{{ $member->facebook }}', '{{ $member->linkedin }}', '{{ $member->instagram }}')">
               <div class="team-image">
                 @if($member->photo)
                   <img src="{{ asset($member->photo) }}" alt="{{ $member->name }}">
@@ -350,7 +394,7 @@
               </div>
               <div class="team-content">
                 <h3 class="team-name">{{ $member->name }}</h3>
-                <p class="team-position">{{ $member->position }}</p>
+                <p class="team-position">{{ $member->designation ?? $member->position }}</p>
                 @if($member->bio)
                   <p class="team-bio">{{ \Illuminate\Support\Str::limit(strip_tags($member->bio), 100) }}</p>
                 @endif
@@ -361,6 +405,68 @@
       </div>
     </section>
   @endif
+
+
+  <!-- Team Member Modal -->
+  <div id="teamModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+    aria-modal="true">
+    <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity"
+      style="backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);" onclick="closeTeamModal()"></div>
+
+    <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+      <div
+        class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-xl">
+
+        <div class="bg-indigo-600 px-4 py-4 sm:px-6 flex justify-between items-center">
+          <h3 class="text-lg font-bold text-white" id="modal-team-name">Member Name</h3>
+          <button type="button" class="text-white hover:text-gray-200 focus:outline-none" onclick="closeTeamModal()">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="px-6 py-6 max-h-[70vh] overflow-y-auto">
+          <div class="flex flex-col items-center mb-6">
+            <!-- Large Image -->
+            <div id="modal-team-image-container"
+              class="h-32 w-32 rounded-full overflow-hidden border-4 border-white shadow-lg mb-4">
+              <img id="modal-team-image" src="" alt="Team Member" class="w-full h-full object-cover hidden">
+              <div id="modal-team-placeholder"
+                class="w-full h-full bg-indigo-100 flex items-center justify-center text-4xl font-bold text-indigo-500 hidden">
+                <span id="modal-team-initials"></span>
+              </div>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900" id="modal-team-name-display"></h2>
+            <p class="text-indigo-600 font-medium" id="modal-team-designation"></p>
+
+            <!-- Social Links -->
+            <div class="flex space-x-4 mt-4" id="modal-team-socials">
+              <a id="modal-team-facebook" href="#" target="_blank" class="text-gray-400 hover:text-blue-600 hidden">
+                <i class="fab fa-facebook fa-lg"></i>
+              </a>
+              <a id="modal-team-linkedin" href="#" target="_blank" class="text-gray-400 hover:text-blue-700 hidden">
+                <i class="fab fa-linkedin fa-lg"></i>
+              </a>
+              <a id="modal-team-instagram" href="#" target="_blank" class="text-gray-400 hover:text-pink-600 hidden">
+                <i class="fab fa-instagram fa-lg"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="prose max-w-none text-gray-600 text-justify">
+            <p id="modal-team-bio"></p>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 px-6 py-4 flex justify-end">
+          <button type="button"
+            class="inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:text-sm"
+            onclick="closeTeamModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- LATEST BLOGS -->
   @if(!empty($blogs) && $blogs->count())
@@ -397,5 +503,64 @@
     </section>
   @endif
 
+  <script>
+    function openTeamModal(name, designation, photo, bio, facebook, linkedin, instagram) {
+      document.getElementById('modal-team-name').innerText = name;
+      document.getElementById('modal-team-name-display').innerText = name;
+      document.getElementById('modal-team-designation').innerText = designation;
 
+      // Handle Photo
+      const img = document.getElementById('modal-team-image');
+      const placeholder = document.getElementById('modal-team-placeholder');
+      const initials = document.getElementById('modal-team-initials');
+
+      if (photo) {
+        img.src = photo;
+        img.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        initials.innerText = name.charAt(0).toUpperCase();
+      }
+
+      // Handle Bio (interpret HTML entities roughly, but bio is usually simple text here)
+      const textarea = document.createElement('textarea');
+      textarea.innerHTML = bio;
+      document.getElementById('modal-team-bio').innerHTML = textarea.value; // Use innerHTML to render HTML tags if any
+
+      // Handle Social Links
+      const fbLink = document.getElementById('modal-team-facebook');
+      if (facebook) {
+        fbLink.href = facebook;
+        fbLink.classList.remove('hidden');
+      } else {
+        fbLink.classList.add('hidden');
+      }
+
+      const liLink = document.getElementById('modal-team-linkedin');
+      if (linkedin) {
+        liLink.href = linkedin;
+        liLink.classList.remove('hidden');
+      } else {
+        liLink.classList.add('hidden');
+      }
+
+      const instaLink = document.getElementById('modal-team-instagram');
+      if (instagram) {
+        instaLink.href = instagram;
+        instaLink.classList.remove('hidden');
+      } else {
+        instaLink.classList.add('hidden');
+      }
+
+      document.getElementById('teamModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeTeamModal() {
+      document.getElementById('teamModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+  </script>
 @endsection

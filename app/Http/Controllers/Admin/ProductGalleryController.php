@@ -36,7 +36,7 @@ class ProductGalleryController extends Controller
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'image_path' => 'required',
-            'image_path.*' => 'image|mimes:jpeg,png,jpg,gif|max:3072',
+            'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'caption' => 'nullable|string|max:255',
         ]);
 
@@ -80,7 +80,7 @@ class ProductGalleryController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'caption' => 'nullable|string|max:255',
         ]);
 

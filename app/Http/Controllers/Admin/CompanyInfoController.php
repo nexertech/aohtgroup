@@ -76,13 +76,38 @@ class CompanyInfoController extends Controller
             'mission' => 'nullable|string',
             'vision' => 'nullable|string',
             'history' => 'nullable|string',
-            'logo' => 'nullable|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'about_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:100',
             'address' => 'nullable|string',
         ]);
 
-        $companyInfo->update($validatedData);
+        $data = $validatedData;
+
+        if ($request->hasFile('logo')) {
+            if ($companyInfo->logo && \Illuminate\Support\Facades\Storage::disk('public')->exists($companyInfo->logo)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($companyInfo->logo);
+            }
+            $imageName = time() . '_logo.' . $request->logo->extension();
+            $path = $request->logo->storeAs('images/company', $imageName, 'public');
+            $data['logo'] = $path;
+        } else {
+            unset($data['logo']); // Keep old logo if not uploaded
+        }
+
+        if ($request->hasFile('about_image')) {
+            if ($companyInfo->about_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($companyInfo->about_image)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($companyInfo->about_image);
+            }
+            $imageName = time() . '_about.' . $request->about_image->extension();
+            $path = $request->about_image->storeAs('images/company', $imageName, 'public');
+            $data['about_image'] = $path;
+        } else {
+            unset($data['about_image']); // Keep old about_image if not uploaded
+        }
+
+        $companyInfo->update($data);
 
         return redirect()->route('admin.company-info.index')->with('success', 'Company Info updated successfully.');
     }

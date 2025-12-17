@@ -34,7 +34,7 @@ class SliderController extends Controller
         $request->validate([
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'button_text' => 'nullable|string|max:100',
             'button_link' => 'nullable|string|max:255',
             'sequence' => 'required|integer',
@@ -76,7 +76,7 @@ class SliderController extends Controller
         $request->validate([
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:3072',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'button_text' => 'nullable|string|max:100',
             'button_link' => 'nullable|string|max:255',
             'sequence' => 'required|integer',

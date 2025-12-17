@@ -113,11 +113,20 @@
                         {!! $product->description !!}
                     </div>
 
-                    <!-- <div class="mt-auto">
-                        <a href="{{ route('frontend.contact') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                            Inquire About This Product
-                        </a>
-                    </div> -->
+                    <div class="mt-8 flex gap-4">
+                        <button class="inline-flex items-center px-8 py-4 border border-transparent text-lg font-bold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" onclick="addToCart()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            Add to Cart
+                        </button>
+                    </div>
+
+                    <script>
+                        function addToCart() {
+                            alert('Product added to cart! (Functionality pending)');
+                        }
+                    </script>
                 </div>
             </div>
         </div>

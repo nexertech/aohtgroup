@@ -43,7 +43,7 @@ class ProductController extends Controller
             'location' => 'nullable|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
-            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:3072',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'status' => 'boolean',
         ]);
 
@@ -92,7 +92,7 @@ class ProductController extends Controller
             'location' => 'nullable|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
-            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:3072',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'status' => 'boolean',
         ]);
 

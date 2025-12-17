@@ -10,10 +10,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                     <div>
                         @if($company->about_image)
-                            @if(file_exists(public_path('storage/' . $company->about_image)))
-                                <img src="{{ asset('storage/' . $company->about_image) }}" alt="About Us" class="rounded-lg shadow-md w-full h-auto object-cover">
+                            @if(\Illuminate\Support\Str::startsWith($company->about_image, ['http://', 'https://']))
+                                <img src="{{ $company->about_image }}" alt="About Us"
+                                    class="rounded-lg shadow-md w-full h-auto object-cover">
+                            @elseif(file_exists(public_path('storage/' . $company->about_image)))
+                                <img src="{{ asset('storage/' . $company->about_image) }}" alt="About Us"
+                                    class="rounded-lg shadow-md w-full h-auto object-cover">
                             @elseif(file_exists(public_path($company->about_image)))
-                                <img src="{{ asset($company->about_image) }}" alt="About Us" class="rounded-lg shadow-md w-full h-auto object-cover">
+                                <img src="{{ asset($company->about_image) }}" alt="About Us"
+                                    class="rounded-lg shadow-md w-full h-auto object-cover">
                             @else
                                 <!-- Fallback if file not found -->
                                 <div class="bg-gray-200 rounded-lg h-64 flex items-center justify-center text-gray-500 flex-col">
