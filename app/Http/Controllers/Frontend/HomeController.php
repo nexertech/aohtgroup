@@ -37,6 +37,14 @@ class HomeController extends Controller
         return view('frontend.categories', compact('categories', 'company'));
     }
 
+    public function products()
+    {
+        $company = CompanyInfo::first();
+        $products = Product::where('status', 1)->with('category')->latest()->get();
+        return view('frontend.products', compact('company', 'products'));
+    }
+
+
     public function categoryDetail($slug)
     {
         $company = CompanyInfo::first();
@@ -141,7 +149,8 @@ class HomeController extends Controller
     public function productDetail($slug)
     {
         $company = CompanyInfo::first();
-        $product = Product::where('slug', $slug)->with(['category', 'galleries'])->firstOrFail();
+        $product = Product::where('slug', $slug)->with(['category', 'subcategory', 'galleries'])->firstOrFail();
+
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->take(4)

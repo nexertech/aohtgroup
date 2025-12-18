@@ -5,15 +5,16 @@
     <div class="container-custom">
         <!-- Breadcrumb / Header -->
         <div class="mb-8 text-center">
-            @if($category->parent)
-                <nav class="flex justify-center mb-4 text-sm font-medium text-gray-500">
-                    <a href="{{ route('home') }}" class="hover:text-indigo-600 transition-colors">Home</a>
-                    <span class="mx-2">/</span>
+            <nav class="flex justify-center mb-4 text-sm font-medium text-gray-500">
+                <a href="{{ route('home') }}" class="hover:text-indigo-600 transition-colors">Home</a>
+                <span class="mx-2">/</span>
+                @if($category->parent)
                     <a href="{{ route('frontend.category.detail', $category->parent->slug) }}" class="hover:text-indigo-600 transition-colors">{{ $category->parent->category_name }}</a>
                     <span class="mx-2">/</span>
-                    <span class="text-indigo-600">{{ $category->category_name }}</span>
-                </nav>
-            @endif
+                @endif
+                <span class="text-indigo-600">{{ $category->category_name }}</span>
+            </nav>
+
 
             <h1 class="text-4xl font-extrabold text-gray-900 mb-2">{{ $category->category_name }}</h1>
             <p class="text-gray-600">

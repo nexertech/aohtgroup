@@ -1,0 +1,143 @@
+@extends('frontend.layouts.app')
+
+@section('content')
+    <style>
+        .products-container {
+            padding: 4rem 0;
+            background: #f9fafb;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            transition: transform 0.4s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .product-content {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #111827;
+        }
+
+        .product-description {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        /* Category Hover Label */
+        .category-hover-label {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(var(--accent-1-rgb, 124, 58, 237), 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+
+        .product-card:hover .category-hover-label {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+
+    <section class="products-container">
+        <div class="container-custom">
+            <div class="section-header">
+                <h2 class="section-title">Our Products</h2>
+                <p class="section-subtitle">Discover our wide range of high-quality products</p>
+            </div>
+
+            @if($products->count() > 0)
+                <div class="products-grid">
+                    @foreach($products as $product)
+                        <div class="product-card">
+                            @if($product->category)
+                                <div class="category-hover-label">
+                                    {{ $product->category->category_name }}
+                                </div>
+                            @endif
+
+                            <div class="product-image">
+                                <a href="{{ route('frontend.products.detail', $product->slug) }}" class="block w-full h-full">
+                                    @if($product->main_image)
+                                        <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}">
+                                    @else
+                                        <div class="image-placeholder">
+                                            <span>📦</span>
+                                        </div>
+                                    @endif
+                                </a>
+                            </div>
+                            <div class="product-content">
+                                <h3 class="product-title">{{ $product->product_name }}</h3>
+                                <p class="product-description">
+                                    {{ \Illuminate\Support\Str::limit(strip_tags($product->description), 120) }}
+                                </p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-20">
+                    <p class="text-gray-500 text-lg">No products found.</p>
+                </div>
+            @endif
+        </div>
+    </section>
+@endsection

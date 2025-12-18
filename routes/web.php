@@ -37,7 +37,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     // Logs
     Route::get('activity-logs', [App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-logs.index');
     Route::get('error-logs', [App\Http\Controllers\Admin\ErrorLogController::class, 'index'])->name('error-logs.index');
-    Route::get('visitors', [App\Http\Controllers\Admin\VisitorController::class, 'index'])->name('visitors.index');
 });
 
 Route::middleware('auth')->group(function () {

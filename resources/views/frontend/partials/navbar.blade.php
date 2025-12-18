@@ -15,12 +15,27 @@
 
       <!-- Center: Navigation Links -->
       <div class="navbar-links">
-        <nav class="flex gap-2 text-sm">
+        <nav class="flex items-center gap-2 text-sm">
+
           <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
           <a class="nav-link {{ request()->routeIs('frontend.about') ? 'active' : '' }}"
             href="{{ route('frontend.about') }}">About</a>
           <a class="nav-link {{ request()->routeIs('frontend.company.show') ? 'active' : '' }}"
             href="{{ route('frontend.company.show', 1) }}">Companies</a>
+
+          <div class="nav-item-dropdown">
+            <a class="nav-link {{ request()->routeIs('frontend.products') ? 'active' : '' }}"
+              href="{{ route('frontend.products') }}">Products</a>
+            <div class="dropdown-content">
+              @if(isset($mainCategories))
+                @foreach($mainCategories as $cat)
+                  <a href="{{ route('frontend.category.detail', $cat->slug) }}">{{ $cat->category_name }}</a>
+                @endforeach
+              @endif
+            </div>
+          </div>
+
+
           <a class="nav-link {{ request()->routeIs('frontend.services') ? 'active' : '' }}"
             href="{{ route('frontend.services') }}">Services</a>
           <a class="nav-link {{ request()->routeIs('frontend.careers') ? 'active' : '' }}"

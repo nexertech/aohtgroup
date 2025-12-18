@@ -13,7 +13,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalVisitors = Visitor::count();
         $contactMessagesCount = ContactMessage::count();
         $jobApplicationsCount = JobApplication::count();
         $newsCount = \App\Models\Blog::where('status', 1)->count();
@@ -21,7 +20,6 @@ class DashboardController extends Controller
         $recentActivities = ActivityLog::with('user')->latest()->take(5)->get();
 
         return view('admin.dashboard', compact(
-            'totalVisitors',
             'contactMessagesCount',
             'jobApplicationsCount',
             'newsCount',
