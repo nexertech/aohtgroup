@@ -19,8 +19,8 @@
           <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
           <a class="nav-link {{ request()->routeIs('frontend.about') ? 'active' : '' }}"
             href="{{ route('frontend.about') }}">About</a>
-          <a class="nav-link {{ request()->routeIs('frontend.companies') ? 'active' : '' }}"
-            href="{{ route('frontend.companies') }}">Companies</a>
+          <a class="nav-link {{ request()->routeIs('frontend.company.show') ? 'active' : '' }}"
+            href="{{ route('frontend.company.show', 1) }}">Companies</a>
           <a class="nav-link {{ request()->routeIs('frontend.services') ? 'active' : '' }}"
             href="{{ route('frontend.services') }}">Services</a>
           <a class="nav-link {{ request()->routeIs('frontend.careers') ? 'active' : '' }}"

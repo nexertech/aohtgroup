@@ -154,7 +154,8 @@
           @if(isset($categories[4]) || isset($categories[5]))
             <div class="category-column">
               @if(isset($categories[4]))
-                <div class="category-card category-half">
+                <a href="{{ route('frontend.category.detail', $categories[4]->slug) }}"
+                  class="category-card category-half block">
                   <div class="category-image">
                     @if($categories[4]->image)
                       <img src="{{ asset('storage/' . $categories[4]->image) }}" alt="{{ $categories[4]->category_name }}">
@@ -163,10 +164,11 @@
                     @endif
                   </div>
                   <div class="category-label">{{ strtoupper($categories[4]->category_name) }}</div>
-                </div>
+                </a>
               @endif
               @if(isset($categories[5]))
-                <div class="category-card category-half">
+                <a href="{{ route('frontend.category.detail', $categories[5]->slug) }}"
+                  class="category-card category-half block">
                   <div class="category-image">
                     @if($categories[5]->image)
                       <img src="{{ asset('storage/' . $categories[5]->image) }}" alt="{{ $categories[5]->category_name }}">
@@ -175,7 +177,7 @@
                     @endif
                   </div>
                   <div class="category-label">{{ strtoupper($categories[5]->category_name) }}</div>
-                </div>
+                </a>
               @endif
             </div>
           @endif
@@ -183,7 +185,8 @@
           <!-- Column 5: Item 7 -->
           @if(isset($categories[6]))
             <div class="category-column">
-              <div class="category-card category-auto">
+              <a href="{{ route('frontend.category.detail', $categories[6]->slug) }}"
+                class="category-card category-auto block">
                 <div class="category-image">
                   @if($categories[6]->image)
                     <img src="{{ asset('storage/' . $categories[6]->image) }}" alt="{{ $categories[6]->category_name }}">
@@ -192,7 +195,7 @@
                   @endif
                 </div>
                 <div class="category-label">{{ strtoupper($categories[6]->category_name) }}</div>
-              </div>
+              </a>
             </div>
           @endif
         @else
@@ -304,7 +307,8 @@
         </div>
         <div class="services-grid">
           @foreach($services as $service)
-            <div class="service-card hover:shadow-xl transition-all duration-300" style="padding: 0;">
+            <div class="service-card service-item hover:shadow-xl transition-all duration-300"
+              style="padding: 0; {{ $loop->index >= 4 ? 'display: none;' : '' }}">
               @if($service->banner_image)
                 <div class="h-40 w-full overflow-hidden rounded-t-2xl">
                   @if(\Illuminate\Support\Str::startsWith($service->banner_image, ['http://', 'https://']))
@@ -342,6 +346,39 @@
             </div>
           @endforeach
         </div>
+
+        @if($services->count() > 4)
+          <div class="text-center mt-12">
+            <button id="toggleServicesBtn"
+              class="inline-flex items-center justify-center px-8 py-3 bg-indigo-600 text-white font-bold rounded-full hover:bg-indigo-700 transition duration-300 shadow-lg hover:shadow-indigo-200">
+              Show More Services
+            </button>
+          </div>
+
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              const toggleBtn = document.getElementById('toggleServicesBtn');
+              const items = document.querySelectorAll('.service-item');
+
+              if (toggleBtn) {
+                toggleBtn.addEventListener('click', function () {
+                  const isShowingAll = this.innerText === 'Show Less Services';
+
+                  if (isShowingAll) {
+                    items.forEach((el, index) => {
+                      if (index >= 4) el.style.display = 'none';
+                    });
+                    this.innerText = 'Show More Services';
+                    document.querySelector('.services-section').scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    items.forEach(el => el.style.display = '');
+                    this.innerText = 'Show Less Services';
+                  }
+                });
+              }
+            });
+          </script>
+        @endif
       </div>
     </section>
   @endif
@@ -349,27 +386,27 @@
 
   <!-- STATISTICS SECTION -->
   <!-- <section class="stats-section">
-          <div class="container-custom">
-            <div class="stats-grid">
-              <div class="stat-card">
-                <div class="stat-number">5000+</div>
-                <div class="stat-label">Textile Products</div>
+              <div class="container-custom">
+                <div class="stats-grid">
+                  <div class="stat-card">
+                    <div class="stat-number">5000+</div>
+                    <div class="stat-label">Textile Products</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Global Partners</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Countries Served</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-number">10M+</div>
+                    <div class="stat-label">Garments Delivered</div>
+                  </div>
+                </div>
               </div>
-              <div class="stat-card">
-                <div class="stat-number">100+</div>
-                <div class="stat-label">Global Partners</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">Countries Served</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-number">10M+</div>
-                <div class="stat-label">Garments Delivered</div>
-              </div>
-            </div>
-          </div>
-        </section> -->
+            </section> -->
 
   <!-- TEAM MEMBERS SECTION -->
   @if(!empty($teamMembers) && $teamMembers->count())
@@ -381,7 +418,8 @@
         </div>
         <div class="team-grid">
           @foreach($teamMembers as $member)
-            <div class="team-card cursor-pointer transform hover:scale-105 transition duration-300"
+            <div class="team-card team-item cursor-pointer transform hover:scale-105 transition duration-300"
+              style="{{ $loop->index >= 4 ? 'display: none;' : '' }}"
               onclick="openTeamModal('{{ $member->name }}', '{{ $member->designation ?? $member->position }}', '{{ $member->photo ? asset($member->photo) : '' }}', '{{ e($member->bio) }}', '{{ $member->facebook }}', '{{ $member->linkedin }}', '{{ $member->instagram }}')">
               <div class="team-image">
                 @if($member->photo)
@@ -402,6 +440,39 @@
             </div>
           @endforeach
         </div>
+
+        @if($teamMembers->count() > 4)
+          <div class="text-center mt-12">
+            <button id="toggleTeamBtn"
+              class="inline-flex items-center justify-center px-8 py-3 bg-indigo-600 text-white font-bold rounded-full hover:bg-indigo-700 transition duration-300 shadow-lg hover:shadow-indigo-200">
+              Show More Team
+            </button>
+          </div>
+
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              const toggleBtn = document.getElementById('toggleTeamBtn');
+              const items = document.querySelectorAll('.team-item');
+
+              if (toggleBtn) {
+                toggleBtn.addEventListener('click', function () {
+                  const isShowingAll = this.innerText === 'Show Less Team';
+
+                  if (isShowingAll) {
+                    items.forEach((el, index) => {
+                      if (index >= 4) el.style.display = 'none';
+                    });
+                    this.innerText = 'Show More Team';
+                    document.querySelector('.team-section').scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    items.forEach(el => el.style.display = '');
+                    this.innerText = 'Show Less Team';
+                  }
+                });
+              }
+            });
+          </script>
+        @endif
       </div>
     </section>
   @endif

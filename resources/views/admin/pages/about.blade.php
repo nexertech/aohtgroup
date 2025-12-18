@@ -130,7 +130,8 @@
                                 Timeline</label>
                             <textarea name="history" id="history" rows="6"
                                 class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-150"
-                                placeholder="Enter company history...">{{ old('history', $companyInfo->history ?? '') }}</textarea>
+                                placeholder="Year - Event Description...">{{ old('history', $companyInfo->history ?? '') }}</textarea>
+                            <p class="mt-2 text-xs text-gray-500 italic">Tip: Use the format <strong>"Year - Description"</strong> on each new line to create a beautiful vertical timeline on the frontend.</p>
                         </div>
                     </div>
 
