@@ -16,21 +16,27 @@ class TrackVisitors
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $ip = $request->ip();
-        $today = now()->startOfDay();
+        try {
+            $ip = $request->ip();
+            $today = now()->startOfDay();
 
-        // Check if this IP has visited today
-        // We can check if a visitor record exists for this IP created today
-        $visitor = Visitor::where('ip_address', $ip)
-            ->whereDate('created_at', $today)
-            ->first();
+            // Check if this IP has visited today
+            // We can check if a visitor record exists for this IP created today
+            $visitor = Visitor::where('ip_address', $ip)
+                ->whereDate('created_at', $today)
+                ->first();
 
-        if (!$visitor) {
-            Visitor::create([
-                'ip_address' => $ip,
-                'user_agent' => $request->header('User-Agent'),
-                'page_url' => $request->fullUrl(),
-            ]);
+            if (!$visitor) {
+                Visitor::create([
+                    'ip_address' => $ip,
+                    'user_agent' => $request->header('User-Agent'),
+                    'page_url' => $request->fullUrl(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Silently fail if there is a database issue with the visitors table
+            // This prevents the whole site from crashing
+            \Log::error('Visitor tracking failed: ' . $e->getMessage());
         }
 
         return $next($request);

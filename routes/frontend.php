@@ -24,6 +24,7 @@ Route::post('/register', [RegisteredUserController::class, 'store']);
 // Dynamic Pages Routes
 Route::get('/about', [HomeController::class, 'about'])->name('frontend.about');
 Route::get('/companies', [HomeController::class, 'companies'])->name('frontend.companies');
+Route::get('/companies/{id}', [HomeController::class, 'companyShow'])->name('frontend.company.show');
 Route::get('/category/{slug}', [HomeController::class, 'categoryDetail'])->name('frontend.category.detail');
 Route::get('/services', [HomeController::class, 'services'])->name('frontend.services');
 Route::get('/services/{slug}', [HomeController::class, 'serviceDetail'])->name('frontend.services.detail');

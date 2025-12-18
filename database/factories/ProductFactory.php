@@ -29,7 +29,7 @@ class ProductFactory extends Factory
             'start_date' => $this->faker->date(),
             'end_date' => $this->faker->optional()->date(),
             'main_image' => null,
-            'status' => $this->faker->randomElement(['ongoing', 'completed', 'pending']),
+            'status' => $this->faker->numberBetween(0, 1),
         ];
     }
 }

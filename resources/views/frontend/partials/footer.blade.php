@@ -4,32 +4,40 @@
 
       <div>
         @if(isset($company) && $company->logo)
-          <img src="{{ asset('storage/' . $company->logo) }}" style="width:160px; margin-bottom:1rem;" alt="{{ $company->company_name ?? 'AOHT' }}">
+          <img src="{{ asset('storage/' . $company->logo) }}" style="width:160px; margin-bottom:1rem;"
+            alt="{{ $company->company_name ?? 'AOHT' }}">
         @else
           <div style="font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 1rem;">AOHT GROUP</div>
         @endif
-        <p style="line-height: 1.6;">{{ $company->about ?? 'AOHT Group provides integrated business solutions across Hospitality, Technology, Real Estate, HR, and Consultancy with over a decade of excellence and innovation.' }}</p>
+        <p style="line-height: 1.6;">
+          {{ $company->about ?? 'AOHT Group provides integrated business solutions across Hospitality, Technology, Real Estate, HR, and Consultancy with over a decade of excellence and innovation.' }}
+        </p>
       </div>
 
       <div>
         <h3>Company</h3>
         <ul>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Leadership</a></li>
-          <li><a href="#">Group Businesses</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">News & Updates</a></li>
+          <li><a href="{{ route('frontend.about') }}">About Us</a></li>
+          <li><a href="{{ route('frontend.about') }}#team">Leadership</a></li>
+          <li><a href="{{ route('frontend.company.show', 1) }}">Group Businesses</a></li>
+          <li><a href="{{ route('frontend.careers') }}">Careers</a></li>
+          <li><a href="{{ route('frontend.news') }}">News & Updates</a></li>
         </ul>
       </div>
 
       <div>
         <h3>Services</h3>
         <ul>
-          <li><a href="#">IT Solutions</a></li>
-          <li><a href="#">Real Estate Services</a></li>
-          <li><a href="#">HR Outsourcing</a></li>
-          <li><a href="#">Hospitality Management</a></li>
-          <li><a href="#">Consultancy</a></li>
+          @if(isset($services) && $services->count() > 0)
+            @foreach($services->take(5) as $s)
+              <li><a href="{{ route('frontend.services.detail', $s->slug) }}">{{ $s->service_name }}</a></li>
+            @endforeach
+          @else
+            <li><a href="{{ route('frontend.services') }}">IT Solutions</a></li>
+            <li><a href="{{ route('frontend.services') }}">Real Estate Services</a></li>
+            <li><a href="{{ route('frontend.services') }}">HR Outsourcing</a></li>
+            <li><a href="{{ route('frontend.services') }}">Consultancy</a></li>
+          @endif
         </ul>
       </div>
 
@@ -45,7 +53,8 @@
     </div>
 
     <div class="copyright">
-      © {{ now()->year }} {{ $company->company_name ?? 'AOHT Group' }} — All rights reserved | <a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a>
+      © {{ now()->year }} {{ $company->company_name ?? 'AOHT Group' }} — All rights reserved | <a href="#">Privacy
+        Policy</a> | <a href="#">Terms of Use</a>
     </div>
   </div>
 </footer>

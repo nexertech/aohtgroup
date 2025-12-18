@@ -22,7 +22,7 @@ class HomeController extends Controller
         $services = Service::where('status', 1)->orderBy('sequence')->get();
         $products = Product::where('status', 1)->latest()->get();
         $blogs = Blog::where('status', 1)->latest('published_at')->take(3)->get();
-        $teamMembers = TeamMember::orderBy('sequence')->take(4)->get();
+        $teamMembers = TeamMember::orderBy('sequence')->get();
         $categories = ProductCategory::whereNull('parent_id')->orderBy('sequence')->take(7)->get();
         $totalCategories = ProductCategory::whereNull('parent_id')->count();
         $company = CompanyInfo::first();
@@ -75,10 +75,22 @@ class HomeController extends Controller
 
     public function companies()
     {
+        $firstCompany = CompanyInfo::first();
+        if ($firstCompany) {
+            return redirect()->route('frontend.company.show', $firstCompany->id);
+        }
+
         $company = CompanyInfo::first();
-        $companies = CompanyInfo::latest()->get(); // Fetch all company info records
+        $companies = CompanyInfo::orderBy('company_name')->get();
         $clients = Client::latest()->get();
         return view('frontend.companies', compact('company', 'companies', 'clients'));
+    }
+
+    public function companyShow($id)
+    {
+        $company = CompanyInfo::first(); // Layout data
+        $targetCompany = CompanyInfo::findOrFail($id);
+        return view('frontend.company-detail', compact('company', 'targetCompany'));
     }
 
     public function services()

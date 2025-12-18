@@ -27,7 +27,7 @@ class BlogFactory extends Factory
             'thumbnail' => null,
             'banner_image' => null,
             'author_id' => User::inRandomOrder()->first()->id ?? User::factory(),
-            'status' => $this->faker->randomElement(['published', 'draft']),
+            'status' => $this->faker->numberBetween(0, 1),
             'published_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
