@@ -30,10 +30,10 @@
                 @foreach($subcategories as $sub)
                     <!-- Added anchor tag to make entire card clickable -->
                     <a href="{{ route('frontend.category.detail', $sub->slug) }}" class="block group">
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                            <div class="h-[500px] bg-gray-200 overflow-hidden relative"> <!-- Explicit 500px height -->
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
+                            <div class="bg-gray-200 overflow-hidden relative" style="height: 400px;"> <!-- Force equal height -->
                                 @if($sub->image)
-                                    <img src="{{ asset('storage/' . $sub->image) }}" alt="{{ $sub->category_name }}" class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500">
+                                    <img src="{{ asset('storage/' . $sub->image) }}" alt="{{ $sub->category_name }}" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400 font-bold text-3xl">
                                         {{ substr($sub->category_name, 0, 1) }}
@@ -41,7 +41,7 @@
                                 @endif
                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
                             </div>
-                            <div class="p-6 text-center">
+                            <div class="p-6 text-center mt-auto">
                                 <h3 class="text-xl font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">{{ $sub->category_name }}</h3>
                             </div>
                         </div>
@@ -53,11 +53,11 @@
             <!-- Product Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($products as $product)
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
-                        <a href="{{ route('frontend.products.detail', $product->slug) }}">
-                            <div class="h-[500px] bg-gray-200 overflow-hidden relative"> <!-- Explicit 500px height -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group flex flex-col h-full">
+                        <a href="{{ route('frontend.products.detail', $product->slug) }}" class="flex flex-col h-full">
+                            <div class="bg-gray-200 overflow-hidden relative" style="height: 400px;"> <!-- Force equal height -->
                                 @if($product->main_image)
-                                    <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500">
+                                    <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
                                         <span>No Image</span>

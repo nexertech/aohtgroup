@@ -78,13 +78,13 @@
 
                         @if($targetCompany->vision)
                             <div
-                                class="bg-gradient-to-br from-cyan-50 to-white rounded-2xl p-8 border border-cyan-100 shadow-sm">
+                                class="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 border border-blue-100 shadow-sm">
                                 <div
-                                    class="w-12 h-12 bg-cyan-600 text-white rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-cyan-200">
-                                    <i class="fas fa-eye text-xl"></i>
+                                    class="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-blue-200">
+                                    <i class="fa-solid fa-eye text-xl"></i>
                                 </div>
-                                <h3 class="text-xl font-bold text-cyan-900 mb-4">Our Vision</h3>
-                                <p class="text-cyan-800/80 leading-relaxed">{{ $targetCompany->vision }}</p>
+                                <h3 class="text-xl font-bold text-blue-900 mb-4">Our Vision</h3>
+                                <p class="text-blue-800/80 leading-relaxed">{{ $targetCompany->vision }}</p>
                             </div>
                         @endif
                     </div>
@@ -111,7 +111,7 @@
 
                             .timeline-item {
                                 position: relative;
-                                margin-bottom: 2rem;
+                                margin-bottom: 1rem;
                             }
 
                             .timeline-item::before {
@@ -137,8 +137,8 @@
                             .timeline-card-glass {
                                 background: #ffffff;
                                 border: 1px solid #f3f4f6;
-                                border-radius: 1.25rem;
-                                padding: 1.5rem;
+                                border-radius: 1rem;
+                                padding: 0.75rem 1.25rem;
                                 transition: all 0.3s ease;
                                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
                             }
@@ -149,9 +149,9 @@
                                 box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
                             }
                         </style>
-                        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-12 flex items-center">
-                                <span class="w-2 h-8 bg-indigo-600 rounded-full mr-4"></span>
+                        <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center">
+                                <span class="w-1.5 h-7 bg-indigo-600 rounded-full mr-4"></span>
                                 Our Journey & History
                             </h2>
                             <div class="timeline-wrapper">

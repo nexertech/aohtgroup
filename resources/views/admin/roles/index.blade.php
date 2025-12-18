@@ -134,10 +134,10 @@
 
             if (permissions && permissions.length > 0) {
                 permissions.forEach(p => {
-                    // Try to display permission_name if available, else name, else key
-                    const name = p.permission_name || p.name || p.permission_key || 'Unknown';
+                    // Try to display description if available, else permission_name or permission_key
+                    const name = p.description || p.permission_name || p.permission_key || p.name || 'Unknown';
                     const badge = document.createElement('span');
-                    badge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800';
+                    badge.className = 'inline-flex items-center px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm';
                     badge.innerText = name;
                     list.appendChild(badge);
                 });

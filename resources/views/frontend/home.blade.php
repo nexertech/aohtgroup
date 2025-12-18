@@ -154,7 +154,8 @@
           @if(isset($categories[4]) || isset($categories[5]))
             <div class="category-column">
               @if(isset($categories[4]))
-                <div class="category-card category-half">
+                <a href="{{ route('frontend.category.detail', $categories[4]->slug) }}"
+                  class="category-card category-half block">
                   <div class="category-image">
                     @if($categories[4]->image)
                       <img src="{{ asset('storage/' . $categories[4]->image) }}" alt="{{ $categories[4]->category_name }}">
@@ -163,10 +164,11 @@
                     @endif
                   </div>
                   <div class="category-label">{{ strtoupper($categories[4]->category_name) }}</div>
-                </div>
+                </a>
               @endif
               @if(isset($categories[5]))
-                <div class="category-card category-half">
+                <a href="{{ route('frontend.category.detail', $categories[5]->slug) }}"
+                  class="category-card category-half block">
                   <div class="category-image">
                     @if($categories[5]->image)
                       <img src="{{ asset('storage/' . $categories[5]->image) }}" alt="{{ $categories[5]->category_name }}">
@@ -175,7 +177,7 @@
                     @endif
                   </div>
                   <div class="category-label">{{ strtoupper($categories[5]->category_name) }}</div>
-                </div>
+                </a>
               @endif
             </div>
           @endif
@@ -183,7 +185,8 @@
           <!-- Column 5: Item 7 -->
           @if(isset($categories[6]))
             <div class="category-column">
-              <div class="category-card category-auto">
+              <a href="{{ route('frontend.category.detail', $categories[6]->slug) }}"
+                class="category-card category-auto block">
                 <div class="category-image">
                   @if($categories[6]->image)
                     <img src="{{ asset('storage/' . $categories[6]->image) }}" alt="{{ $categories[6]->category_name }}">
@@ -192,7 +195,7 @@
                   @endif
                 </div>
                 <div class="category-label">{{ strtoupper($categories[6]->category_name) }}</div>
-              </div>
+              </a>
             </div>
           @endif
         @else
@@ -383,27 +386,27 @@
 
   <!-- STATISTICS SECTION -->
   <!-- <section class="stats-section">
-            <div class="container-custom">
-              <div class="stats-grid">
-                <div class="stat-card">
-                  <div class="stat-number">5000+</div>
-                  <div class="stat-label">Textile Products</div>
-                </div>
-                <div class="stat-card">
-                  <div class="stat-number">100+</div>
-                  <div class="stat-label">Global Partners</div>
-                </div>
-                <div class="stat-card">
-                  <div class="stat-number">50+</div>
-                  <div class="stat-label">Countries Served</div>
-                </div>
-                <div class="stat-card">
-                  <div class="stat-number">10M+</div>
-                  <div class="stat-label">Garments Delivered</div>
+              <div class="container-custom">
+                <div class="stats-grid">
+                  <div class="stat-card">
+                    <div class="stat-number">5000+</div>
+                    <div class="stat-label">Textile Products</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Global Partners</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Countries Served</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-number">10M+</div>
+                    <div class="stat-label">Garments Delivered</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section> -->
+            </section> -->
 
   <!-- TEAM MEMBERS SECTION -->
   @if(!empty($teamMembers) && $teamMembers->count())

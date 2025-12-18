@@ -126,14 +126,14 @@ class HomeController extends Controller
     public function news()
     {
         $company = CompanyInfo::first();
-        $blogs = Blog::where('status', 1)->latest('published_at')->paginate(9);
+        $blogs = Blog::with('author')->where('status', 1)->latest('published_at')->paginate(9);
         return view('frontend.news', compact('company', 'blogs'));
     }
 
     public function newsDetail($id)
     {
         $company = CompanyInfo::first();
-        $blog = Blog::findOrFail($id);
+        $blog = Blog::with('author')->findOrFail($id);
         $recentBlogs = Blog::where('status', 1)->where('id', '!=', $id)->latest('published_at')->take(5)->get();
         return view('frontend.news-detail', compact('company', 'blog', 'recentBlogs'));
     }
