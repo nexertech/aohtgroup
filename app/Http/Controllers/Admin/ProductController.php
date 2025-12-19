@@ -43,6 +43,7 @@ class ProductController extends Controller
             'location' => 'nullable|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
+            'price' => 'nullable|numeric|min:0',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'status' => 'boolean',
         ]);
@@ -51,9 +52,8 @@ class ProductController extends Controller
         $data['slug'] = $this->generateUniqueSlug($request->product_name);
 
         if ($request->hasFile('main_image')) {
-            $imageName = time() . '.' . $request->main_image->extension();
-            $request->main_image->move(public_path('images/products'), $imageName);
-            $data['main_image'] = 'images/products/' . $imageName;
+            $path = $request->file('main_image')->store('products', 'public');
+            $data['main_image'] = $path;
         }
 
         Product::create($data);
@@ -92,6 +92,7 @@ class ProductController extends Controller
             'location' => 'nullable|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
+            'price' => 'nullable|numeric|min:0',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'status' => 'boolean',
         ]);
@@ -104,13 +105,12 @@ class ProductController extends Controller
 
         if ($request->hasFile('main_image')) {
             // Delete old image if exists
-            if ($product->main_image && file_exists(public_path($product->main_image))) {
-                unlink(public_path($product->main_image));
+            if ($product->main_image) {
+                Storage::disk('public')->delete($product->main_image);
             }
 
-            $imageName = time() . '.' . $request->main_image->extension();
-            $request->main_image->move(public_path('images/products'), $imageName);
-            $data['main_image'] = 'images/products/' . $imageName;
+            $path = $request->file('main_image')->store('products', 'public');
+            $data['main_image'] = $path;
         }
 
         $product->update($data);
@@ -123,8 +123,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        if ($product->main_image && file_exists(public_path($product->main_image))) {
-            unlink(public_path($product->main_image));
+        if ($product->main_image) {
+            Storage::disk('public')->delete($product->main_image);
         }
 
         $product->delete();

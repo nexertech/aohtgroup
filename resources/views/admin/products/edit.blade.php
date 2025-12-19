@@ -118,7 +118,7 @@
                             <label for="main_image" class="block text-sm font-medium text-gray-700 mb-1">Main Image</label>
                             @if($product->main_image)
                                 <div class="mb-2">
-                                    <img src="{{ asset($product->main_image) }}" alt="Current Image"
+                                    <img src="{{ asset('storage/' . $product->main_image) }}" alt="Current Image"
                                         class="h-20 w-auto rounded object-cover border border-gray-300">
                                 </div>
                             @endif

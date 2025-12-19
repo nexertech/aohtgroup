@@ -101,7 +101,7 @@
                     </div>
                     <div class="p-6">
                         @if($product->main_image)
-                            <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}"
+                            <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}"
                                 class="w-full h-auto rounded-lg shadow-sm">
                         @else
                             <div class="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
