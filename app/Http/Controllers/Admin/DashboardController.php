@@ -17,12 +17,14 @@ class DashboardController extends Controller
         $jobApplicationsCount = JobApplication::count();
         $newsCount = \App\Models\Blog::where('status', 1)->count();
 
+        $visitorsCount = Visitor::count();
         $recentActivities = ActivityLog::with('user')->latest()->take(5)->get();
 
         return view('admin.dashboard', compact(
             'contactMessagesCount',
             'jobApplicationsCount',
             'newsCount',
+            'visitorsCount',
             'recentActivities'
         ));
     }

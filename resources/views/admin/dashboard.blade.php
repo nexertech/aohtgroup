@@ -130,6 +130,43 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Total Visitors -->
+                <div
+                    class="group bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/50 overflow-hidden">
+                    <div class="p-8">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-base font-medium text-slate-500 mb-2">Total Visitors</p>
+                                <p
+                                    class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                                    {{ number_format($visitorsCount) }}
+                                </p>
+                            </div>
+                            <div
+                                class="p-5 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
+                                <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="mt-5 flex items-center text-sm text-slate-500">
+                            <span class="inline-flex items-center text-blue-600 font-medium">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                    <path fill-rule="evenodd"
+                                        d="M.458 10C1.732 5.943 5.523 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Tracking
+                            </span>
+                            <span class="ml-2">unique visits</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Recent Activity & Quick Links -->
