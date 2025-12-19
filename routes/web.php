@@ -23,6 +23,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('product-galleries', App\Http\Controllers\Admin\ProductGalleryController::class);
     Route::resource('blogs', App\Http\Controllers\Admin\BlogController::class);
     Route::resource('contact-messages', App\Http\Controllers\Admin\ContactMessageController::class);
+    Route::post('contact-messages/{id}/send-reply', [App\Http\Controllers\Admin\ContactMessageController::class, 'sendReply'])->name('contact-messages.send-reply');
     Route::resource('job-openings', App\Http\Controllers\Admin\JobOpeningController::class);
     Route::resource('job-applications', App\Http\Controllers\Admin\JobApplicationController::class);
     Route::resource('clients', App\Http\Controllers\Admin\ClientController::class);

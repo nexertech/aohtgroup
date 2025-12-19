@@ -42,6 +42,8 @@
             href="{{ route('frontend.careers') }}">Careers</a>
           <a class="nav-link {{ request()->routeIs('frontend.news') || request()->routeIs('frontend.news.detail') ? 'active' : '' }}"
             href="{{ route('frontend.news') }}">News</a>
+          <a class="nav-link {{ request()->routeIs('frontend.contact') ? 'active' : '' }}"
+            href="{{ route('frontend.contact') }}">Contact Us</a>
         </nav>
       </div>
 

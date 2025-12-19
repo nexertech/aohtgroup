@@ -227,7 +227,7 @@
       <div class="container-custom">
         <div class="section-header">
           <h2 class="section-title"> Products</h2>
-          <p class="section-subtitle">Showcasing our latest achievements and innovations</p>
+          {{-- <p class="section-subtitle">Showcasing our latest achievements and innovations</p> --}}
         </div>
         <div class="projects-grid">
           @foreach($products as $index => $product)

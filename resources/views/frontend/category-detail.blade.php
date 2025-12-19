@@ -17,13 +17,13 @@
 
 
             <h1 class="text-4xl font-extrabold text-gray-900 mb-2">{{ $category->category_name }}</h1>
-            <p class="text-gray-600">
+            {{-- <p class="text-gray-600">
                 @if($subcategories->count() > 0)
                     Explore our specific solutions and offerings in this category.
                 @else
                     Browse our products in this category.
                 @endif
-            </p>
+            </p> --}}
         </div>
 
         @if($subcategories->count() > 0)
@@ -93,9 +93,15 @@
                 <h3 class="mt-2 text-sm font-medium text-gray-900">No content found</h3>
                 <p class="mt-1 text-sm text-gray-500">Check back later for new additions in this category.</p>
                 <div class="mt-6">
-                    <a href="{{ url('/') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Go Back Home
-                    </a>
+                    @if($category->parent)
+                        <a href="{{ route('frontend.category.detail', $category->parent->slug) }}" class="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-sm font-bold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-300">
+                            Back to {{ $category->parent->category_name }}
+                        </a>
+                    @else
+                        <a href="{{ route('frontend.categories') }}" class="inline-flex items-center px-6 py-3 border border-transparent shadow-sm text-sm font-bold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-300">
+                            Back to Categories
+                        </a>
+                    @endif
                 </div>
             </div>
         @endif
