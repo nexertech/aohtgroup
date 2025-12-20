@@ -29,7 +29,31 @@
             <div class="dropdown-content">
               @if(isset($mainCategories))
                 @foreach($mainCategories as $cat)
-                  <a href="{{ route('frontend.category.detail', $cat->slug) }}">{{ $cat->category_name }}</a>
+                  @if($cat->children->count() > 0)
+                    <div class="dropdown-submenu">
+                      <a href="{{ route('frontend.category.detail', $cat->slug) }}"
+                        class="has-submenu">{{ $cat->category_name }}</a>
+                      <div class="submenu-content">
+                        @foreach($cat->children as $sub)
+                          @if($sub->children->count() > 0)
+                            <div class="dropdown-submenu">
+                              <a href="{{ route('frontend.category.detail', $sub->slug) }}"
+                                class="has-submenu">{{ $sub->category_name }}</a>
+                              <div class="submenu-content">
+                                @foreach($sub->children as $child)
+                                  <a href="{{ route('frontend.category.detail', $child->slug) }}">{{ $child->category_name }}</a>
+                                @endforeach
+                              </div>
+                            </div>
+                          @else
+                            <a href="{{ route('frontend.category.detail', $sub->slug) }}">{{ $sub->category_name }}</a>
+                          @endif
+                        @endforeach
+                      </div>
+                    </div>
+                  @else
+                    <a href="{{ route('frontend.category.detail', $cat->slug) }}">{{ $cat->category_name }}</a>
+                  @endif
                 @endforeach
               @endif
             </div>

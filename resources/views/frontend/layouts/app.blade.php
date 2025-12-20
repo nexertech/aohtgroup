@@ -176,6 +176,46 @@
       opacity: 1;
     }
 
+    /* Nested Submenu Styles */
+    .dropdown-submenu {
+      position: relative;
+    }
+
+    .dropdown-submenu .submenu-content {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      top: -5px;
+      left: 100%;
+      background-color: white;
+      min-width: 240px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      z-index: 101;
+      border-radius: 8px;
+      padding: 0.5rem 0;
+      transition: all 0.2s ease;
+      border: 1px solid #f3f4f6;
+    }
+
+    .dropdown-submenu:hover>.submenu-content {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .dropdown-content a.has-submenu {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dropdown-content a.has-submenu::after {
+      content: '\f105';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      font-size: 0.8rem;
+      margin-left: 10px;
+    }
+
 
 
     .avatar {

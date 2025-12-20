@@ -8,6 +8,10 @@
             <nav class="flex justify-center mb-4 text-sm font-medium text-gray-500">
                 <a href="{{ route('home') }}" class="hover:text-indigo-600 transition-colors">Home</a>
                 <span class="mx-2">/</span>
+                @if($category->parent && $category->parent->parent)
+                    <a href="{{ route('frontend.category.detail', $category->parent->parent->slug) }}" class="hover:text-indigo-600 transition-colors">{{ $category->parent->parent->category_name }}</a>
+                    <span class="mx-2">/</span>
+                @endif
                 @if($category->parent)
                     <a href="{{ route('frontend.category.detail', $category->parent->slug) }}" class="hover:text-indigo-600 transition-colors">{{ $category->parent->category_name }}</a>
                     <span class="mx-2">/</span>
@@ -58,7 +62,7 @@
                         <a href="{{ route('frontend.products.detail', $product->slug) }}" class="flex flex-col h-full">
                             <div class="bg-gray-200 overflow-hidden relative" style="height: 400px;"> <!-- Force equal height -->
                                 @if($product->main_image)
-                                    <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
+                                    <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
                                         <span>No Image</span>

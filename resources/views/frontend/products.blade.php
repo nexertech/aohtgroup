@@ -109,14 +109,20 @@
                         <div class="product-card">
                             @if($product->category)
                                 <div class="category-hover-label">
-                                    {{ $product->category->category_name }}
+                                    @if($product->childSubcategory)
+                                        {{ $product->childSubcategory->category_name }}
+                                    @elseif($product->subcategory)
+                                        {{ $product->subcategory->category_name }}
+                                    @else
+                                        {{ $product->category->category_name }}
+                                    @endif
                                 </div>
                             @endif
 
                             <div class="product-image">
                                 <a href="{{ route('frontend.products.detail', $product->slug) }}" class="block w-full h-full">
                                     @if($product->main_image)
-                                        <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}">
+                                        <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}">
                                     @else
                                         <div class="image-placeholder">
                                             <span>📦</span>

@@ -127,12 +127,12 @@
                             <label class="block">
                                 <span class="sr-only">Choose profile photo</span>
                                 <input type="file" name="about_image" class="block w-full text-sm text-slate-500
-                                        file:mr-4 file:py-2 file:px-4
-                                        file:rounded-full file:border-0
-                                        file:text-sm file:font-semibold
-                                        file:bg-violet-50 file:text-violet-700
-                                        hover:file:bg-violet-100
-                                    " />
+                                                    file:mr-4 file:py-2 file:px-4
+                                                    file:rounded-full file:border-0
+                                                    file:text-sm file:font-semibold
+                                                    file:bg-violet-50 file:text-violet-700
+                                                    hover:file:bg-violet-100
+                                                " />
                             </label>
                         </div>
                         @error('about_image')
@@ -150,4 +150,13 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                if (typeof CKEDITOR !== 'undefined') {
+                    CKEDITOR.replace('about');
+                }
+            });
+        </script>
+    @endpush
 @endsection

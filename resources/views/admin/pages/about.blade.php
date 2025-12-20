@@ -145,4 +145,15 @@
             </div>
         </div>
     </div>
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof CKEDITOR !== 'undefined') {
+                CKEDITOR.replace('mission');
+                CKEDITOR.replace('vision');
+                CKEDITOR.replace('history');
+            }
+        });
+    </script>
+@endpush
 @endsection

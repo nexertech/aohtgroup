@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('frontend.*', function ($view) {
-            $view->with('mainCategories', ProductCategory::whereNull('parent_id')->orderBy('sequence')->get());
+            $view->with('mainCategories', ProductCategory::whereNull('parent_id')->with('children.children')->orderBy('sequence')->get());
         });
     }
 }

@@ -229,6 +229,7 @@
                             </svg>
                             Contact Messages
                         </a>
+
                     @endif
 
                     <!-- Job Openings Link -->

@@ -15,6 +15,7 @@ class Product extends Model
         'slug',
         'category_id',
         'subcategory_id',
+        'child_subcategory_id',
         'description',
         'price',
         'client',
@@ -37,6 +38,11 @@ class Product extends Model
     public function subcategory()
     {
         return $this->belongsTo(ProductCategory::class, 'subcategory_id');
+    }
+
+    public function childSubcategory()
+    {
+        return $this->belongsTo(ProductCategory::class, 'child_subcategory_id');
     }
 
     public function galleries()

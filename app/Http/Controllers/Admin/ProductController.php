@@ -38,6 +38,7 @@ class ProductController extends Controller
             'product_name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:product_categories,id',
             'subcategory_id' => 'nullable|exists:product_categories,id',
+            'child_subcategory_id' => 'nullable|exists:product_categories,id',
             'description' => 'nullable|string',
             'client' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
@@ -45,6 +46,7 @@ class ProductController extends Controller
             'end_date' => 'nullable|date',
             'price' => 'nullable|numeric|min:0',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'status' => 'boolean',
         ]);
 
@@ -56,7 +58,18 @@ class ProductController extends Controller
             $data['main_image'] = $path;
         }
 
-        Product::create($data);
+        $product = Product::create($data);
+
+        // Handle Gallery Images
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $image) {
+                $path = $image->store('product_galleries', 'public');
+                \App\Models\ProductGallery::create([
+                    'product_id' => $product->id,
+                    'image_path' => $path
+                ]);
+            }
+        }
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
@@ -87,6 +100,7 @@ class ProductController extends Controller
             'product_name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:product_categories,id',
             'subcategory_id' => 'nullable|exists:product_categories,id',
+            'child_subcategory_id' => 'nullable|exists:product_categories,id',
             'description' => 'nullable|string',
             'client' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
@@ -94,6 +108,7 @@ class ProductController extends Controller
             'end_date' => 'nullable|date',
             'price' => 'nullable|numeric|min:0',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'status' => 'boolean',
         ]);
 
@@ -115,6 +130,17 @@ class ProductController extends Controller
 
         $product->update($data);
 
+        // Handle Gallery Images (Append new ones)
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $image) {
+                $path = $image->store('product_galleries', 'public');
+                \App\Models\ProductGallery::create([
+                    'product_id' => $product->id,
+                    'image_path' => $path
+                ]);
+            }
+        }
+
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
 
@@ -123,13 +149,48 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        // Delete main image
         if ($product->main_image) {
             Storage::disk('public')->delete($product->main_image);
+        }
+
+        // Delete gallery images
+        foreach ($product->galleries as $gallery) {
+            if ($gallery->image_path) {
+                Storage::disk('public')->delete($gallery->image_path);
+            }
+            $gallery->delete();
         }
 
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+    }
+
+    /**
+     * Delete a specific gallery image.
+     */
+    public function deleteGalleryImage($id)
+    {
+        try {
+            $gallery = \App\Models\ProductGallery::findOrFail($id);
+
+            if ($gallery->image_path) {
+                Storage::disk('public')->delete($gallery->image_path);
+            }
+
+            $gallery->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Gallery image deleted successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting image: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

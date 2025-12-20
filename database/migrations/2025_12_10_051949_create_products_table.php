@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('subcategory_id')->nullable();
+            $table->unsignedBigInteger('child_subcategory_id')->nullable();
             $table->longText('description')->nullable();
             $table->decimal('price', 10, 2)->nullable();
             $table->string('client')->nullable();
@@ -26,8 +27,9 @@ return new class extends Migration {
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
 
-            // Foreign key intentionally omitted as per user request
-            // $table->foreign('category_id')->references('id')->on('project_categories');
+            $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('set null');
+            $table->foreign('subcategory_id')->references('id')->on('product_categories')->onDelete('set null');
+            $table->foreign('child_subcategory_id')->references('id')->on('product_categories')->onDelete('set null');
         });
     }
 

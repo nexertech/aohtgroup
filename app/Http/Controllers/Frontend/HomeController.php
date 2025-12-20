@@ -40,7 +40,7 @@ class HomeController extends Controller
     public function products()
     {
         $company = CompanyInfo::first();
-        $products = Product::where('status', 1)->with('category')->latest()->get();
+        $products = Product::where('status', 1)->with(['category', 'subcategory', 'childSubcategory'])->latest()->get();
         return view('frontend.products', compact('company', 'products'));
     }
 
@@ -59,7 +59,8 @@ class HomeController extends Controller
         if ($subcategories->count() === 0) {
             $products = Product::where(function ($query) use ($category) {
                 $query->where('category_id', $category->id)
-                    ->orWhere('subcategory_id', $category->id);
+                    ->orWhere('subcategory_id', $category->id)
+                    ->orWhere('child_subcategory_id', $category->id);
             })
                 ->where('status', 1)
                 ->latest()
@@ -149,7 +150,7 @@ class HomeController extends Controller
     public function productDetail($slug)
     {
         $company = CompanyInfo::first();
-        $product = Product::where('slug', $slug)->with(['category', 'subcategory', 'galleries'])->firstOrFail();
+        $product = Product::where('slug', $slug)->with(['category', 'subcategory', 'childSubcategory', 'galleries'])->firstOrFail();
 
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)

@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::post('product-categories/ajax-store', [App\Http\Controllers\Admin\ProductCategoryController::class, 'ajaxStore'])->name('product-categories.ajax-store');
     Route::put('product-categories/ajax-update/{id}', [App\Http\Controllers\Admin\ProductCategoryController::class, 'ajaxUpdate'])->name('product-categories.ajax-update');
     Route::delete('product-categories/ajax-destroy/{id}', [App\Http\Controllers\Admin\ProductCategoryController::class, 'ajaxDestroy'])->name('product-categories.ajax-destroy');
+    Route::delete('products/gallery/{id}', [App\Http\Controllers\Admin\ProductController::class, 'deleteGalleryImage'])->name('products.delete-gallery-image');
     Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
     Route::resource('product-galleries', App\Http\Controllers\Admin\ProductGalleryController::class);
     Route::resource('blogs', App\Http\Controllers\Admin\BlogController::class);

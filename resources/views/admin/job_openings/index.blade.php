@@ -176,9 +176,9 @@
             document.getElementById('modalJobDepartment').innerText = job.department || 'N/A';
             document.getElementById('modalJobType').innerText = job.job_type || 'N/A';
             document.getElementById('modalJobLocation').innerText = job.location || 'N/A';
-            document.getElementById('modalJobDescription').innerText = job.description || 'N/A';
-            document.getElementById('modalJobResponsibilities').innerText = job.responsibilities || 'N/A';
-            document.getElementById('modalJobQualifications').innerText = job.qualifications || 'N/A';
+            document.getElementById('modalJobDescription').innerHTML = job.description || 'N/A';
+            document.getElementById('modalJobResponsibilities').innerHTML = job.responsibilities || 'N/A';
+            document.getElementById('modalJobQualifications').innerHTML = job.qualifications || 'N/A';
 
             const statusElem = document.getElementById('modalJobStatus');
             if (job.status) {

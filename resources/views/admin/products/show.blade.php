@@ -87,7 +87,7 @@
                     </div>
                     <div class="p-6">
                         <div class="prose max-w-none text-gray-600">
-                            {{ $product->description ?? 'No description provided.' }}
+                            {!! $product->description ?? 'No description provided.' !!}
                         </div>
                     </div>
                 </div>

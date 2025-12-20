@@ -16,7 +16,7 @@
                         <a href="{{ route('frontend.products.detail', $product->slug) }}" class="flex flex-col h-full">
                             <div class="bg-gray-200 overflow-hidden relative" style="height: 350px;">
                                 @if($product->main_image)
-                                    <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
+                                    <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
                                         <span>No Image</span>

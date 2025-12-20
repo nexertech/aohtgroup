@@ -52,6 +52,16 @@
                             @error('subcategory_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
+                        <!-- Child Subcategory -->
+                        <div>
+                            <label for="child_subcategory_id" class="block text-sm font-medium text-gray-700 mb-1">Child Subcategory</label>
+                            <select name="child_subcategory_id" id="child_subcategory_id" disabled
+                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm bg-gray-100">
+                                <option value="">Select Child Subcategory</option>
+                            </select>
+                            @error('child_subcategory_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
                         <!-- Client -->
                         <div>
                             <label for="client" class="block text-sm font-medium text-gray-700 mb-1">Client</label>
@@ -59,6 +69,15 @@
                                 class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
                                 value="{{ old('client') }}">
                             @error('client') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- Price -->
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                            <input type="number" step="0.01" name="price" id="price"
+                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
+                                value="{{ old('price') }}">
+                            @error('price') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
                         <!-- Location -->
@@ -88,42 +107,36 @@
                             @error('end_date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
-                        <!-- Description -->
-                        <div class="md:col-span-2">
-                            <label for="description"
-                                class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                            <textarea name="description" id="description" rows="4"
-                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">{{ old('description') }}</textarea>
-                            @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                        </div>
-
-                        <!-- Price -->
-                        <div>
-                            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
-                            <input type="number" name="price" id="price" step="0.01" min="0"
-                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
-                                value="{{ old('price') }}" placeholder="0.00">
-                            @error('price') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                        </div>
-
                         <!-- Main Image -->
-                        <div class="md:col-span-2">
+                        <div>
                             <label for="main_image" class="block text-sm font-medium text-gray-700 mb-1">Main Image</label>
                             <input type="file" name="main_image" id="main_image"
-                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">
+                                class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                             @error('main_image') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
-                        <!-- Status -->
-                        <div class="md:col-span-2">
-                            <div class="flex items-center">
-                                <input type="hidden" name="status" value="0">
-                                <input type="checkbox" name="status" id="status" value="1"
-                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                                    checked>
-                                <label for="status" class="ml-2 block text-sm text-gray-900">Active</label>
-                            </div>
+                        <!-- Product Gallery -->
+                        <div>
+                            <label for="gallery_images" class="block text-sm font-medium text-gray-700 mb-1">Product Gallery (Multi)</label>
+                            <input type="file" name="gallery_images[]" id="gallery_images" multiple
+                                class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                            @error('gallery_images.*') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
+
+                        <!-- Status -->
+                        <div class="flex items-center mt-6">
+                            <input type="checkbox" name="status" id="status" value="1" {{ old('status', 1) ? 'checked' : '' }}
+                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                            <label for="status" class="ml-2 block text-sm text-gray-900">Active</label>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-6">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea name="description" id="description" rows="4"
+                            class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">{{ old('description') }}</textarea>
+                        @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="flex justify-end gap-3">
@@ -131,7 +144,7 @@
                             class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition duration-200">Cancel</a>
                         <button type="submit"
                             class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-200">Create
-                            Project</button>
+                            Product</button>
                     </div>
                 </form>
             </div>
@@ -143,20 +156,21 @@
         document.getElementById('category_id').addEventListener('change', function() {
             var categoryId = this.value;
             var subCategorySelect = document.getElementById('subcategory_id');
+            var childSubCategorySelect = document.getElementById('child_subcategory_id');
             
-            // Reset
+            // Reset Subcategory
             subCategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
             subCategorySelect.disabled = true;
             subCategorySelect.classList.add('bg-gray-100');
 
+            // Reset Child Subcategory
+            childSubCategorySelect.innerHTML = '<option value="">Select Child Subcategory</option>';
+            childSubCategorySelect.disabled = true;
+            childSubCategorySelect.classList.add('bg-gray-100');
+
             if(categoryId) {
                 fetch(`{{ url('admin/get-subcategories') }}/${categoryId}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
+                    .then(response => response.json())
                     .then(data => {
                         if(data.length > 0) {
                             subCategorySelect.disabled = false;
@@ -170,6 +184,40 @@
                         }
                     })
                     .catch(error => console.error('Error fetching subcategories:', error));
+            }
+        });
+
+        document.getElementById('subcategory_id').addEventListener('change', function() {
+            var subcategoryId = this.value;
+            var childSubCategorySelect = document.getElementById('child_subcategory_id');
+            
+            // Reset
+            childSubCategorySelect.innerHTML = '<option value="">Select Child Subcategory</option>';
+            childSubCategorySelect.disabled = true;
+            childSubCategorySelect.classList.add('bg-gray-100');
+
+            if(subcategoryId) {
+                fetch(`{{ url('admin/get-subcategories') }}/${subcategoryId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.length > 0) {
+                            childSubCategorySelect.disabled = false;
+                            childSubCategorySelect.classList.remove('bg-gray-100');
+                            data.forEach(child => {
+                                var option = document.createElement('option');
+                                option.value = child.id;
+                                option.text = child.category_name;
+                                childSubCategorySelect.appendChild(option);
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error fetching child subcategories:', error));
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+            if(typeof CKEDITOR !== 'undefined' && document.getElementById('description')) {
+                CKEDITOR.replace('description');
             }
         });
     </script>

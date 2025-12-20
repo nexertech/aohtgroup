@@ -75,4 +75,11 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            if (typeof CKEDITOR !== 'undefined') {
+                CKEDITOR.replace('body');
+            }
+        </script>
+    @endpush
 </x-admin-layout>

@@ -187,7 +187,7 @@
             document.getElementById('modalBlogDate').innerText = blog.published_at ? new Date(blog.published_at).toLocaleDateString() : 'Not Published';
             document.getElementById('modalBlogSlug').innerText = blog.slug;
             document.getElementById('modalBlogSummary').innerText = blog.summary || 'No Summary';
-            document.getElementById('modalBlogContent').innerText = blog.content || 'No Content'; // Use innerHTML if content is HTML from WYSIWYG
+            document.getElementById('modalBlogContent').innerHTML = blog.content || 'No Content'; // Use innerHTML if content is HTML from WYSIWYG
             
             const statusElem = document.getElementById('modalBlogStatus');
             if (blog.status) {

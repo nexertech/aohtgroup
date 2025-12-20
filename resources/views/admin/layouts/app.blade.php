@@ -14,6 +14,10 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script>
+        window.CKEDITOR_BASEPATH = '//cdn.ckeditor.com/4.22.1/standard/';
+    </script>
 </head>
 
 <body class="font-sans antialiased bg-gray-50">
@@ -45,8 +49,6 @@
             @include('admin.layouts.partials.footer')
         </div>
     </div>
-    @stack('scripts')
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             setTimeout(function () {
@@ -61,6 +63,12 @@
             }, 5000);
         });
     </script>
+    <script>
+        if (typeof CKEDITOR !== 'undefined') {
+            CKEDITOR.config.versionCheck = false;
+        }
+    </script>
+    @stack('scripts')
 </body>
 
 </html>

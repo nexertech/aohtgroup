@@ -235,7 +235,7 @@
               <div class="project-image">
                 <a href="{{ route('frontend.products.detail', $product->slug) }}" class="block w-full h-full">
                   @if($product->main_image)
-                    <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}">
+                    <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}">
                   @else
                     <div class="image-placeholder">
                       <span>📦</span>
@@ -386,27 +386,27 @@
 
   <!-- STATISTICS SECTION -->
   <!-- <section class="stats-section">
-              <div class="container-custom">
-                <div class="stats-grid">
-                  <div class="stat-card">
-                    <div class="stat-number">5000+</div>
-                    <div class="stat-label">Textile Products</div>
-                  </div>
-                  <div class="stat-card">
-                    <div class="stat-number">100+</div>
-                    <div class="stat-label">Global Partners</div>
-                  </div>
-                  <div class="stat-card">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Countries Served</div>
-                  </div>
-                  <div class="stat-card">
-                    <div class="stat-number">10M+</div>
-                    <div class="stat-label">Garments Delivered</div>
+                <div class="container-custom">
+                  <div class="stats-grid">
+                    <div class="stat-card">
+                      <div class="stat-number">5000+</div>
+                      <div class="stat-label">Textile Products</div>
+                    </div>
+                    <div class="stat-card">
+                      <div class="stat-number">100+</div>
+                      <div class="stat-label">Global Partners</div>
+                    </div>
+                    <div class="stat-card">
+                      <div class="stat-number">50+</div>
+                      <div class="stat-label">Countries Served</div>
+                    </div>
+                    <div class="stat-card">
+                      <div class="stat-number">10M+</div>
+                      <div class="stat-label">Garments Delivered</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section> -->
+              </section> -->
 
   <!-- TEAM MEMBERS SECTION -->
   @if(!empty($teamMembers) && $teamMembers->count())

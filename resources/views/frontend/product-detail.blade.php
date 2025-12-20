@@ -35,6 +35,18 @@
                     </div>
                 </li>
                 @endif
+                @if($product->childSubcategory)
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                        </svg>
+                        <a href="{{ route('frontend.category.detail', $product->childSubcategory->slug) }}" class="ml-1 text-sm font-medium text-gray-700 hover:text-indigo-600 md:ml-2">
+                            {{ $product->childSubcategory->category_name }}
+                        </a>
+                    </div>
+                </li>
+                @endif
                 <li aria-current="page">
                     <div class="flex items-center">
                         <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
@@ -55,7 +67,7 @@
                     @php
                         $allImages = [];
                         if($product->main_image) {
-                            $allImages[] = ['path' => $product->main_image, 'is_main' => true, 'caption' => 'Main Image'];
+                            $allImages[] = ['path' => 'storage/' . $product->main_image, 'is_main' => true, 'caption' => 'Main Image'];
                         }
                         foreach($product->galleries as $gallery) {
                             $allImages[] = ['path' => 'storage/' . $gallery->image_path, 'is_main' => false, 'caption' => $gallery->caption];
@@ -77,7 +89,7 @@
                     <div class="flex-1 relative overflow-hidden rounded-lg bg-gray-200">
                          @if($product->main_image || $product->galleries->count() > 0)
                             @php
-                                $displayImage = $product->main_image ?? 'storage/' . $product->galleries->first()->image_path;
+                                $displayImage = $product->main_image ? 'storage/' . $product->main_image : 'storage/' . $product->galleries->first()->image_path;
                             @endphp
                             <!-- Forced Portrait Aspect Ratio via Height -->
                             <img id="mainProductImage" 
@@ -95,7 +107,15 @@
                 <!-- Right: Product Details -->
                 <div class="p-8 lg:p-12 flex flex-col justify-center">
                     <div class="uppercase tracking-wide text-sm text-indigo-600 font-semibold mb-2">
-                        {{ $product->category ? $product->category->category_name : 'Product' }}
+                        @if($product->childSubcategory)
+                            {{ $product->childSubcategory->category_name }}
+                        @elseif($product->subcategory)
+                            {{ $product->subcategory->category_name }}
+                        @elseif($product->category)
+                            {{ $product->category->category_name }}
+                        @else
+                            Product
+                        @endif
                     </div>
                     <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">{{ $product->product_name }}</h1>
                     
@@ -174,7 +194,7 @@
                         <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
                             <div class="h-[500px] bg-gray-200 overflow-hidden relative">
                                 @if($related->main_image)
-                                    <img src="{{ asset($related->main_image) }}" alt="{{ $related->product_name }}" class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500">
+                                    <img src="{{ asset('storage/' . $related->main_image) }}" alt="{{ $related->product_name }}" class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
                                         <span>No Image</span>

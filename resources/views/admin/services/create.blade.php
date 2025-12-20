@@ -122,4 +122,13 @@
             document.getElementById('slug').value = slug;
         });
     </script>
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                if (typeof CKEDITOR !== 'undefined') {
+                    CKEDITOR.replace('description');
+                }
+            });
+        </script>
+    @endpush
 </x-admin-layout>
