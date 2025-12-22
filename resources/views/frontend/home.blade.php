@@ -309,40 +309,40 @@
           @foreach($services as $service)
             <div class="service-card service-item hover:shadow-xl transition-all duration-300"
               style="padding: 0; {{ $loop->index >= 4 ? 'display: none;' : '' }}">
-              @if($service->banner_image)
-                <div class="h-40 w-full overflow-hidden rounded-t-2xl">
-                  @if(\Illuminate\Support\Str::startsWith($service->banner_image, ['http://', 'https://']))
-                    <img src="{{ $service->banner_image }}" alt="{{ $service->service_name }}"
-                      class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
-                  @else
-                    <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->service_name }}"
-                      class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
-                  @endif
-                </div>
-              @endif
+              <a href="{{ route('frontend.services.detail', $service->slug) }}" class="block h-full">
+                @if($service->banner_image)
+                  <div class="h-40 w-full overflow-hidden rounded-t-2xl">
+                    @if(\Illuminate\Support\Str::startsWith($service->banner_image, ['http://', 'https://']))
+                      <img src="{{ $service->banner_image }}" alt="{{ $service->service_name }}"
+                        class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                    @else
+                      <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->service_name }}"
+                        class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500">
+                    @endif
+                  </div>
+                @endif
 
-              <div class="p-8">
-                <div class="service-icon">
-                  @if($service->icon)
-                    @if(\Illuminate\Support\Str::contains($service->icon, ['http://', 'https://']) || \Illuminate\Support\Str::contains($service->icon, ['.jpg', '.png', '.jpeg', '.svg', '.webp']))
-                      @if(\Illuminate\Support\Str::startsWith($service->icon, ['http://', 'https://']))
-                        <img src="{{ $service->icon }}" alt="{{ $service->service_name }}">
+                <div class="p-8">
+                  <div class="service-icon">
+                    @if($service->icon)
+                      @if(\Illuminate\Support\Str::contains($service->icon, ['http://', 'https://']) || \Illuminate\Support\Str::contains($service->icon, ['.jpg', '.png', '.jpeg', '.svg', '.webp']))
+                        @if(\Illuminate\Support\Str::startsWith($service->icon, ['http://', 'https://']))
+                          <img src="{{ $service->icon }}" alt="{{ $service->service_name }}">
+                        @else
+                          <img src="{{ asset('storage/' . $service->icon) }}" alt="{{ $service->service_name }}">
+                        @endif
                       @else
-                        <img src="{{ asset('storage/' . $service->icon) }}" alt="{{ $service->service_name }}">
+                        <!-- Assume FontAwesome Class -->
+                        <i class="{{ $service->icon }}" style="font-size: 2rem; color: white;"></i>
                       @endif
                     @else
-                      <!-- Assume FontAwesome Class -->
-                      <i class="{{ $service->icon }}" style="font-size: 2rem; color: white;"></i>
+                      <div class="icon-placeholder">{{ strtoupper(substr($service->service_name, 0, 1)) }}</div>
                     @endif
-                  @else
-                    <div class="icon-placeholder">{{ strtoupper(substr($service->service_name, 0, 1)) }}</div>
-                  @endif
+                  </div>
+                  <h3 class="service-title">{{ $service->service_name }}</h3>
+                  <span class="service-link">Learn More →</span>
                 </div>
-                <h3 class="service-title">{{ $service->service_name }}</h3>
-                <p class="service-description">{{ \Illuminate\Support\Str::limit(strip_tags($service->description), 140) }}
-                </p>
-                <a href="{{ route('frontend.services.detail', $service->slug) }}" class="service-link">Learn More →</a>
-              </div>
+              </a>
             </div>
           @endforeach
         </div>
@@ -386,27 +386,27 @@
 
   <!-- STATISTICS SECTION -->
   <!-- <section class="stats-section">
-                <div class="container-custom">
-                  <div class="stats-grid">
-                    <div class="stat-card">
-                      <div class="stat-number">5000+</div>
-                      <div class="stat-label">Textile Products</div>
+                    <div class="container-custom">
+                      <div class="stats-grid">
+                        <div class="stat-card">
+                          <div class="stat-number">5000+</div>
+                          <div class="stat-label">Textile Products</div>
+                        </div>
+                        <div class="stat-card">
+                          <div class="stat-number">100+</div>
+                          <div class="stat-label">Global Partners</div>
+                        </div>
+                        <div class="stat-card">
+                          <div class="stat-number">50+</div>
+                          <div class="stat-label">Countries Served</div>
+                        </div>
+                        <div class="stat-card">
+                          <div class="stat-number">10M+</div>
+                          <div class="stat-label">Garments Delivered</div>
+                        </div>
+                      </div>
                     </div>
-                    <div class="stat-card">
-                      <div class="stat-number">100+</div>
-                      <div class="stat-label">Global Partners</div>
-                    </div>
-                    <div class="stat-card">
-                      <div class="stat-number">50+</div>
-                      <div class="stat-label">Countries Served</div>
-                    </div>
-                    <div class="stat-card">
-                      <div class="stat-number">10M+</div>
-                      <div class="stat-label">Garments Delivered</div>
-                    </div>
-                  </div>
-                </div>
-              </section> -->
+                  </section> -->
 
   <!-- TEAM MEMBERS SECTION -->
   @if(!empty($teamMembers) && $teamMembers->count())
@@ -560,11 +560,7 @@
                 @endif
               </div>
               <div class="blog-content">
-                <div class="blog-date">{{ $blog->published_at ? $blog->published_at->format('M d, Y') : '' }}</div>
                 <h3 class="blog-title">{{ $blog->title }}</h3>
-                <p class="blog-excerpt">
-                  {{ \Illuminate\Support\Str::limit(strip_tags($blog->summary ?? $blog->content), 110) }}
-                </p>
                 <a href="{{ route('frontend.news.detail', $blog->id) }}" class="blog-link">Read More →</a>
               </div>
             </div>

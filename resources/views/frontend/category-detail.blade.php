@@ -8,6 +8,8 @@
             <nav class="flex justify-center mb-4 text-sm font-medium text-gray-500">
                 <a href="{{ route('home') }}" class="hover:text-indigo-600 transition-colors">Home</a>
                 <span class="mx-2">/</span>
+                <a href="{{ route('frontend.products') }}" class="hover:text-indigo-600 transition-colors">Products</a>
+                <span class="mx-2">/</span>
                 @if($category->parent && $category->parent->parent)
                     <a href="{{ route('frontend.category.detail', $category->parent->parent->slug) }}" class="hover:text-indigo-600 transition-colors">{{ $category->parent->parent->category_name }}</a>
                     <span class="mx-2">/</span>
@@ -36,18 +38,18 @@
                     <!-- Added anchor tag to make entire card clickable -->
                     <a href="{{ route('frontend.category.detail', $sub->slug) }}" class="block group">
                         <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
-                            <div class="bg-gray-200 overflow-hidden relative" style="height: 400px;"> <!-- Force equal height -->
+                            <div class="bg-gray-100 overflow-hidden relative" style="height: 320px;"> <!-- Standardized high-end height -->
                                 @if($sub->image)
                                     <img src="{{ asset('storage/' . $sub->image) }}" alt="{{ $sub->category_name }}" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
                                 @else
-                                    <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400 font-bold text-3xl">
+                                    <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400 font-black text-3xl">
                                         {{ substr($sub->category_name, 0, 1) }}
                                     </div>
                                 @endif
-                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
+                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-300"></div>
                             </div>
-                            <div class="p-6 text-center mt-auto">
-                                <h3 class="text-xl font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">{{ $sub->category_name }}</h3>
+                            <div class="p-6 text-center mt-auto bg-white">
+                                <h3 class="text-xl font-black text-gray-900 group-hover:text-indigo-600 transition-colors uppercase tracking-tight">{{ $sub->category_name }}</h3>
                             </div>
                         </div>
                     </a>
@@ -60,28 +62,30 @@
                 @foreach($products as $product)
                     <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group flex flex-col h-full">
                         <a href="{{ route('frontend.products.detail', $product->slug) }}" class="flex flex-col h-full">
-                            <div class="bg-gray-200 overflow-hidden relative" style="height: 400px;"> <!-- Force equal height -->
+                            <div class="bg-gray-100 overflow-hidden relative" style="height: 320px;"> <!-- Standardized high-end height -->
                                 @if($product->main_image)
-                                    <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500">
+                                    <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}" class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
-                                        <span>No Image</span>
+                                        <span class="font-bold uppercase tracking-widest text-xs">No Image</span>
                                     </div>
                                 @endif
-                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
+                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-300"></div>
                             </div>
-                            <div class="p-6">
-                                <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">{{ $product->product_name }}</h3>
+                            <div class="p-6 flex flex-col flex-grow bg-white">
+                                <h3 class="text-lg font-black text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors leading-tight">{{ $product->product_name }}</h3>
                                 @if($product->price)
-                                    <p class="text-indigo-600 font-semibold mb-2">Rs. {{ number_format($product->price, 2) }}</p>
+                                    <p class="text-indigo-600 font-black mb-2">Rs. {{ number_format($product->price, 2) }}</p>
                                 @endif
-                                <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 100) }}</p>
-                                <span class="text-indigo-600 font-medium text-sm flex items-center mt-3">
-                                    View Details 
-                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                    </svg>
-                                </span>
+                                <p class="text-gray-500 text-sm mb-4 line-clamp-2 leading-relaxed">{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 100) }}</p>
+                                <div class="mt-auto pt-4 border-t border-gray-50">
+                                    <span class="text-indigo-600 font-bold text-sm flex items-center">
+                                        View Details 
+                                        <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                        </svg>
+                                    </span>
+                                </div>
                             </div>
                         </a>
                     </div>

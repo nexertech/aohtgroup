@@ -116,6 +116,28 @@
                         @endif
                     </div>
                 </div>
+
+                @if($product->galleries->count() > 0)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="p-6 border-b border-gray-100">
+                            <h2 class="text-lg font-semibold text-gray-800">Product Gallery</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                @foreach($product->galleries as $gallery)
+                                    <div class="relative group">
+                                        <img src="{{ asset('storage/' . $gallery->image_path) }}"
+                                            class="w-full h-24 object-cover rounded-lg border border-gray-100 shadow-sm transition-transform duration-300 group-hover:scale-105"
+                                            alt="Gallery Image">
+                                        <div
+                                            class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 rounded-lg">
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

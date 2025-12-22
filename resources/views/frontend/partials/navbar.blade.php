@@ -14,7 +14,7 @@
       </div>
 
       <!-- Center: Navigation Links -->
-      <div class="navbar-links">
+      <div class="navbar-links" id="navbarLinks">
         <nav class="flex items-center gap-2 text-sm">
 
           <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
@@ -25,7 +25,7 @@
 
           <div class="nav-item-dropdown">
             <a class="nav-link {{ request()->routeIs('frontend.products') ? 'active' : '' }}"
-              href="{{ route('frontend.products') }}">Products</a>
+              href="{{ route('frontend.products') }}" onclick="handleDropdownClick(event)">Products</a>
             <div class="dropdown-content">
               @if(isset($mainCategories))
                 @foreach($mainCategories as $cat)
@@ -119,10 +119,36 @@
             </a>
           </div>
         </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+          <i class="fas fa-bars"></i>
+        </button>
       </div>
     </div>
   </div>
   <script>
+    function toggleMobileMenu() {
+      const links = document.getElementById('navbarLinks');
+      links.classList.toggle('active');
+      const icon = document.querySelector('.mobile-menu-btn i');
+      if (links.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      }
+    }
+
+    function handleDropdownClick(event) {
+      if (window.innerWidth <= 1024) {
+        event.preventDefault();
+        const parent = event.target.closest('.nav-item-dropdown');
+        parent.classList.toggle('active');
+      }
+    }
+
     function toggleUserDropdown(event) {
       event.stopPropagation();
       const dropdown = document.getElementById('userDropdown');
@@ -131,6 +157,14 @@
     }
 
     document.addEventListener('click', function (event) {
+      const links = document.getElementById('navbarLinks');
+      const mobileBtn = document.querySelector('.mobile-menu-btn');
+
+      // Close mobile menu when clicking outside
+      if (links.classList.contains('active') && !links.contains(event.target) && !mobileBtn.contains(event.target)) {
+        toggleMobileMenu();
+      }
+
       const dropdown = document.getElementById('userDropdown');
       const button = document.getElementById('userMenuButton');
       if (dropdown && !dropdown.classList.contains('invisible') && !button.contains(event.target)) {

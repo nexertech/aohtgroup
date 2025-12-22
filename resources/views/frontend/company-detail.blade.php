@@ -72,7 +72,7 @@
                                     <i class="fas fa-bullseye text-xl"></i>
                                 </div>
                                 <h3 class="text-xl font-bold text-indigo-900 mb-4">Our Mission</h3>
-                                <p class="text-indigo-800/80 leading-relaxed">{{ $targetCompany->mission }}</p>
+                                <p class="text-indigo-800/80 leading-relaxed">{!! $targetCompany->mission !!}</p>
                             </div>
                         @endif
 
@@ -84,7 +84,7 @@
                                     <i class="fa-solid fa-eye text-xl"></i>
                                 </div>
                                 <h3 class="text-xl font-bold text-blue-900 mb-4">Our Vision</h3>
-                                <p class="text-blue-800/80 leading-relaxed">{{ $targetCompany->vision }}</p>
+                                <p class="text-blue-800/80 leading-relaxed">{!! $targetCompany->vision !!}</p>
                             </div>
                         @endif
                     </div>

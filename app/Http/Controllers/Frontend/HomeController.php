@@ -112,9 +112,9 @@ class HomeController extends Controller
     public function serviceDetail($slug)
     {
         $company = CompanyInfo::first();
-        $service = Service::where('slug', $slug)->firstOrFail();
-        $otherServices = Service::where('status', 1)->where('id', '!=', $service->id)->orderBy('sequence')->take(5)->get();
-        return view('frontend.service-detail', compact('company', 'service', 'otherServices'));
+        $singleService = Service::where('slug', $slug)->firstOrFail();
+        $otherServices = Service::where('status', 1)->where('id', '!=', $singleService->id)->orderBy('sequence')->take(5)->get();
+        return view('frontend.services', compact('company', 'singleService', 'otherServices'));
     }
 
     public function careers()
@@ -142,9 +142,9 @@ class HomeController extends Controller
     public function newsDetail($id)
     {
         $company = CompanyInfo::first();
-        $blog = Blog::with('author')->findOrFail($id);
+        $singleBlog = Blog::with('author')->findOrFail($id);
         $recentBlogs = Blog::where('status', 1)->where('id', '!=', $id)->latest('published_at')->take(5)->get();
-        return view('frontend.news-detail', compact('company', 'blog', 'recentBlogs'));
+        return view('frontend.news', compact('company', 'singleBlog', 'recentBlogs'));
     }
 
     public function productDetail($slug)
@@ -185,7 +185,8 @@ class HomeController extends Controller
     public function contact()
     {
         $company = CompanyInfo::first();
-        return view('frontend.contact', compact('company'));
+        $officeLocations = \App\Models\OfficeLocation::where('status', 1)->orderBy('sequence')->get();
+        return view('frontend.contact', compact('company', 'officeLocations'));
     }
 
     public function storeContact(Request $request)

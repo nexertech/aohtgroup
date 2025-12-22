@@ -21,7 +21,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::delete('product-categories/ajax-destroy/{id}', [App\Http\Controllers\Admin\ProductCategoryController::class, 'ajaxDestroy'])->name('product-categories.ajax-destroy');
     Route::delete('products/gallery/{id}', [App\Http\Controllers\Admin\ProductController::class, 'deleteGalleryImage'])->name('products.delete-gallery-image');
     Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
-    Route::resource('product-galleries', App\Http\Controllers\Admin\ProductGalleryController::class);
     Route::resource('blogs', App\Http\Controllers\Admin\BlogController::class);
     Route::resource('contact-messages', App\Http\Controllers\Admin\ContactMessageController::class);
     Route::post('contact-messages/{id}/send-reply', [App\Http\Controllers\Admin\ContactMessageController::class, 'sendReply'])->name('contact-messages.send-reply');
@@ -31,6 +30,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('certificates', App\Http\Controllers\Admin\CertificateController::class);
     Route::resource('sliders', App\Http\Controllers\Admin\SliderController::class);
     Route::resource('email-templates', App\Http\Controllers\Admin\EmailTemplateController::class);
+    Route::resource('office-locations', App\Http\Controllers\Admin\OfficeLocationController::class);
 
     // Pages Management
     Route::get('pages/about', [App\Http\Controllers\Admin\AboutPageController::class, 'index'])->name('pages.about');
