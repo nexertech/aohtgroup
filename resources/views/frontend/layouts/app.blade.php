@@ -1203,11 +1203,22 @@
       font-size: 0.875rem;
     }
 
+    /* MAIN CONTENT STYLES */
+    main {
+      flex: 1;
+      width: 100%;
+      padding-top: 80px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ... */
+
     /* AUTH PAGES STYLES */
     .auth-section {
-      padding: 6rem 0;
+      padding: 1rem 0;
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      min-height: calc(100vh - 80px);
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1222,13 +1233,13 @@
     .auth-card {
       background: white;
       border-radius: 16px;
-      padding: 3rem 2.5rem;
+      padding: 1.5rem 2rem;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
     }
 
     .auth-header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
     .auth-title {
@@ -1244,11 +1255,11 @@
     }
 
     .auth-form {
-      margin-top: 2rem;
+      margin-top: 1rem;
     }
 
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .form-label {

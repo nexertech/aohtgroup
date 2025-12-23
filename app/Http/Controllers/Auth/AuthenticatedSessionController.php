@@ -32,7 +32,13 @@ class AuthenticatedSessionController extends Controller
 
         $this->logActivity('Login', 'User logged in successfully');
 
-        return redirect()->intended(route('admin.dashboard', absolute: false));
+        // Check if the login request came from the admin login page
+        if (str_contains(url()->previous(), '/admin/login')) {
+            return redirect()->intended(route('admin.dashboard', absolute: false));
+        }
+
+        // Otherwise (frontend login), redirect to home
+        return redirect()->intended(route('home'));
     }
 
     /**
@@ -40,6 +46,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Check if the request came from an admin page before logging out
+        $isFromAdmin = str_contains(url()->previous(), '/admin');
+
         $this->logActivity('Logout', 'User logged out');
 
         Auth::guard('web')->logout();
@@ -48,6 +57,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/admin/login');
+        return $isFromAdmin ? redirect('/admin/login') : redirect('/');
     }
 }

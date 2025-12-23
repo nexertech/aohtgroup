@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <div class="container-fluid p-6">
+    <div class="p-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-semibold text-gray-800">Product Categories</h1>
             <a href="{{ route('admin.product-categories.create') }}"
@@ -328,7 +328,18 @@
                             const tr = document.createElement('tr');
                             tr.className = 'hover:bg-gray-50 transition-colors';
 
-                            const drillBtn = `<button type="button" onclick="drillDown(${sub.id}, '${sub.category_name}')" class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition duration-200 font-semibold text-xs uppercase" title="Manage Children">Next Layer</button>`;
+                            let nameHtml = sub.category_name;
+                            let drillBtn = '';
+
+                            if (navigationStack.length === 1) {
+                                // Depth 1: Subcategories - Show name link but NO "Next Layer" button
+                                nameHtml = `<button type="button" onclick="drillDown(${sub.id}, '${sub.category_name}')" class="text-indigo-600 hover:underline">${sub.category_name}</button>`;
+                                drillBtn = '';
+                            } else {
+                                // Depth 2+: Sub-subcategories - Plain text and NO button
+                                nameHtml = sub.category_name;
+                                drillBtn = '';
+                            }
 
                             const editBtn = `<button type="button" onclick='editSubcategory(${JSON.stringify(sub).replace(/'/g, "&#39;")})' class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition duration-200" title="Edit"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></button>`;
 
@@ -340,19 +351,19 @@
 
 
                             tr.innerHTML = `
-                                            <td class="px-6 py-4 text-gray-500 text-sm whitespace-nowrap">${index + 1}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap">${imageHtml}</td>
-                                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                <button type="button" onclick="drillDown(${sub.id}, '${sub.category_name}')" class="text-indigo-600 hover:underline">${sub.category_name}</button>
-                                            </td>
-                                            <td class="px-6 py-4 text-right whitespace-nowrap">
-                                                <div class="flex items-center justify-end gap-2">
-                                                    ${drillBtn}
-                                                    ${editBtn}
-                                                    ${deleteBtn}
-                                                </div>
-                                            </td>
-                                        `;
+                                                    <td class="px-6 py-4 text-gray-500 text-sm whitespace-nowrap">${index + 1}</td>
+                                                    <td class="px-6 py-4 whitespace-nowrap">${imageHtml}</td>
+                                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                        ${nameHtml}
+                                                    </td>
+                                                    <td class="px-6 py-4 text-right whitespace-nowrap">
+                                                        <div class="flex items-center justify-end gap-2">
+                                                            ${drillBtn}
+                                                            ${editBtn}
+                                                            ${deleteBtn}
+                                                        </div>
+                                                    </td>
+                                                `;
                             tbody.appendChild(tr);
                         });
                     } else {
