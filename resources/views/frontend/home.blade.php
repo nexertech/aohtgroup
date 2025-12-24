@@ -231,7 +231,7 @@
         </div>
         <div class="projects-grid">
           @foreach($products as $index => $product)
-            <div class="project-card product-item" style="{{ $index >= 6 ? 'display: none;' : '' }}">
+            <div class="project-card product-item" style="{{ $index >= 4 ? 'display: none;' : '' }}">
               <div class="project-image">
                 <a href="{{ route('frontend.products.detail', $product->slug) }}" class="block w-full h-full">
                   @if($product->main_image)
@@ -245,15 +245,22 @@
               </div>
               <div class="project-content">
                 <h3 class="project-title">{{ $product->product_name }}</h3>
+                <div class="flex items-center gap-2 mb-3">
+                  @if($product->discount_price)
+                    <span class="text-lg font-bold text-red-600">PKR {{ number_format($product->discount_price) }}</span>
+                    <span class="text-sm text-gray-400 line-through">PKR {{ number_format($product->price) }}</span>
+                  @elseif($product->price)
+                    <span class="text-lg font-bold text-gray-900">PKR {{ number_format($product->price) }}</span>
+                  @endif
+                </div>
                 <p class="project-description">{{ \Illuminate\Support\Str::limit(strip_tags($product->description), 120) }}
                 </p>
-                <!-- View Details link removed as requested -->
               </div>
             </div>
           @endforeach
         </div>
 
-        @if($products->count() > 6)
+        @if($products->count() > 4)
           <div class="text-center mt-8">
             <button id="toggleProductsBtn"
               class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10 transition duration-150 ease-in-out">
@@ -271,9 +278,9 @@
                   const isShowingAll = this.innerText === 'Show Less';
 
                   if (isShowingAll) {
-                    // Hide products > 6
+                    // Hide products > 4
                     products.forEach((el, index) => {
-                      if (index >= 6) el.style.display = 'none';
+                      if (index >= 4) el.style.display = 'none';
                     });
                     this.innerText = 'Show More';
 
@@ -386,27 +393,27 @@
 
   <!-- STATISTICS SECTION -->
   <!-- <section class="stats-section">
-                    <div class="container-custom">
-                      <div class="stats-grid">
-                        <div class="stat-card">
-                          <div class="stat-number">5000+</div>
-                          <div class="stat-label">Textile Products</div>
+                        <div class="container-custom">
+                          <div class="stats-grid">
+                            <div class="stat-card">
+                              <div class="stat-number">5000+</div>
+                              <div class="stat-label">Textile Products</div>
+                            </div>
+                            <div class="stat-card">
+                              <div class="stat-number">100+</div>
+                              <div class="stat-label">Global Partners</div>
+                            </div>
+                            <div class="stat-card">
+                              <div class="stat-number">50+</div>
+                              <div class="stat-label">Countries Served</div>
+                            </div>
+                            <div class="stat-card">
+                              <div class="stat-number">10M+</div>
+                              <div class="stat-label">Garments Delivered</div>
+                            </div>
+                          </div>
                         </div>
-                        <div class="stat-card">
-                          <div class="stat-number">100+</div>
-                          <div class="stat-label">Global Partners</div>
-                        </div>
-                        <div class="stat-card">
-                          <div class="stat-number">50+</div>
-                          <div class="stat-label">Countries Served</div>
-                        </div>
-                        <div class="stat-card">
-                          <div class="stat-number">10M+</div>
-                          <div class="stat-label">Garments Delivered</div>
-                        </div>
-                      </div>
-                    </div>
-                  </section> -->
+                      </section> -->
 
   <!-- TEAM MEMBERS SECTION -->
   @if(!empty($teamMembers) && $teamMembers->count())

@@ -46,24 +46,25 @@
                                 @endif
                             </div>
                             <div>
-                                <p class="text-sm font-medium text-gray-500 mb-1">Client</p>
-                                <p class="text-gray-900">{{ $product->client ?? 'N/A' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 mb-1">Location</p>
-                                <p class="text-gray-900">{{ $product->location ?? 'N/A' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 mb-1">Start Date</p>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Price</p>
                                 <p class="text-gray-900">
-                                    {{ $product->start_date ? \Carbon\Carbon::parse($product->start_date)->format('M d, Y') : 'N/A' }}
-                                </p>
+                                    {{ $product->price ? '$' . number_format($product->price, 2) : 'N/A' }}</p>
                             </div>
                             <div>
-                                <p class="text-sm font-medium text-gray-500 mb-1">End Date</p>
-                                <p class="text-gray-900">
-                                    {{ $product->end_date ? \Carbon\Carbon::parse($product->end_date)->format('M d, Y') : 'N/A' }}
-                                </p>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Color</p>
+                                <p class="text-gray-900">{{ $product->color ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Size</p>
+                                <p class="text-gray-900">{{ $product->size ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Special Effects</p>
+                                <p class="text-gray-900">{{ $product->special_effects ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Washing & Dyeing Category</p>
+                                <p class="text-gray-900">{{ $product->washing_dyeing_category ?? 'N/A' }}</p>
                             </div>
                             <div>
                                 <p class="text-sm font-medium text-gray-500 mb-1">Category</p>

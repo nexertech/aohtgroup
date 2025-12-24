@@ -27,6 +27,15 @@
                             @error('product_name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
+                        <!-- Product Type -->
+                        <div>
+                            <label for="product_type" class="block text-sm font-medium text-gray-700 mb-1">Product Type (e.g. 1 Piece, 3 Piece)</label>
+                            <input type="text" name="product_type" id="product_type"
+                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
+                                value="{{ old('product_type', '1 Piece') }}">
+                            @error('product_type') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
                         <!-- Category -->
                         <div>
                             <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
@@ -62,49 +71,248 @@
                             @error('child_subcategory_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
-                        <!-- Client -->
-                        <div>
-                            <label for="client" class="block text-sm font-medium text-gray-700 mb-1">Client</label>
-                            <input type="text" name="client" id="client"
-                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
-                                value="{{ old('client') }}">
-                            @error('client') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                        </div>
-
                         <!-- Price -->
                         <div>
-                            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Regular Price</label>
                             <input type="number" step="0.01" name="price" id="price"
                                 class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
                                 value="{{ old('price') }}">
                             @error('price') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
-                        <!-- Location -->
+                        <!-- Discount Price -->
                         <div>
-                            <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                            <input type="text" name="location" id="location"
+                            <label for="discount_price" class="block text-sm font-medium text-gray-700 mb-1">Discount Price</label>
+                            <input type="number" step="0.01" name="discount_price" id="discount_price"
                                 class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
-                                value="{{ old('location') }}">
-                            @error('location') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                value="{{ old('discount_price') }}">
+                            @error('discount_price') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
-                        <!-- Start Date -->
-                        <div>
-                            <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-                            <input type="date" name="start_date" id="start_date"
-                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
-                                value="{{ old('start_date') }}">
-                            @error('start_date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        <!-- Color Selection -->
+                        <div x-data="{ 
+                            open: false, 
+                            selected: '{{ old('color') }}' ? '{{ old('color') }}'.split(',').map(c => c.trim()).filter(c => c) : [],
+                            commonColors: [
+                                { name: 'Black', code: '#000000' },
+                                { name: 'White', code: '#FFFFFF' },
+                                { name: 'Red', code: '#EF4444' },
+                                { name: 'Blue', code: '#3B82F6' },
+                                { name: 'Green', code: '#10B981' },
+                                { name: 'Yellow', code: '#F59E0B' },
+                                { name: 'Grey', code: '#6B7280' },
+                                { name: 'Navy', code: '#1E3A8A' },
+                                { name: 'Beige', code: '#F5F5DC' },
+                                { name: 'Pink', code: '#EC4899' }
+                            ],
+                            customColor: '',
+                            addCustom() {
+                                let val = this.customColor.trim();
+                                if (val && !this.selected.includes(val)) {
+                                    this.selected = [...this.selected, val];
+                                    this.customColor = '';
+                                }
+                            },
+                            toggleColor(colorName) {
+                                if (this.selected.includes(colorName)) {
+                                    this.selected = this.selected.filter(c => c !== colorName);
+                                } else {
+                                    this.selected = [...this.selected, colorName];
+                                }
+                            }
+                        }" class="relative" @click.away="open = false">
+                            <label for="color_display" class="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                            
+                            <!-- Hidden input for the actual form submission -->
+                            <input type="hidden" name="color" :value="selected.join(', ')">
+
+                            <!-- Dropdown Trigger -->
+                            <div @click="open = !open"
+                                class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-4 py-2 cursor-pointer flex justify-between items-center focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500">
+                                <div class="flex flex-wrap gap-1 items-center overflow-hidden">
+                                    <template x-if="selected.length === 0">
+                                        <span class="text-gray-400">Select Colors</span>
+                                    </template>
+                                    <template x-for="color in selected" :key="color">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
+                                            <span x-text="color"></span>
+                                            <button type="button" @click.stop="toggleColor(color)" class="ml-1 text-indigo-400 hover:text-indigo-600">
+                                                <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/></svg>
+                                            </button>
+                                        </span>
+                                    </template>
+                                </div>
+                                <svg class="h-5 w-5 text-gray-400 transform transition-transform ml-2 shrink-0" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+
+                            <!-- Dropdown Menu -->
+                            <div x-show="open" 
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                x-transition:enter-end="opacity-100 transform translate-y-0"
+                                class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-xl p-4">
+                                
+                                <div class="grid grid-cols-5 gap-3 mb-4">
+                                    <template x-for="color in commonColors" :key="color.name">
+                                        <button type="button" 
+                                            @click="toggleColor(color.name)"
+                                            class="flex flex-col items-center gap-1 group">
+                                            <div class="h-8 w-8 rounded-full border-2 transition-all duration-200 flex items-center justify-center shadow-sm"
+                                                :style="'background-color: ' + color.code"
+                                                :class="selected.includes(color.name) ? 'border-indigo-600 ring-2 ring-indigo-200 scale-110' : 'border-gray-200 hover:border-gray-300'">
+                                                <svg x-show="selected.includes(color.name)" class="h-4 w-4" :class="color.name === 'White' || color.name === 'Beige' ? 'text-gray-800' : 'text-white'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </div>
+                                            <span class="text-[10px] text-gray-500 font-medium" x-text="color.name"></span>
+                                        </button>
+                                    </template>
+                                </div>
+
+                                <div class="border-t border-gray-100 pt-3">
+                                    <div class="flex gap-2 mb-2">
+                                        <input type="text" x-model="customColor" @keydown.enter.prevent="addCustom()"
+                                            class="flex-1 text-sm rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 py-1.5" 
+                                            placeholder="Custom color...">
+                                        <button type="button" @click="addCustom()"
+                                            class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-semibold transition-colors">Add</button>
+                                    </div>
+
+                                    <!-- Added Custom Colors List -->
+                                    <div class="flex flex-col gap-1 max-h-32 overflow-y-auto">
+                                        <template x-for="color in selected.filter(c => !commonColors.map(cc => cc.name).includes(c))" :key="color">
+                                            <div class="flex items-center justify-between px-2 py-1 bg-gray-50 rounded text-xs">
+                                                <span x-text="color" class="font-medium text-gray-700"></span>
+                                                <button type="button" @click="toggleColor(color)" class="text-red-400 hover:text-red-600">
+                                                    <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                                </button>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                            @error('color') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
-                        <!-- End Date -->
+                        <!-- Size Selection -->
+                        <div x-data="{ 
+                            open: false, 
+                            selected: '{{ old('size') }}' ? '{{ old('size') }}'.split(',').map(s => s.trim()).filter(s => s) : [],
+                            commonSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '4XL', '5XL'],
+                            customSize: '',
+                            addCustom() {
+                                let val = this.customSize.trim();
+                                if (val && !this.selected.includes(val)) {
+                                    this.selected = [...this.selected, val];
+                                    this.customSize = '';
+                                }
+                            },
+                            toggleSize(size) {
+                                if (this.selected.includes(size)) {
+                                    this.selected = this.selected.filter(s => s !== size);
+                                } else {
+                                    this.selected = [...this.selected, size];
+                                }
+                            }
+                        }" class="relative" @click.away="open = false">
+                            <label for="size_display" class="block text-sm font-medium text-gray-700 mb-1">Size</label>
+                            
+                            <!-- Hidden input for the actual form submission -->
+                            <input type="hidden" name="size" :value="selected.join(', ')">
+
+                            <!-- Dropdown Trigger -->
+                            <div @click="open = !open"
+                                class="w-full bg-white border border-gray-300 rounded-lg shadow-sm px-4 py-2 cursor-pointer flex justify-between items-center focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500">
+                                <span x-text="selected.length > 0 ? selected.join(', ') : 'Select Sizes'"
+                                    class="text-gray-700 truncate" :class="selected.length === 0 && 'text-gray-400'"></span>
+                                <svg class="h-5 w-5 text-gray-400 transform transition-transform" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+
+                            <!-- Dropdown Menu -->
+                            <div x-show="open" 
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                x-transition:enter-end="opacity-100 transform translate-y-0"
+                                class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-xl py-2 max-h-60 overflow-y-auto">
+                                
+                                <template x-for="size in commonSizes" :key="size">
+                                    <label class="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" :value="size" :checked="selected.includes(size)" @change="toggleSize(size)"
+                                            class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
+                                        <span class="ml-3 text-sm text-gray-700" x-text="size"></span>
+                                    </label>
+                                </template>
+
+                                <div class="border-t border-gray-100 my-1"></div>
+                                
+                                <!-- Custom Size Input -->
+                                <div class="px-4 py-2">
+                                    <div class="flex gap-2">
+                                        <input type="text" x-model="customSize" @keydown.enter.prevent="addCustom()"
+                                            class="flex-1 text-xs rounded border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 py-1" 
+                                            placeholder="Custom...">
+                                        <button type="button" @click="addCustom()"
+                                            class="px-2 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200 text-xs font-bold">Add</button>
+                                    </div>
+                                </div>
+
+                                <!-- Display Custom Selected (that aren't in common) -->
+                                <template x-for="size in selected.filter(s => !commonSizes.includes(s))" :key="size">
+                                    <label class="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer">
+                                        <input type="checkbox" checked @change="toggleSize(size)"
+                                            class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4">
+                                        <span class="ml-3 text-sm text-gray-700 font-medium" x-text="size"></span>
+                                    </label>
+                                </template>
+                            </div>
+                            @error('size') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- Special Effects -->
                         <div>
-                            <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                            <input type="date" name="end_date" id="end_date"
+                            <label for="special_effects" class="block text-sm font-medium text-gray-700 mb-1">Special Effects</label>
+                            <input type="text" name="special_effects" id="special_effects"
                                 class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
-                                value="{{ old('end_date') }}">
-                            @error('end_date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                value="{{ old('special_effects') }}">
+                            @error('special_effects') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- Washing & Dyeing Category -->
+                        <div>
+                            <label for="washing_dyeing_category" class="block text-sm font-medium text-gray-700 mb-1">Washing & Dyeing Category</label>
+                            <input type="text" name="washing_dyeing_category" id="washing_dyeing_category"
+                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
+                                value="{{ old('washing_dyeing_category') }}">
+                            @error('washing_dyeing_category') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- Fabric Category -->
+                        <div>
+                            <label for="fabric_category_id" class="block text-sm font-medium text-gray-700 mb-1">Fabric Category</label>
+                            <select name="fabric_category_id" id="fabric_category_id"
+                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">
+                                <option value="">Select Fabric Category</option>
+                                @foreach($fabricCategories as $fCategory)
+                                    <option value="{{ $fCategory->id }}" {{ old('fabric_category_id') == $fCategory->id ? 'selected' : '' }}>
+                                        {{ $fCategory->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('fabric_category_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- Fabric -->
+                        <div>
+                            <label for="fabric_id" class="block text-sm font-medium text-gray-700 mb-1">Fabric</label>
+                            <select name="fabric_id" id="fabric_id" disabled
+                                class="w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm bg-gray-100">
+                                <option value="">Select Fabric</option>
+                            </select>
+                            @error('fabric_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
                         <!-- Main Image -->
@@ -212,6 +420,34 @@
                         }
                     })
                     .catch(error => console.error('Error fetching child subcategories:', error));
+            }
+        });
+
+        document.getElementById('fabric_category_id').addEventListener('change', function() {
+            var categoryId = this.value;
+            var fabricSelect = document.getElementById('fabric_id');
+            
+            // Reset Fabric
+            fabricSelect.innerHTML = '<option value="">Select Fabric</option>';
+            fabricSelect.disabled = true;
+            fabricSelect.classList.add('bg-gray-100');
+
+            if(categoryId) {
+                fetch(`{{ url('admin/get-fabrics') }}/${categoryId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.length > 0) {
+                            fabricSelect.disabled = false;
+                            fabricSelect.classList.remove('bg-gray-100');
+                            data.forEach(fabric => {
+                                var option = document.createElement('option');
+                                option.value = fabric.id;
+                                option.text = fabric.name;
+                                fabricSelect.appendChild(option);
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error fetching fabrics:', error));
             }
         });
 

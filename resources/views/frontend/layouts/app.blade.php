@@ -800,7 +800,7 @@
 
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 2rem;
     }
 
@@ -819,8 +819,13 @@
 
     .project-image {
       width: 100%;
-      height: 500px;
+      height: 450px;
+      background: #fdfdfd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
+      border-bottom: 1px solid #f3f4f6;
     }
 
     .project-image img {
@@ -828,7 +833,7 @@
       height: 100%;
       object-fit: cover;
       object-position: top;
-      transition: transform 0.4s;
+      transition: transform 0.4s ease;
     }
 
     .project-card:hover .project-image img {

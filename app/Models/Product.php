@@ -13,15 +13,19 @@ class Product extends Model
     protected $fillable = [
         'product_name',
         'slug',
+        'product_type',
         'category_id',
         'subcategory_id',
         'child_subcategory_id',
         'description',
         'price',
-        'client',
-        'location',
-        'start_date',
-        'end_date',
+        'discount_price',
+        'color',
+        'size',
+        'special_effects',
+        'washing_dyeing_category',
+        'fabric_category_id',
+        'fabric_id',
         'main_image',
         'status',
     ];
@@ -48,5 +52,15 @@ class Product extends Model
     public function galleries()
     {
         return $this->hasMany(ProductGallery::class);
+    }
+
+    public function fabricCategory()
+    {
+        return $this->belongsTo(FabricCategory::class, 'fabric_category_id');
+    }
+
+    public function fabric()
+    {
+        return $this->belongsTo(Fabric::class, 'fabric_id');
     }
 }

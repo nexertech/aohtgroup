@@ -9,7 +9,7 @@
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
         }
 
@@ -29,8 +29,13 @@
 
         .product-image {
             width: 100%;
-            height: 400px;
+            height: 450px;
+            background: #fdfdfd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
+            border-bottom: 1px solid #f3f4f6;
         }
 
         .product-image img {
@@ -38,11 +43,11 @@
             height: 100%;
             object-fit: cover;
             object-position: top;
-            transition: transform 0.4s;
+            transition: transform 0.4s ease;
         }
 
         .product-card:hover .product-image img {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         .image-placeholder {
@@ -154,6 +159,15 @@
                             </div>
                             <div class="product-content">
                                 <h3 class="product-title">{{ $product->product_name }}</h3>
+                                <div class="flex items-center gap-2 mb-3">
+                                    @if($product->discount_price)
+                                        <span class="text-lg font-bold text-red-600">PKR
+                                            {{ number_format($product->discount_price) }}</span>
+                                        <span class="text-sm text-gray-400 line-through">PKR {{ number_format($product->price) }}</span>
+                                    @elseif($product->price)
+                                        <span class="text-lg font-bold text-gray-900">PKR {{ number_format($product->price) }}</span>
+                                    @endif
+                                </div>
                                 <p class="product-description">
                                     {{ \Illuminate\Support\Str::limit(strip_tags($product->description), 120) }}
                                 </p>

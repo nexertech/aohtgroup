@@ -8,6 +8,8 @@ use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Models\FabricCategory;
+use App\Models\Fabric;
 
 class ProductController extends Controller
 {
@@ -29,7 +31,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = ProductCategory::whereNull('parent_id')->get();
-        return view('admin.products.create', compact('categories'));
+        $fabricCategories = FabricCategory::where('status', 1)->get();
+        return view('admin.products.create', compact('categories', 'fabricCategories'));
     }
 
     /**
@@ -39,15 +42,18 @@ class ProductController extends Controller
     {
         $request->validate([
             'product_name' => 'required|string|max:255',
+            'product_type' => 'nullable|string|max:255',
             'category_id' => 'nullable|exists:product_categories,id',
             'subcategory_id' => 'nullable|exists:product_categories,id',
             'child_subcategory_id' => 'nullable|exists:product_categories,id',
-            'description' => 'nullable|string',
-            'client' => 'nullable|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
             'price' => 'nullable|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0|lt:price',
+            'color' => 'nullable|string|max:255',
+            'size' => 'nullable|string|max:255',
+            'special_effects' => 'nullable|string|max:255',
+            'washing_dyeing_category' => 'nullable|string|max:255',
+            'fabric_category_id' => 'nullable|exists:fabric_categories,id',
+            'fabric_id' => 'nullable|exists:fabrics,id',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'status' => 'boolean',
@@ -91,7 +97,12 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = ProductCategory::whereNull('parent_id')->get();
-        return view('admin.products.edit', compact('product', 'categories'));
+        $fabricCategories = FabricCategory::where('status', 1)->get();
+        $fabrics = [];
+        if ($product->fabric_category_id) {
+            $fabrics = Fabric::where('fabric_category_id', $product->fabric_category_id)->where('status', 1)->get();
+        }
+        return view('admin.products.edit', compact('product', 'categories', 'fabricCategories', 'fabrics'));
     }
 
     /**
@@ -101,15 +112,19 @@ class ProductController extends Controller
     {
         $request->validate([
             'product_name' => 'required|string|max:255',
+            'product_type' => 'nullable|string|max:255',
             'category_id' => 'nullable|exists:product_categories,id',
             'subcategory_id' => 'nullable|exists:product_categories,id',
             'child_subcategory_id' => 'nullable|exists:product_categories,id',
             'description' => 'nullable|string',
-            'client' => 'nullable|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
             'price' => 'nullable|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0|lt:price',
+            'color' => 'nullable|string|max:255',
+            'size' => 'nullable|string|max:255',
+            'special_effects' => 'nullable|string|max:255',
+            'washing_dyeing_category' => 'nullable|string|max:255',
+            'fabric_category_id' => 'nullable|exists:fabric_categories,id',
+            'fabric_id' => 'nullable|exists:fabrics,id',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'status' => 'boolean',

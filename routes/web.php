@@ -32,6 +32,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('email-templates', App\Http\Controllers\Admin\EmailTemplateController::class);
     Route::resource('office-locations', App\Http\Controllers\Admin\OfficeLocationController::class);
 
+    Route::resource('fabric-categories', App\Http\Controllers\Admin\FabricCategoryController::class);
+    Route::post('fabric-categories/ajax-store', [App\Http\Controllers\Admin\FabricCategoryController::class, 'ajaxStore'])->name('fabric-categories.ajax-store');
+    Route::resource('fabrics', App\Http\Controllers\Admin\FabricController::class);
+    Route::get('get-fabrics/{categoryId}', [App\Http\Controllers\Admin\FabricController::class, 'getFabricsByCategory'])->name('get-fabrics');
+
     // Pages Management
     Route::get('pages/about', [App\Http\Controllers\Admin\AboutPageController::class, 'index'])->name('pages.about');
     Route::put('pages/about', [App\Http\Controllers\Admin\AboutPageController::class, 'update'])->name('pages.about.update');

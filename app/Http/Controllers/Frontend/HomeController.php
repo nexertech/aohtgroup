@@ -48,8 +48,8 @@ class HomeController extends Controller
     public function categoryDetail($slug)
     {
         $company = CompanyInfo::first();
-        // Eager load parent for breadcrumbs
-        $category = ProductCategory::where('slug', $slug)->with('parent')->firstOrFail();
+        // Eager load parent chain for breadcrumbs
+        $category = ProductCategory::where('slug', $slug)->with('parent.parent')->firstOrFail();
 
         // Check if this is a leaf node (subcategory with no children)
         $subcategories = ProductCategory::where('parent_id', $category->id)->get();
@@ -150,7 +150,14 @@ class HomeController extends Controller
     public function productDetail($slug)
     {
         $company = CompanyInfo::first();
-        $product = Product::where('slug', $slug)->with(['category', 'subcategory', 'childSubcategory', 'galleries'])->firstOrFail();
+        $product = Product::where('slug', $slug)->with([
+            'category.parent.parent',
+            'subcategory.parent.parent',
+            'childSubcategory.parent.parent',
+            'galleries',
+            'fabricCategory',
+            'fabric'
+        ])->firstOrFail();
 
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)

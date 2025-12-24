@@ -5,81 +5,45 @@
         <div class="container-custom">
             <!-- Breadcrumb -->
             <nav class="flex mb-8" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <ol class="inline-flex items-center space-x-1 md:space-x-2">
                     <li class="inline-flex items-center">
                         <a href="{{ route('home') }}"
                             class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-indigo-600">
                             Home
                         </a>
                     </li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m1 9 4-4-4-4" />
+
+                    @php
+                        // Find the deepest available category level
+                        $leaf = $product->childSubcategory ?: ($product->subcategory ?: $product->category);
+                        $path = [];
+                        $curr = $leaf;
+                        while ($curr) {
+                            $path[] = $curr;
+                            $curr = $curr->parent;
+                        }
+                        $path = array_reverse($path);
+                    @endphp
+
+                    @foreach($path as $p)
+                        <li class="flex items-center">
+                            <svg class="w-3 h-3 text-gray-400 mx-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
-                            <a href="{{ route('frontend.products') }}"
-                                class="ml-1 text-sm font-medium text-gray-700 hover:text-indigo-600 md:ml-2">
-                                Products
+                            <a href="{{ route('frontend.category.detail', $p->slug) }}"
+                                class="text-sm font-medium text-gray-700 hover:text-indigo-600">
+                                {{ $p->category_name }}
                             </a>
-                        </div>
-                    </li>
-                    @if($product->category)
-                        <li>
-                            <div class="flex items-center">
-                                <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 6 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="m1 9 4-4-4-4" />
-                                </svg>
-                                <a href="{{ route('frontend.category.detail', $product->category->slug) }}"
-                                    class="ml-1 text-sm font-medium text-gray-700 hover:text-indigo-600 md:ml-2">
-                                    {{ $product->category->category_name }}
-                                </a>
-                            </div>
                         </li>
-                    @endif
-                    @if($product->subcategory)
-                        <li>
-                            <div class="flex items-center">
-                                <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 6 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="m1 9 4-4-4-4" />
-                                </svg>
-                                <a href="{{ route('frontend.category.detail', $product->subcategory->slug) }}"
-                                    class="ml-1 text-sm font-medium text-gray-700 hover:text-indigo-600 md:ml-2">
-                                    {{ $product->subcategory->category_name }}
-                                </a>
-                            </div>
-                        </li>
-                    @endif
-                    @if($product->childSubcategory)
-                        <li>
-                            <div class="flex items-center">
-                                <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 6 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="m1 9 4-4-4-4" />
-                                </svg>
-                                <a href="{{ route('frontend.category.detail', $product->childSubcategory->slug) }}"
-                                    class="ml-1 text-sm font-medium text-gray-700 hover:text-indigo-600 md:ml-2">
-                                    {{ $product->childSubcategory->category_name }}
-                                </a>
-                            </div>
-                        </li>
-                    @endif
-                    <li aria-current="page">
-                        <div class="flex items-center">
-                            <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="m1 9 4-4-4-4" />
-                            </svg>
-                            <span
-                                class="ml-1 text-sm font-medium text-gray-500 md:ml-2 truncate">{{ $product->product_name }}</span>
-                        </div>
+                    @endforeach
+
+                    <li class="flex items-center" aria-current="page">
+                        <svg class="w-3 h-3 text-gray-400 mx-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span class="text-sm font-medium text-gray-500 truncate max-w-[150px] md:max-w-xs">
+                            {{ $product->product_name }}
+                        </span>
                     </li>
                 </ol>
             </nav>
@@ -133,80 +97,163 @@
                     </div>
 
                     <!-- Right: Product Details -->
-                    <div class="p-8 lg:px-12 lg:py-6 flex flex-col justify-center">
-                        <div class="uppercase tracking-wide text-sm text-indigo-600 font-semibold mb-2">
-                            @if($product->childSubcategory)
-                                {{ $product->childSubcategory->category_name }}
-                            @elseif($product->subcategory)
-                                {{ $product->subcategory->category_name }}
-                            @elseif($product->category)
-                                {{ $product->category->category_name }}
-                            @else
-                                Product
-                            @endif
+                    <div class="p-4 lg:px-12 lg:pt-6 pb-10">
+                        <div class="mb-2">
+                            <span class="text-xs font-medium text-gray-500 uppercase tracking-widest">
+                                @if($product->childSubcategory)
+                                    {{ $product->childSubcategory->category_name }}
+                                @elseif($product->subcategory)
+                                    {{ $product->subcategory->category_name }}
+                                @elseif($product->category)
+                                    {{ $product->category->category_name }}
+                                @else
+                                    Ready To Wear
+                                @endif
+                            </span>
                         </div>
-                        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">{{ $product->product_name }}</h1>
+
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2 leading-tight">
+                            {{ $product->product_name }}
+                        </h1>
 
                         @if($product->price)
-                            <div class="text-3xl font-bold text-indigo-600 mb-6">
-                                Rs. {{ number_format($product->price, 2) }}
+                            <div class="flex items-baseline gap-2 mb-6">
+                                @if($product->discount_price)
+                                    <span class="text-2xl font-bold text-red-600">PKR
+                                        {{ number_format($product->discount_price) }}</span>
+                                    <span class="text-lg text-gray-400 line-through">PKR {{ number_format($product->price) }}</span>
+                                @else
+                                    <span class="text-2xl font-bold text-gray-900">PKR {{ number_format($product->price) }}</span>
+                                @endif
                             </div>
                         @endif
 
-                        <div class="flex flex-wrap gap-4 mb-6 text-sm text-gray-600">
-                            @if($product->client)
-                                <div class="flex items-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                    </svg>
-                                    Client: <span class="font-medium text-gray-900 ml-1">{{ $product->client }}</span>
-                                </div>
-                            @endif
-                            @if($product->location)
-                                <div class="flex items-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                        </path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    </svg>
-                                    Location: <span class="font-medium text-gray-900 ml-1">{{ $product->location }}</span>
-                                </div>
-                            @endif
-                            @if($product->start_date)
-                                <div class="flex items-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                                        </path>
-                                    </svg>
-                                    Date: <span
-                                        class="font-medium text-gray-900 ml-1">{{ \Carbon\Carbon::parse($product->start_date)->format('M Y') }}</span>
+                        <div class="text-sm text-gray-600 mb-8 pb-6 border-b border-gray-100 flex flex-col gap-2">
+                            <div>
+                                <span class="font-medium">Item:</span>
+                                {{ $product->product_type ?? '1 Piece' }}
+                            </div>
+                            @if($product->fabricCategory || $product->fabric)
+                                <div>
+                                    <span class="font-medium">Fabric:</span>
+                                    {{ $product->fabricCategory->name ?? '' }}
+                                    {{ $product->fabric->name ? '+ ' . $product->fabric->name : '' }}
                                 </div>
                             @endif
                         </div>
 
-                        <div class="prose prose-indigo text-gray-600 mb-8">
-                            {!! $product->description !!}
-                        </div>
+                        <!-- Size Selection -->
+                        @if($product->size)
+                            <div class="mb-8">
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-sm font-bold text-gray-900 uppercase">Size</span>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    @php
+                                        $sizes = explode(',', $product->size);
+                                    @endphp
+                                    @foreach($sizes as $size)
+                                        <button type="button"
+                                            class="size-box min-w-[50px] h-11 px-3 flex items-center justify-center border border-gray-300 text-sm font-bold transition-all duration-200 hover:border-gray-900"
+                                            onclick="selectSize(this, '{{ trim($size) }}')">
+                                            {{ trim($size) }}
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
 
-                        <div class="mt-8 flex gap-4">
-                            <button
-                                class="inline-flex items-center px-8 py-4 border border-transparent text-lg font-bold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150 ease-in-out shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                        <!-- Color Selection -->
+                        @if($product->color)
+                            <div class="mb-8">
+                                <span class="block text-sm font-bold text-gray-900 uppercase mb-4">Color:
+                                    {{ $product->color }}</span>
+                                <div class="flex gap-2">
+                                    <button type="button"
+                                        class="w-8 h-8 rounded-full border-2 border-gray-900 ring-2 ring-transparent ring-offset-2 transition-all p-0.5"
+                                        style="background-color: {{ strtolower($product->color) == 'white' ? '#fff' : strtolower($product->color) }}; border-color: #eee;">
+                                        <span class="sr-only">{{ $product->color }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- Quantity and Call to Action -->
+                        <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                            <!-- Quantity Selector -->
+                            <div class="flex items-center border border-gray-300 h-14 bg-white">
+                                <button type="button" onclick="decrementQty()"
+                                    class="w-12 h-full flex items-center justify-center text-xl hover:bg-gray-50 transition-colors">−</button>
+                                <input type="number" id="quantity" value="1" min="1"
+                                    class="w-14 h-full text-center border-none focus:ring-0 font-bold text-lg bg-transparent"
+                                    readonly>
+                                <button type="button" onclick="incrementQty()"
+                                    class="w-12 h-full flex items-center justify-center text-xl hover:bg-gray-50 transition-colors">+</button>
+                            </div>
+
+                            <!-- Add to Cart -->
+                            <button type="button"
+                                class="flex-1 bg-black text-white h-14 text-sm font-bold uppercase tracking-widest hover:bg-gray-900 transition-all duration-300 shadow-lg hover:shadow-xl transform active:scale-[0.98]"
                                 onclick="addToCart()">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
                                 Add to Cart
                             </button>
                         </div>
 
+                        <!-- Technical Details Accordion (Optional but good) -->
+                        <div class="space-y-4 pt-4 border-t border-gray-100">
+                            <div class="text-sm text-gray-600 leading-relaxed description-content">
+                                {!! $product->description !!}
+                            </div>
+                        </div>
+
+                        <style>
+                            .size-box.active {
+                                background-color: #111;
+                                color: #fff;
+                                border-color: #111;
+                            }
+
+                            input::-webkit-outer-spin-button,
+                            input::-webkit-inner-spin-button {
+                                -webkit-appearance: none;
+                                margin: 0;
+                            }
+
+                            input[type=number] {
+                                -moz-appearance: textfield;
+                            }
+
+                            .description-content p {
+                                margin-bottom: 0.75rem;
+                            }
+                        </style>
+
                         <script>
+                            let selectedSize = '';
+
+                            function selectSize(btn, size) {
+                                document.querySelectorAll('.size-box').forEach(b => b.classList.remove('active'));
+                                btn.classList.add('active');
+                                selectedSize = size;
+                            }
+
+                            function incrementQty() {
+                                const input = document.getElementById('quantity');
+                                input.value = parseInt(input.value) + 1;
+                            }
+
+                            function decrementQty() {
+                                const input = document.getElementById('quantity');
+                                if (input.value > 1) {
+                                    input.value = parseInt(input.value) - 1;
+                                }
+                            }
+
                             function addToCart() {
+                                if ({{ $product->size ? 'true' : 'false' }} && !selectedSize) {
+                                    alert('Please select a size');
+                                    return;
+                                }
                                 alert('Product added to cart! (Functionality pending)');
                             }
                         </script>
