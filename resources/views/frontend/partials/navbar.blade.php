@@ -4,7 +4,7 @@
       <!-- Left: Logo -->
       <div class="navbar-left">
         @if(isset($company) && $company->logo)
-          <img src="{{ asset('storage/' . $company->logo) }}" class="logo-img"
+          <img src="{{ asset('assets/logo.jpg') }}" class="logo-img"
             alt="{{ $company->company_name ?? 'AOHT' }}">
         @elseif(file_exists(public_path('assets/logo.jpg')))
           <img src="{{ asset('assets/logo.jpg') }}" class="logo-img" alt="AOHT Group">

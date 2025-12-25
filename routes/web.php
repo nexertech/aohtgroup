@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-require __DIR__ . '/frontend.php';
+
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
@@ -56,3 +56,5 @@ Route::middleware('auth')->group(function () {
 Route::prefix('admin')->group(function () {
     require __DIR__ . '/auth.php';
 });
+
+require __DIR__ . '/frontend.php';
