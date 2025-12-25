@@ -8,7 +8,7 @@
       @if(!empty($sliders) && $sliders->count())
         @foreach($sliders as $slide)
           <div class="slide"
-            style="background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url('{{ $slide->image ? asset('storage/' . $slide->image) : '' }}'); background-size:cover; background-position:center;">
+            style="background-image: url('{{ $slide->image ? asset('storage/' . $slide->image) : '' }}'); background-size:cover; background-position:center;">
             <div class="overlay"></div>
             <div class="slide-content">
               <h2 class="title">{{ $slide->title ?? 'AOHT Group' }}</h2>
