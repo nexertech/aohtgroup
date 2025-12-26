@@ -55,4 +55,21 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+
+    /**
+     * Check if user has specific permission
+     */
+    public function hasPermission(string $permissionKey): bool
+    {
+        if (!$this->role) {
+            return false;
+        }
+
+        static $permissions = [];
+        if (!isset($permissions[$this->id])) {
+            $permissions[$this->id] = $this->role->permissions()->pluck('permission_key')->toArray();
+        }
+
+        return in_array($permissionKey, $permissions[$this->id]);
+    }
 }

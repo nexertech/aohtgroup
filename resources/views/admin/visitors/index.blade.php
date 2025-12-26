@@ -1,54 +1,78 @@
-@extends('admin.layouts.app')
+<x-admin-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
+            {{ __('Visitors Tracking') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-    <div class="container-fluid p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-semibold text-gray-800">Visitors</h1>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 font-semibold">
-                            <th class="px-6 py-4">IP Address</th>
-                            <th class="px-6 py-4">User Agent</th>
-                            <th class="px-6 py-4">Page URL</th>
-                            <th class="px-6 py-4">Time</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        @forelse($visitors as $visitor)
-                            <tr class="hover:bg-gray-50 transition duration-200">
-                                <td class="px-6 py-4 font-medium text-gray-700 font-mono">{{ $visitor->ip_address }}</td>
-                                <td class="px-6 py-4 text-gray-600 text-sm truncate max-w-xs"
-                                    title="{{ $visitor->user_agent }}">{{ $visitor->user_agent }}</td>
-                                <td class="px-6 py-4 text-gray-600 text-sm truncate max-w-xs" title="{{ $visitor->page_url }}">
-                                    {{ $visitor->page_url }}</td>
-                                <td class="px-6 py-4 text-gray-500 text-sm">{{ $visitor->created_at->diffForHumans() }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="px-6 py-8 text-center text-gray-500">
-                                    <div class="flex flex-col items-center justify-center">
-                                        <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                        </svg>
-                                        <p>No visitors found.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-            @if($visitors->hasPages())
-                <div class="px-6 py-4 border-t border-gray-100">
-                    {{ $visitors->links() }}
+    <div class="py-8 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 overflow-hidden">
+                <div class="p-8">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr class="border-b border-slate-200">
+                                    <th
+                                        class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                        IP Address
+                                    </th>
+                                    <th
+                                        class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                        User Agent
+                                    </th>
+                                    <th
+                                        class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                        Page URL
+                                    </th>
+                                    <th
+                                        class="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                        Visited At
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                @forelse($visitors as $visitor)
+                                    <tr class="hover:bg-slate-50/50 transition duration-200">
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <span class="text-sm font-mono text-slate-700 bg-slate-100 px-2 py-1 rounded">
+                                                {{ $visitor->ip_address }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-4">
+                                            <span class="text-xs text-slate-500 break-all"
+                                                title="{{ $visitor->user_agent }}">
+                                                {{ Str::limit($visitor->user_agent, 50) }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-4 text-sm text-slate-600">
+                                            <a href="{{ $visitor->page_url }}" target="_blank"
+                                                class="hover:text-indigo-600 transition-colors">
+                                                {{ Str::limit($visitor->page_url, 40) }}
+                                            </a>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-slate-500">
+                                            {{ $visitor->created_at->diffForHumans() }}
+                                            <div class="text-[10px] text-slate-400">
+                                                {{ $visitor->created_at->format('M d, Y H:i:s') }}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="px-4 py-12 text-center text-slate-400">
+                                            No visitor records found.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-5">
+                        {{ $visitors->links() }}
+                    </div>
                 </div>
-            @endif
+            </div>
         </div>
     </div>
-@endsection
+</x-admin-layout>

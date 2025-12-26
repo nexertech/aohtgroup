@@ -13,6 +13,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     use LogsActivity;
+
     /**
      * Display the login view.
      */
@@ -26,13 +27,30 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Authenticate user
         $request->authenticate();
 
+        // Regenerate session
         $request->session()->regenerate();
 
+        // Log activity
         $this->logActivity('Login', 'User logged in successfully');
 
-        return redirect()->intended(route('admin.dashboard', absolute: false));
+        /*
+        |--------------------------------------------------------------------------
+        | Admin vs Frontend Redirect
+        |--------------------------------------------------------------------------
+        | Laravel 10/11 has no RouteServiceProvider::HOME
+        | So we control redirect manually
+        */
+
+        // If login request is from admin panel
+        if ($request->is('admin/login')) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        // Default frontend redirect
+        return redirect()->route('home');
     }
 
     /**
@@ -40,14 +58,24 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Detect if logout is from admin panel
+        $isAdmin = $request->is('admin/*');
+
+        // Log activity
         $this->logActivity('Logout', 'User logged out');
 
-        Auth::guard('web')->logout();
+        // Logout
+        Auth::logout();
 
+        // Invalidate session
         $request->session()->invalidate();
 
+        // Regenerate CSRF token
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        // Redirect after logout
+        return $isAdmin
+            ? redirect('/admin/login')
+            : redirect('/');
     }
 }

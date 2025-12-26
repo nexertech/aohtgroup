@@ -8,6 +8,8 @@ use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Models\FabricCategory;
+use App\Models\Fabric;
 
 class ProductController extends Controller
 {
@@ -16,7 +18,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->latest()->paginate(10);
+        $products = Product::with(['category', 'subcategory', 'childSubcategory'])
+            ->withCount('galleries')
+            ->latest()
+            ->paginate(10);
         return view('admin.products.index', compact('products'));
     }
 
@@ -26,7 +31,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = ProductCategory::whereNull('parent_id')->get();
-        return view('admin.products.create', compact('categories'));
+        $fabricCategories = FabricCategory::where('status', 1)->get();
+        return view('admin.products.create', compact('categories', 'fabricCategories'));
     }
 
     /**
@@ -36,14 +42,20 @@ class ProductController extends Controller
     {
         $request->validate([
             'product_name' => 'required|string|max:255',
+            'product_type' => 'nullable|string|max:255',
             'category_id' => 'nullable|exists:product_categories,id',
             'subcategory_id' => 'nullable|exists:product_categories,id',
-            'description' => 'nullable|string',
-            'client' => 'nullable|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
+            'child_subcategory_id' => 'nullable|exists:product_categories,id',
+            'price' => 'nullable|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0|lt:price',
+            'color' => 'nullable|string|max:255',
+            'size' => 'nullable|string|max:255',
+            'special_effects' => 'nullable|string|max:255',
+            'washing_dyeing_category' => 'nullable|string|max:255',
+            'fabric_category_id' => 'nullable|exists:fabric_categories,id',
+            'fabric_id' => 'nullable|exists:fabrics,id',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'status' => 'boolean',
         ]);
 
@@ -51,12 +63,22 @@ class ProductController extends Controller
         $data['slug'] = $this->generateUniqueSlug($request->product_name);
 
         if ($request->hasFile('main_image')) {
-            $imageName = time() . '.' . $request->main_image->extension();
-            $request->main_image->move(public_path('images/products'), $imageName);
-            $data['main_image'] = 'images/products/' . $imageName;
+            $path = $request->file('main_image')->store('products', 'public');
+            $data['main_image'] = $path;
         }
 
-        Product::create($data);
+        $product = Product::create($data);
+
+        // Handle Gallery Images
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $image) {
+                $path = $image->store('product_galleries', 'public');
+                \App\Models\ProductGallery::create([
+                    'product_id' => $product->id,
+                    'image_path' => $path
+                ]);
+            }
+        }
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
@@ -75,7 +97,12 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = ProductCategory::whereNull('parent_id')->get();
-        return view('admin.products.edit', compact('product', 'categories'));
+        $fabricCategories = FabricCategory::where('status', 1)->get();
+        $fabrics = [];
+        if ($product->fabric_category_id) {
+            $fabrics = Fabric::where('fabric_category_id', $product->fabric_category_id)->where('status', 1)->get();
+        }
+        return view('admin.products.edit', compact('product', 'categories', 'fabricCategories', 'fabrics'));
     }
 
     /**
@@ -85,14 +112,21 @@ class ProductController extends Controller
     {
         $request->validate([
             'product_name' => 'required|string|max:255',
+            'product_type' => 'nullable|string|max:255',
             'category_id' => 'nullable|exists:product_categories,id',
             'subcategory_id' => 'nullable|exists:product_categories,id',
+            'child_subcategory_id' => 'nullable|exists:product_categories,id',
             'description' => 'nullable|string',
-            'client' => 'nullable|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
+            'price' => 'nullable|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0|lt:price',
+            'color' => 'nullable|string|max:255',
+            'size' => 'nullable|string|max:255',
+            'special_effects' => 'nullable|string|max:255',
+            'washing_dyeing_category' => 'nullable|string|max:255',
+            'fabric_category_id' => 'nullable|exists:fabric_categories,id',
+            'fabric_id' => 'nullable|exists:fabrics,id',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'status' => 'boolean',
         ]);
 
@@ -104,16 +138,26 @@ class ProductController extends Controller
 
         if ($request->hasFile('main_image')) {
             // Delete old image if exists
-            if ($product->main_image && file_exists(public_path($product->main_image))) {
-                unlink(public_path($product->main_image));
+            if ($product->main_image) {
+                Storage::disk('public')->delete($product->main_image);
             }
 
-            $imageName = time() . '.' . $request->main_image->extension();
-            $request->main_image->move(public_path('images/products'), $imageName);
-            $data['main_image'] = 'images/products/' . $imageName;
+            $path = $request->file('main_image')->store('products', 'public');
+            $data['main_image'] = $path;
         }
 
         $product->update($data);
+
+        // Handle Gallery Images (Append new ones)
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $image) {
+                $path = $image->store('product_galleries', 'public');
+                \App\Models\ProductGallery::create([
+                    'product_id' => $product->id,
+                    'image_path' => $path
+                ]);
+            }
+        }
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
@@ -123,13 +167,48 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        if ($product->main_image && file_exists(public_path($product->main_image))) {
-            unlink(public_path($product->main_image));
+        // Delete main image
+        if ($product->main_image) {
+            Storage::disk('public')->delete($product->main_image);
+        }
+
+        // Delete gallery images
+        foreach ($product->galleries as $gallery) {
+            if ($gallery->image_path) {
+                Storage::disk('public')->delete($gallery->image_path);
+            }
+            $gallery->delete();
         }
 
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+    }
+
+    /**
+     * Delete a specific gallery image.
+     */
+    public function deleteGalleryImage($id)
+    {
+        try {
+            $gallery = \App\Models\ProductGallery::findOrFail($id);
+
+            if ($gallery->image_path) {
+                Storage::disk('public')->delete($gallery->image_path);
+            }
+
+            $gallery->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Gallery image deleted successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting image: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

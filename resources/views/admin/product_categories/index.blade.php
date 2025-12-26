@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <div class="container-fluid p-6">
+    <div class="p-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-semibold text-gray-800">Product Categories</h1>
             <a href="{{ route('admin.product-categories.create') }}"
@@ -116,14 +116,25 @@
                 <!-- Expanded Header with Add Button -->
                 <div class="px-6 py-6 border-b border-gray-100 flex justify-between items-center bg-white">
                     <div>
-                        <h3 class="text-xl font-bold text-gray-900">Subcategories</h3>
-                        <p class="text-sm text-gray-500 mt-1">Manage subcategories for <span
-                                class="font-semibold text-indigo-600" id="subModalSubtitle">--</span></p>
+                        <h3 class="text-xl font-bold text-gray-900">Categories Management</h3>
+                        <p class="text-sm text-gray-500 mt-1 flex items-center gap-1">
+                            <span id="modalNavigationPath" class="flex items-center">
+                                <span class="text-gray-400">Manage: </span>
+                                <span class="font-semibold text-indigo-600 ml-1" id="subModalSubtitle">--</span>
+                            </span>
+                        </p>
                     </div>
                     <div class="flex items-center gap-3">
+                        <button type="button" id="modalBackButton" onclick="goBackHierarchy()"
+                            class="hidden inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg> Back
+                        </button>
                         <button type="button" onclick="toggleForm(true)"
                             class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
-                            + Add Subcategory
+                            + Add Item
                         </button>
                         <button type="button" class="text-gray-400 hover:text-gray-500 transition-colors"
                             onclick="closeSubCategoryModal()">
@@ -140,7 +151,7 @@
                     <div id="formContainer"
                         class="hidden mb-6 bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all duration-300">
                         <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-2">
-                            <h4 class="text-lg font-semibold text-gray-800" id="formTitle">Add New Subcategory</h4>
+                            <h4 class="text-lg font-semibold text-gray-800" id="formTitle">Add New Item</h4>
                             <button type="button" onclick="toggleForm(false)" class="text-gray-400 hover:text-red-500">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -188,7 +199,7 @@
                                 </button>
                                 <button type="submit" id="saveButton"
                                     class="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Add Subcategory
+                                    Add Item
                                 </button>
                             </div>
                         </form>
@@ -204,8 +215,6 @@
                                         <th class="px-6 py-4">#</th>
                                         <th class="px-6 py-4">Image</th>
                                         <th class="px-6 py-4">Name</th>
-                                        <th class="px-6 py-4">Parent Category</th>
-                                        <th class="px-6 py-4">Slug</th>
                                         <th class="px-6 py-4 text-right">Actions</th>
                                     </tr>
                                 </thead>
@@ -236,8 +245,8 @@
                                         d="M4 6h16M4 12h16M4 18h7" />
                                 </svg>
                             </div>
-                            <h3 class="text-gray-900 font-medium text-sm">No subcategories found</h3>
-                            <p class="text-gray-500 text-xs mt-1">Get started by adding a new subcategory.</p>
+                            <h3 class="text-gray-900 font-medium text-sm">No items found</h3>
+                            <p class="text-gray-500 text-xs mt-1">Get started by adding a new item.</p>
                         </div>
                     </div>
                 </div>
@@ -250,21 +259,49 @@
 
         // --- Subcategory AJAX Logic ---
         let currentParentId = null;
+        let navigationStack = []; // To keep track of hierarchy [{id, name}]
 
         function openSubCategoryModal(id, name) {
-            currentParentId = id;
-            document.getElementById('subModalSubtitle').innerText = name;
-            document.getElementById('modalParentId').value = id;
-
-            toggleForm(false);
-            document.getElementById('subcategoryForm').reset();
-            document.getElementById('modalSubcategoryId').value = '';
-
-            fetchSubcategories(id);
+            navigationStack = []; // Reset stack on fresh open
+            drillDown(id, name);
 
             document.getElementById('subCategoryModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
             document.querySelector('#subCategoryModal .backdrop-blur-sm').addEventListener('click', closeSubCategoryModal);
+        }
+
+        function drillDown(id, name) {
+            currentParentId = id;
+            navigationStack.push({ id: id, name: name });
+
+            updateModalHeader();
+
+            document.getElementById('modalParentId').value = id;
+            document.getElementById('subcategoryForm').reset();
+            document.getElementById('modalSubcategoryId').value = '';
+            toggleForm(false);
+
+            fetchSubcategories(id);
+        }
+
+        function goBackHierarchy() {
+            if (navigationStack.length > 1) {
+                navigationStack.pop(); // Remove current
+                const previous = navigationStack.pop(); // Get previous (will be re-pushed by drillDown)
+                drillDown(previous.id, previous.name);
+            }
+        }
+
+        function updateModalHeader() {
+            const current = navigationStack[navigationStack.length - 1];
+            document.getElementById('subModalSubtitle').innerText = current.name;
+
+            const backBtn = document.getElementById('modalBackButton');
+            if (navigationStack.length > 1) {
+                backBtn.classList.remove('hidden');
+            } else {
+                backBtn.classList.add('hidden');
+            }
         }
 
         function closeSubCategoryModal() {
@@ -276,7 +313,6 @@
             const tbody = document.getElementById('subCategoryTableBody');
             const noSubs = document.getElementById('noSubCategories');
             const loading = document.getElementById('loadingSubcategories');
-            const parentName = document.getElementById('subModalSubtitle').innerText;
 
             tbody.innerHTML = '';
             noSubs.classList.add('hidden');
@@ -292,6 +328,19 @@
                             const tr = document.createElement('tr');
                             tr.className = 'hover:bg-gray-50 transition-colors';
 
+                            let nameHtml = sub.category_name;
+                            let drillBtn = '';
+
+                            if (navigationStack.length === 1) {
+                                // Depth 1: Subcategories - Show name link but NO "Next Layer" button
+                                nameHtml = `<button type="button" onclick="drillDown(${sub.id}, '${sub.category_name}')" class="text-indigo-600 hover:underline">${sub.category_name}</button>`;
+                                drillBtn = '';
+                            } else {
+                                // Depth 2+: Sub-subcategories - Plain text and NO button
+                                nameHtml = sub.category_name;
+                                drillBtn = '';
+                            }
+
                             const editBtn = `<button type="button" onclick='editSubcategory(${JSON.stringify(sub).replace(/'/g, "&#39;")})' class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition duration-200" title="Edit"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></button>`;
 
                             const deleteBtn = `<button type="button" onclick="deleteSubcategory(${sub.id})" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition duration-200" title="Delete"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>`;
@@ -300,21 +349,21 @@
                                 ? `<img src="/storage/${sub.image}" class="w-10 h-10 rounded-full object-cover border border-gray-100">`
                                 : `<div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-400 font-bold">NA</div>`;
 
-                            const parentBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">${parentName}</span>`;
 
                             tr.innerHTML = `
-                                    <td class="px-6 py-4 text-gray-500 text-sm whitespace-nowrap">${index + 1}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">${imageHtml}</td>
-                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${sub.category_name}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">${parentBadge}</td>
-                                    <td class="px-6 py-4 text-gray-500 text-sm font-mono whitespace-nowrap">${sub.slug}</td>
-                                    <td class="px-6 py-4 text-right whitespace-nowrap">
-                                        <div class="flex items-center justify-end gap-2">
-                                            ${editBtn}
-                                            ${deleteBtn}
-                                        </div>
-                                    </td>
-                                `;
+                                                    <td class="px-6 py-4 text-gray-500 text-sm whitespace-nowrap">${index + 1}</td>
+                                                    <td class="px-6 py-4 whitespace-nowrap">${imageHtml}</td>
+                                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                        ${nameHtml}
+                                                    </td>
+                                                    <td class="px-6 py-4 text-right whitespace-nowrap">
+                                                        <div class="flex items-center justify-end gap-2">
+                                                            ${drillBtn}
+                                                            ${editBtn}
+                                                            ${deleteBtn}
+                                                        </div>
+                                                    </td>
+                                                `;
                             tbody.appendChild(tr);
                         });
                     } else {
@@ -331,13 +380,18 @@
             const container = document.getElementById('formContainer');
             if (show) {
                 container.classList.remove('hidden');
-                // Reset edit mode titles just in case
+                // If subId is empty, it's a fresh ADD
                 if (document.getElementById('modalSubcategoryId').value === '') {
-                    document.getElementById('formTitle').innerText = 'Add New Subcategory';
-                    document.getElementById('saveButton').innerText = 'Add Subcategory';
+                    document.getElementById('subcategoryForm').reset();
+                    document.getElementById('modalParentId').value = currentParentId;
+                    document.getElementById('formTitle').innerText = 'Add New Item';
+                    document.getElementById('saveButton').innerText = 'Add Item';
                 }
             } else {
                 container.classList.add('hidden');
+                document.getElementById('subcategoryForm').reset();
+                document.getElementById('modalSubcategoryId').value = '';
+                document.getElementById('modalParentId').value = currentParentId;
             }
         }
 
@@ -366,7 +420,8 @@
                     method: 'POST', // Always POST for Laravel FormData with _method
                     body: formData,
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                        'Accept': 'application/json'
                     }
                 });
 
@@ -374,11 +429,13 @@
 
                 if (result.success) {
                     toggleForm(false);
-                    document.getElementById('subcategoryForm').reset();
-                    document.getElementById('modalSubcategoryId').value = '';
                     fetchSubcategories(currentParentId);
                 } else {
-                    alert('Error: ' + (result.message || 'Unknown error'));
+                    let errorMessage = result.message || 'Unknown error';
+                    if (result.errors) {
+                        errorMessage += '\n' + Object.values(result.errors).flat().join('\n');
+                    }
+                    alert('Error: ' + errorMessage);
                 }
 
             } catch (error) {

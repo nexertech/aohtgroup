@@ -12,29 +12,31 @@
         @if(isset($categories) && $categories->count() > 0)
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 @foreach($categories as $category)
-                    <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col h-full">
-                        <div class="relative h-64 overflow-hidden bg-gray-100">
-                            @if($category->image)
-                                <img src="{{ asset('storage/' . $category->image) }}" 
-                                     alt="{{ $category->category_name }}" 
-                                     class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center text-gray-300 text-4xl font-bold bg-gray-50">
-                                    {{ substr($category->category_name, 0, 1) }}
-                                </div>
-                            @endif
-                            
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </div>
+                    <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col h-full transform hover:-translate-y-1">
+                        <a href="{{ route('frontend.category.detail', $category->slug) }}" class="flex flex-col h-full">
+                            <div class="relative h-64 overflow-hidden bg-gray-100">
+                                @if($category->image)
+                                    <img src="{{ asset('storage/' . $category->image) }}" 
+                                         alt="{{ $category->category_name }}" 
+                                         class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center text-gray-300 text-4xl font-bold bg-gray-50 uppercase">
+                                        {{ substr($category->category_name, 0, 1) }}
+                                    </div>
+                                @endif
+                                
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            </div>
 
-                        <div class="p-6 text-center flex-grow flex flex-col justify-center">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-indigo-600 transition-colors">
-                                {{ strtoupper($category->category_name) }}
-                            </h3>
-                            <a href="#" class="inline-block mt-3 text-indigo-600 font-semibold text-sm hover:underline">
-                                View Products →
-                            </a>
-                        </div>
+                            <div class="p-6 text-center flex-grow flex flex-col justify-center">
+                                <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-indigo-600 transition-colors">
+                                    {{ strtoupper($category->category_name) }}
+                                </h3>
+                                <span class="inline-block mt-3 text-indigo-600 font-semibold text-sm hover:underline">
+                                    View Products →
+                                </span>
+                            </div>
+                        </a>
                     </div>
                 @endforeach
             </div>

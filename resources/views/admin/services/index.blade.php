@@ -159,7 +159,7 @@
             document.getElementById('modalServiceSlug').innerText = service.slug;
             document.getElementById('modalServiceIcon').innerText = service.icon || 'No Icon';
             document.getElementById('modalServiceBanner').innerText = service.banner_image || 'No Image';
-             document.getElementById('modalServiceDescription').innerText = service.description || 'No Description';
+             document.getElementById('modalServiceDescription').innerHTML = service.description || 'No Description';
             
             const statusElem = document.getElementById('modalServiceStatus');
             if (service.status) {

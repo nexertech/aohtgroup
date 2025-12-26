@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-require __DIR__ . '/frontend.php';
+
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
@@ -19,16 +19,23 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::post('product-categories/ajax-store', [App\Http\Controllers\Admin\ProductCategoryController::class, 'ajaxStore'])->name('product-categories.ajax-store');
     Route::put('product-categories/ajax-update/{id}', [App\Http\Controllers\Admin\ProductCategoryController::class, 'ajaxUpdate'])->name('product-categories.ajax-update');
     Route::delete('product-categories/ajax-destroy/{id}', [App\Http\Controllers\Admin\ProductCategoryController::class, 'ajaxDestroy'])->name('product-categories.ajax-destroy');
+    Route::delete('products/gallery/{id}', [App\Http\Controllers\Admin\ProductController::class, 'deleteGalleryImage'])->name('products.delete-gallery-image');
     Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
-    Route::resource('product-galleries', App\Http\Controllers\Admin\ProductGalleryController::class);
     Route::resource('blogs', App\Http\Controllers\Admin\BlogController::class);
     Route::resource('contact-messages', App\Http\Controllers\Admin\ContactMessageController::class);
+    Route::post('contact-messages/{id}/send-reply', [App\Http\Controllers\Admin\ContactMessageController::class, 'sendReply'])->name('contact-messages.send-reply');
     Route::resource('job-openings', App\Http\Controllers\Admin\JobOpeningController::class);
     Route::resource('job-applications', App\Http\Controllers\Admin\JobApplicationController::class);
     Route::resource('clients', App\Http\Controllers\Admin\ClientController::class);
     Route::resource('certificates', App\Http\Controllers\Admin\CertificateController::class);
     Route::resource('sliders', App\Http\Controllers\Admin\SliderController::class);
     Route::resource('email-templates', App\Http\Controllers\Admin\EmailTemplateController::class);
+    Route::resource('office-locations', App\Http\Controllers\Admin\OfficeLocationController::class);
+
+    Route::resource('fabric-categories', App\Http\Controllers\Admin\FabricCategoryController::class);
+    Route::post('fabric-categories/ajax-store', [App\Http\Controllers\Admin\FabricCategoryController::class, 'ajaxStore'])->name('fabric-categories.ajax-store');
+    Route::resource('fabrics', App\Http\Controllers\Admin\FabricController::class);
+    Route::get('get-fabrics/{categoryId}', [App\Http\Controllers\Admin\FabricController::class, 'getFabricsByCategory'])->name('get-fabrics');
 
     // Pages Management
     Route::get('pages/about', [App\Http\Controllers\Admin\AboutPageController::class, 'index'])->name('pages.about');
@@ -49,3 +56,5 @@ Route::middleware('auth')->group(function () {
 Route::prefix('admin')->group(function () {
     require __DIR__ . '/auth.php';
 });
+
+require __DIR__ . '/frontend.php';

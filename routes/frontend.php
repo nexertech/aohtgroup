@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/categories', [HomeController::class, 'categories'])->name('frontend.categories');
+Route::get('/products', [HomeController::class, 'products'])->name('frontend.products');
+
 
 // Frontend Authentication Pages
 Route::get('/login', function () {
@@ -34,3 +36,4 @@ Route::get('/news', [HomeController::class, 'news'])->name('frontend.news');
 Route::get('/news/{id}', [HomeController::class, 'newsDetail'])->name('frontend.news.detail');
 Route::get('/products/{slug}', [HomeController::class, 'productDetail'])->name('frontend.products.detail');
 Route::get('/contact', [HomeController::class, 'contact'])->name('frontend.contact');
+Route::post('/contact', [HomeController::class, 'storeContact'])->name('frontend.contact.store');

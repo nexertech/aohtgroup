@@ -245,4 +245,14 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            if (typeof CKEDITOR !== 'undefined') {
+                CKEDITOR.replace('about');
+                CKEDITOR.replace('mission');
+                CKEDITOR.replace('vision');
+                CKEDITOR.replace('history');
+            }
+        </script>
+    @endpush
 </x-admin-layout>

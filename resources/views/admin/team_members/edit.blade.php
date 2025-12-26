@@ -122,4 +122,11 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            if (typeof CKEDITOR !== 'undefined') {
+                CKEDITOR.replace('bio');
+            }
+        </script>
+    @endpush
 </x-admin-layout>

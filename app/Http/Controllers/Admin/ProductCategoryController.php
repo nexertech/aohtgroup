@@ -126,15 +126,20 @@ class ProductCategoryController extends Controller
     }
     public function ajaxStore(Request $request)
     {
-        $validatedData = $request->validate([
+        $rules = [
             'category_name' => 'required|string|max:150',
-            'slug' => 'required|string|max:150|unique:product_categories',
+            'slug' => 'nullable|string|max:150|unique:product_categories',
             'parent_id' => 'required|exists:product_categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'sequence' => 'nullable|integer',
-        ]);
+        ];
 
-        if ($request->missing('slug') || is_null($request->slug)) {
+        if ($request->hasFile('image')) {
+            $rules['image'] = 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072';
+        }
+
+        $validatedData = $request->validate($rules);
+
+        if ($request->missing('slug') || is_null($request->slug) || empty($request->slug)) {
             $validatedData['slug'] = Str::slug($validatedData['category_name']);
         }
 
@@ -156,12 +161,21 @@ class ProductCategoryController extends Controller
     {
         $subcategory = ProductCategory::findOrFail($id);
 
-        $validatedData = $request->validate([
+        $rules = [
             'category_name' => 'required|string|max:150',
             'slug' => 'required|string|max:150|unique:product_categories,slug,' . $id,
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'sequence' => 'nullable|integer',
-        ]);
+        ];
+
+        if ($request->hasFile('image')) {
+            $rules['image'] = 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072';
+        }
+
+        $validatedData = $request->validate($rules);
+
+        if ($request->missing('slug') || is_null($request->slug) || empty($request->slug)) {
+            $validatedData['slug'] = Str::slug($validatedData['category_name']);
+        }
 
         if ($request->hasFile('image')) {
             if ($subcategory->image) {

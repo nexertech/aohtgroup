@@ -4,12 +4,6 @@
     <div class="container-fluid p-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-semibold text-gray-800">Contact Messages</h1>
-            <a href="{{ route('admin.contact-messages.create') }}"
-                class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg> Add Message
-            </a>
         </div>
 
         @if(session('success'))
@@ -59,14 +53,6 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
                                         </button>
-                                        <a href="{{ route('admin.contact-messages.edit', $message->id) }}"
-                                            class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition duration-200"
-                                            title="Edit">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </a>
                                         
                                         <form action="{{ route('admin.contact-messages.destroy', $message->id) }}" method="POST"
                                             class="inline-block"
@@ -87,7 +73,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                                <td colspan="7" class="px-6 py-8 text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
@@ -139,11 +125,11 @@
                         </div>
                         <div>
                             <h4 class="text-xs font-medium text-gray-500 uppercase">Email</h4>
-                            <p class="mt-1 text-sm text-blue-600" id="modalMsgEmail">--</p>
+                            <p class="mt-1 text-sm text-blue-600 font-medium" id="modalMsgEmail">--</p>
                         </div>
                         <div>
                             <h4 class="text-xs font-medium text-gray-500 uppercase">Phone</h4>
-                            <p class="mt-1 text-sm text-gray-900" id="modalMsgPhone">--</p>
+                            <p class="mt-1 text-sm text-gray-900 font-medium" id="modalMsgPhone">--</p>
                         </div>
                     </div>
                     
@@ -152,17 +138,17 @@
                         <p class="mt-1 text-sm text-gray-900 font-medium border-b pb-2" id="modalMsgSubject">--</p>
                     </div>
 
-                    <div>
+                    <div class="mb-6">
                         <h4 class="text-xs font-medium text-gray-500 uppercase mb-2">Message</h4>
-                        <div class="bg-gray-50 p-4 rounded-lg text-sm text-gray-700 whitespace-pre-wrap max-h-60 overflow-y-auto" id="modalMsgBody">
+                        <div class="bg-gray-50 p-4 rounded-lg text-sm text-gray-700 whitespace-pre-wrap max-h-60 overflow-y-auto border border-gray-100" id="modalMsgBody">
                             --
                         </div>
                     </div>
+
+                    <div class="mt-6 pt-4 border-t border-gray-100 flex justify-end">
+                        <button type="button" class="inline-flex justify-center items-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors duration-200" onclick="closeViewModal()">Close View</button>
+                    </div>
                 </div>
-                <!-- <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto" onclick="closeViewModal()">Close</button>
-                    <a href="#" id="replyBtn" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto">Reply via Email</a>
-                </div> -->
             </div>
         </div>
     </div>
@@ -177,18 +163,12 @@
             document.getElementById('modalMsgBody').innerText = message.message;
             document.getElementById('modalMsgDate').innerText = new Date(message.created_at).toLocaleString();
 
-            // document.getElementById('replyBtn').href = 'mailto:' + message.email + '?subject=Re: ' + (message.subject || 'Inquiry');
-
             document.getElementById('viewMessageModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
             
-            // Mark as read via AJAX if needed, for now just ui
             if(!message.is_read) {
-                 // specific logic to mark read could go here
                  fetch(`{{ url('admin/contact-messages') }}/${message.id}`, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
                  });
             }
             
@@ -198,8 +178,6 @@
         function closeViewModal() {
             document.getElementById('viewMessageModal').classList.add('hidden');
             document.body.style.overflow = 'auto';
-            // Reload to update read status if we implemented marking read
-            // location.reload(); 
         }
     </script>
 @endsection

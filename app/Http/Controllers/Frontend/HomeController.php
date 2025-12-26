@@ -37,11 +37,19 @@ class HomeController extends Controller
         return view('frontend.categories', compact('categories', 'company'));
     }
 
+    public function products()
+    {
+        $company = CompanyInfo::first();
+        $products = Product::where('status', 1)->with(['category', 'subcategory', 'childSubcategory'])->latest()->get();
+        return view('frontend.products', compact('company', 'products'));
+    }
+
+
     public function categoryDetail($slug)
     {
         $company = CompanyInfo::first();
-        // Eager load parent for breadcrumbs
-        $category = ProductCategory::where('slug', $slug)->with('parent')->firstOrFail();
+        // Eager load parent chain for breadcrumbs
+        $category = ProductCategory::where('slug', $slug)->with('parent.parent')->firstOrFail();
 
         // Check if this is a leaf node (subcategory with no children)
         $subcategories = ProductCategory::where('parent_id', $category->id)->get();
@@ -51,7 +59,8 @@ class HomeController extends Controller
         if ($subcategories->count() === 0) {
             $products = Product::where(function ($query) use ($category) {
                 $query->where('category_id', $category->id)
-                    ->orWhere('subcategory_id', $category->id);
+                    ->orWhere('subcategory_id', $category->id)
+                    ->orWhere('child_subcategory_id', $category->id);
             })
                 ->where('status', 1)
                 ->latest()
@@ -103,9 +112,9 @@ class HomeController extends Controller
     public function serviceDetail($slug)
     {
         $company = CompanyInfo::first();
-        $service = Service::where('slug', $slug)->firstOrFail();
-        $otherServices = Service::where('status', 1)->where('id', '!=', $service->id)->orderBy('sequence')->take(5)->get();
-        return view('frontend.service-detail', compact('company', 'service', 'otherServices'));
+        $singleService = Service::where('slug', $slug)->firstOrFail();
+        $otherServices = Service::where('status', 1)->where('id', '!=', $singleService->id)->orderBy('sequence')->take(5)->get();
+        return view('frontend.services', compact('company', 'singleService', 'otherServices'));
     }
 
     public function careers()
@@ -133,15 +142,23 @@ class HomeController extends Controller
     public function newsDetail($id)
     {
         $company = CompanyInfo::first();
-        $blog = Blog::with('author')->findOrFail($id);
+        $singleBlog = Blog::with('author')->findOrFail($id);
         $recentBlogs = Blog::where('status', 1)->where('id', '!=', $id)->latest('published_at')->take(5)->get();
-        return view('frontend.news-detail', compact('company', 'blog', 'recentBlogs'));
+        return view('frontend.news', compact('company', 'singleBlog', 'recentBlogs'));
     }
 
     public function productDetail($slug)
     {
         $company = CompanyInfo::first();
-        $product = Product::where('slug', $slug)->with(['category', 'galleries'])->firstOrFail();
+        $product = Product::where('slug', $slug)->with([
+            'category.parent.parent',
+            'subcategory.parent.parent',
+            'childSubcategory.parent.parent',
+            'galleries',
+            'fabricCategory',
+            'fabric'
+        ])->firstOrFail();
+
         $relatedProducts = Product::where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->take(4)
@@ -175,6 +192,22 @@ class HomeController extends Controller
     public function contact()
     {
         $company = CompanyInfo::first();
-        return view('frontend.contact', compact('company'));
+        $officeLocations = \App\Models\OfficeLocation::where('status', 1)->orderBy('sequence')->get();
+        return view('frontend.contact', compact('company', 'officeLocations'));
+    }
+
+    public function storeContact(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'subject' => 'nullable|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+        \App\Models\ContactMessage::create($request->all());
+
+        return redirect()->back()->with('success', 'Your message has been sent successfully. We will get back to you soon.');
     }
 }
