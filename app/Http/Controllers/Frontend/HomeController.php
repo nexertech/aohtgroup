@@ -11,7 +11,7 @@ use App\Models\Blog;
 use App\Models\CompanyInfo;
 use App\Models\TeamMember;
 use App\Models\ProductCategory;
-use App\Models\Client;
+
 use App\Models\JobOpening;
 
 class HomeController extends Controller
@@ -82,18 +82,6 @@ class HomeController extends Controller
         return view('frontend.about', compact('company', 'teamMembers'));
     }
 
-    public function companies()
-    {
-        $firstCompany = CompanyInfo::first();
-        if ($firstCompany) {
-            return redirect()->route('frontend.company.show', $firstCompany->id);
-        }
-
-        $company = CompanyInfo::first();
-        $companies = CompanyInfo::orderBy('company_name')->get();
-        $clients = Client::latest()->get();
-        return view('frontend.companies', compact('company', 'companies', 'clients'));
-    }
 
     public function companyShow($id)
     {

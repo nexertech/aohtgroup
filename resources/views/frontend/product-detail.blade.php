@@ -179,8 +179,7 @@
                         @endif
 
                         <!-- Quantity and Call to Action -->
-                        <div class="flex flex-col sm:flex-row gap-4 mb-8">
-                            <!-- Quantity Selector -->
+                        <!-- <div class="flex flex-col sm:flex-row gap-4 mb-8">
                             <div class="flex items-center border border-gray-300 h-14 bg-white">
                                 <button type="button" onclick="decrementQty()"
                                     class="w-12 h-full flex items-center justify-center text-xl hover:bg-gray-50 transition-colors">−</button>
@@ -189,15 +188,15 @@
                                     readonly>
                                 <button type="button" onclick="incrementQty()"
                                     class="w-12 h-full flex items-center justify-center text-xl hover:bg-gray-50 transition-colors">+</button>
-                            </div>
+                            </div> -->
 
                             <!-- Add to Cart -->
-                            <button type="button"
+                            <!-- <button type="button"
                                 class="flex-1 bg-black text-white h-14 text-sm font-bold uppercase tracking-widest hover:bg-gray-900 transition-all duration-300 shadow-lg hover:shadow-xl transform active:scale-[0.98]"
                                 onclick="addToCart()">
                                 Add to Cart
                             </button>
-                        </div>
+                        </div> -->
 
                         <!-- Technical Details Accordion (Optional but good) -->
                         <div class="space-y-4 pt-4 border-t border-gray-100">

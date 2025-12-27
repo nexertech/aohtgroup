@@ -427,10 +427,10 @@
           @foreach($teamMembers as $member)
             <div class="team-card team-item cursor-pointer transform hover:scale-105 transition duration-300"
               style="{{ $loop->index >= 4 ? 'display: none;' : '' }}"
-              onclick="openTeamModal('{{ $member->name }}', '{{ $member->designation ?? $member->position }}', '{{ $member->photo ? asset($member->photo) : '' }}', '{{ e($member->bio) }}', '{{ $member->facebook }}', '{{ $member->linkedin }}', '{{ $member->instagram }}')">
+              onclick="openTeamModal('{{ $member->name }}', '{{ $member->designation ?? $member->position }}', '{{ $member->photo ? asset('storage/' . $member->photo) : '' }}', '{{ e($member->bio) }}', '{{ $member->facebook }}', '{{ $member->linkedin }}', '{{ $member->instagram }}')">
               <div class="team-image">
                 @if($member->photo)
-                  <img src="{{ asset($member->photo) }}" alt="{{ $member->name }}">
+                  <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->name }}">
                 @else
                   <div class="image-placeholder team-placeholder">
                     <span>{{ strtoupper(substr($member->name, 0, 1)) }}</span>

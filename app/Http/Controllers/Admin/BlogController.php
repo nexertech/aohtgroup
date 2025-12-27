@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 
 class BlogController extends Controller
 {
+    use \App\Traits\ImageUploadTrait;
+
     /**
      * Display a listing of the resource.
      */
@@ -49,7 +51,7 @@ class BlogController extends Controller
 
         // Thumbnail is now same as banner
         if ($request->hasFile('banner_image')) {
-            $path = $request->file('banner_image')->store('blogs/banners', 'public');
+            $path = $this->uploadImage($request->file('banner_image'), 'blogs/banners');
             $data['banner_image'] = $path;
             $data['thumbnail'] = $path;
         }
@@ -100,16 +102,15 @@ class BlogController extends Controller
 
         // Thumbnail is now same as banner
         if ($request->hasFile('banner_image')) {
-            // Delete old banner and thumbnail if they exist
-            if ($blog->banner_image) {
-                Storage::disk('public')->delete($blog->banner_image);
-            }
+            // Delete old banner
+            $this->deleteImage($blog->banner_image);
+            
+            // Only delete thumbnail if it's a different file (legacy support)
             if ($blog->thumbnail && $blog->thumbnail !== $blog->banner_image) {
-                // Only delete thumbnail if it's a different file (legacy support)
-                Storage::disk('public')->delete($blog->thumbnail);
+                $this->deleteImage($blog->thumbnail);
             }
 
-            $path = $request->file('banner_image')->store('blogs/banners', 'public');
+            $path = $this->uploadImage($request->file('banner_image'), 'blogs/banners');
             $data['banner_image'] = $path;
             $data['thumbnail'] = $path;
         }
@@ -125,9 +126,9 @@ class BlogController extends Controller
     public function destroy(Blog $blog)
     {
         if ($blog->thumbnail)
-            Storage::disk('public')->delete($blog->thumbnail);
+            $this->deleteImage($blog->thumbnail);
         if ($blog->banner_image)
-            Storage::disk('public')->delete($blog->banner_image);
+            $this->deleteImage($blog->banner_image);
 
         $blog->delete();
 

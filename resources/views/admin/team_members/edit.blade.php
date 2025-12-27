@@ -54,7 +54,7 @@
                                 <label for="photo" class="block text-sm font-medium text-gray-700 mb-2">Photo</label>
                                 @if($teamMember->photo)
                                     <div class="mb-2">
-                                        <img src="{{ asset($teamMember->photo) }}" alt="Current Photo"
+                                            <img src="{{ asset('storage/' . $teamMember->photo) }}" alt="Current Photo"
                                             class="h-20 w-auto rounded object-cover shadow-sm">
                                     </div>
                                 @endif

@@ -175,7 +175,7 @@
             const photoImg = document.getElementById('modalMemberPhoto');
             const noPhoto = document.getElementById('modalMemberNoPhoto');
             if (member.photo) {
-                photoImg.src = member.photo.startsWith('http') ? member.photo : '/' + member.photo;
+                photoImg.src = member.photo.startsWith('http') ? member.photo : '/storage/' + member.photo;
                 photoImg.classList.remove('hidden');
                 noPhoto.classList.add('hidden');
             } else {

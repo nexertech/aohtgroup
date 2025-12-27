@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class TeamMemberController extends Controller
 {
+    use \App\Traits\ImageUploadTrait;
+
     /**
      * Display a listing of the resource.
      */
@@ -42,9 +44,7 @@ class TeamMemberController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $imageName = time() . '.' . $request->photo->extension();
-            $request->photo->move(public_path('images/team'), $imageName);
-            $validatedData['photo'] = 'images/team/' . $imageName;
+            $validatedData['photo'] = $this->uploadImage($request->file('photo'), 'team');
         }
 
         TeamMember::create($validatedData);
@@ -85,13 +85,7 @@ class TeamMemberController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            // Delete old photo
-            if ($teamMember->photo && file_exists(public_path($teamMember->photo))) {
-                unlink(public_path($teamMember->photo));
-            }
-            $imageName = time() . '.' . $request->photo->extension();
-            $request->photo->move(public_path('images/team'), $imageName);
-            $validatedData['photo'] = 'images/team/' . $imageName;
+            $validatedData['photo'] = $this->updateImage($request->file('photo'), 'team', $teamMember->photo);
         }
 
         $teamMember->update($validatedData);
@@ -104,9 +98,7 @@ class TeamMemberController extends Controller
      */
     public function destroy(TeamMember $teamMember)
     {
-        if ($teamMember->photo && file_exists(public_path($teamMember->photo))) {
-            unlink(public_path($teamMember->photo));
-        }
+        $this->deleteImage($teamMember->photo);
         $teamMember->delete();
 
         return redirect()->route('admin.team-members.index')->with('success', 'Team Member deleted successfully.');

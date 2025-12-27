@@ -20,8 +20,7 @@
           <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
           <a class="nav-link {{ request()->routeIs('frontend.about') ? 'active' : '' }}"
             href="{{ route('frontend.about') }}">About</a>
-          <a class="nav-link {{ request()->routeIs('frontend.company.show') ? 'active' : '' }}"
-            href="{{ route('frontend.company.show', 1) }}">Companies</a>
+
 
           <div class="nav-item-dropdown">
             <a class="nav-link {{ request()->routeIs('frontend.products') ? 'active' : '' }}"

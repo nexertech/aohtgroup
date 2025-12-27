@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class CompanyInfoController extends Controller
 {
+    use \App\Traits\ImageUploadTrait;
     /**
      * Display a listing of the resource.
      */
@@ -86,23 +87,13 @@ class CompanyInfoController extends Controller
         $data = $validatedData;
 
         if ($request->hasFile('logo')) {
-            if ($companyInfo->logo && \Illuminate\Support\Facades\Storage::disk('public')->exists($companyInfo->logo)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($companyInfo->logo);
-            }
-            $imageName = time() . '_logo.' . $request->logo->extension();
-            $path = $request->logo->storeAs('images/company', $imageName, 'public');
-            $data['logo'] = $path;
+            $data['logo'] = $this->updateImage($request->file('logo'), 'company', $companyInfo->logo);
         } else {
             unset($data['logo']); // Keep old logo if not uploaded
         }
 
         if ($request->hasFile('about_image')) {
-            if ($companyInfo->about_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($companyInfo->about_image)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($companyInfo->about_image);
-            }
-            $imageName = time() . '_about.' . $request->about_image->extension();
-            $path = $request->about_image->storeAs('images/company', $imageName, 'public');
-            $data['about_image'] = $path;
+            $data['about_image'] = $this->updateImage($request->file('about_image'), 'company', $companyInfo->about_image);
         } else {
             unset($data['about_image']); // Keep old about_image if not uploaded
         }
