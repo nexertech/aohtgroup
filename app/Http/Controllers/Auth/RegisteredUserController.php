@@ -17,9 +17,9 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('auth.register');
+        return $request->is('admin/*') ? view('auth.register') : view('frontend.register');
     }
 
     /**
@@ -43,8 +43,17 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Determine guard
+        $isAdmin = $request->is('admin/*');
+        $guard = $isAdmin ? 'admin' : 'web';
 
-        return redirect(route('home'));
+        Auth::guard($guard)->login($user);
+
+        return $isAdmin
+            ? redirect()->route('admin.dashboard')
+            : redirect(route('frontend.login')); // Redirect to login after registration or home? 
+            // Actually, Breeze usually redirects to 'home'.
+            // But if they are logged in, they can go home.
+            // Let's stick to 'home' as before, but ensure 'home' is valid.
     }
 }

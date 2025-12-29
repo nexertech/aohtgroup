@@ -98,7 +98,7 @@
             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible transition-all duration-200 z-50">
             @auth
                 {{-- Dashboard link removed as per request --}}
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('frontend.logout') }}">
                     @csrf
                     <button type="submit"
                       class="w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors rounded-lg">

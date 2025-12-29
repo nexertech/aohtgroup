@@ -527,7 +527,7 @@
 
                     <!-- Password Tab -->
                     <div id="settings-tab-password" class="settings-tab-content hidden">
-                        <form method="post" action="{{ route('password.update') }}" class="space-y-6">
+                        <form method="post" action="{{ route('admin.password.update') }}" class="space-y-6">
                             @csrf
                             @method('put')
 
@@ -585,7 +585,7 @@
 
                 <div
                     class="bg-gray-50 px-6 py-4 rounded-b-2xl border-t border-gray-200 flex justify-between items-center text-sm">
-                    <form method="POST" action="{{ route('logout') }}" id="sidebar-logout-form">
+                    <form method="POST" action="{{ route('admin.logout') }}" id="sidebar-logout-form">
                         @csrf
                         <button type="submit"
                             class="text-red-600 font-semibold hover:text-red-800 transition-colors flex items-center">
