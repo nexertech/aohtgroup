@@ -1,7 +1,7 @@
 <aside class="w-64 bg-gray-900 text-white min-h-screen flex flex-col font-sans border-r border-gray-800">
     <div class="h-20 flex items-center justify-center border-b border-gray-800 px-4">
         <a href="{{ route('admin.dashboard') }}" class="flex items-center">
-            <img src="{{ asset('images/logo/logo.png') }}" alt="A One Home Textile Group"
+            <img src="{{ asset('assets/logo.jpg') }}" alt="A One Home Textile Group"
                 class="h-12 w-auto object-contain">
         </a>
     </div>
@@ -328,29 +328,6 @@
                         </a>
                     @endif
 
-                    <!-- Clients Link -->
-                    @if(auth()->user()->hasPermission('clients'))
-                        <a href="{{ route('admin.clients.index') }}"
-                            class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.clients.*') ? 'bg-gray-800 text-white' : '' }}">
-                            <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                            Clients / Partners
-                        </a>
-                    @endif
-
-                    <!-- Certificates Link -->
-                    @if(auth()->user()->hasPermission('certificates'))
-                        <a href="{{ route('admin.certificates.index') }}"
-                            class="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.certificates.*') ? 'bg-gray-800 text-white' : '' }}">
-                            <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Certificates
-                        </a>
-                    @endif
 
 
                 </div>
@@ -550,7 +527,7 @@
 
                     <!-- Password Tab -->
                     <div id="settings-tab-password" class="settings-tab-content hidden">
-                        <form method="post" action="{{ route('password.update') }}" class="space-y-6">
+                        <form method="post" action="{{ route('admin.password.update') }}" class="space-y-6">
                             @csrf
                             @method('put')
 
@@ -608,7 +585,7 @@
 
                 <div
                     class="bg-gray-50 px-6 py-4 rounded-b-2xl border-t border-gray-200 flex justify-between items-center text-sm">
-                    <form method="POST" action="{{ route('logout') }}" id="sidebar-logout-form">
+                    <form method="POST" action="{{ route('admin.logout') }}" id="sidebar-logout-form">
                         @csrf
                         <button type="submit"
                             class="text-red-600 font-semibold hover:text-red-800 transition-colors flex items-center">

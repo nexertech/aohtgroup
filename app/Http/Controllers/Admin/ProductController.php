@@ -13,6 +13,8 @@ use App\Models\Fabric;
 
 class ProductController extends Controller
 {
+    use \App\Traits\ImageUploadTrait;
+
     /**
      * Display a listing of the resource.
      */
@@ -63,8 +65,7 @@ class ProductController extends Controller
         $data['slug'] = $this->generateUniqueSlug($request->product_name);
 
         if ($request->hasFile('main_image')) {
-            $path = $request->file('main_image')->store('products', 'public');
-            $data['main_image'] = $path;
+            $data['main_image'] = $this->uploadImage($request->file('main_image'), 'products');
         }
 
         $product = Product::create($data);
@@ -72,7 +73,7 @@ class ProductController extends Controller
         // Handle Gallery Images
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $image) {
-                $path = $image->store('product_galleries', 'public');
+                $path = $this->uploadImage($image, 'product_galleries');
                 \App\Models\ProductGallery::create([
                     'product_id' => $product->id,
                     'image_path' => $path
@@ -137,13 +138,7 @@ class ProductController extends Controller
         $data['status'] = $request->has('status') ? 1 : 0;
 
         if ($request->hasFile('main_image')) {
-            // Delete old image if exists
-            if ($product->main_image) {
-                Storage::disk('public')->delete($product->main_image);
-            }
-
-            $path = $request->file('main_image')->store('products', 'public');
-            $data['main_image'] = $path;
+            $data['main_image'] = $this->updateImage($request->file('main_image'), 'products', $product->main_image);
         }
 
         $product->update($data);
@@ -151,7 +146,7 @@ class ProductController extends Controller
         // Handle Gallery Images (Append new ones)
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $image) {
-                $path = $image->store('product_galleries', 'public');
+                $path = $this->uploadImage($image, 'product_galleries');
                 \App\Models\ProductGallery::create([
                     'product_id' => $product->id,
                     'image_path' => $path
@@ -168,15 +163,11 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         // Delete main image
-        if ($product->main_image) {
-            Storage::disk('public')->delete($product->main_image);
-        }
+        $this->deleteImage($product->main_image);
 
         // Delete gallery images
         foreach ($product->galleries as $gallery) {
-            if ($gallery->image_path) {
-                Storage::disk('public')->delete($gallery->image_path);
-            }
+            $this->deleteImage($gallery->image_path);
             $gallery->delete();
         }
 
@@ -193,9 +184,7 @@ class ProductController extends Controller
         try {
             $gallery = \App\Models\ProductGallery::findOrFail($id);
 
-            if ($gallery->image_path) {
-                Storage::disk('public')->delete($gallery->image_path);
-            }
+            $this->deleteImage($gallery->image_path);
 
             $gallery->delete();
 

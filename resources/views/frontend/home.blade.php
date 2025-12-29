@@ -425,12 +425,18 @@
         </div>
         <div class="team-grid">
           @foreach($teamMembers as $member)
-            <div class="team-card team-item cursor-pointer transform hover:scale-105 transition duration-300"
+            <div class="team-card team-item cursor-pointer transform hover:scale-105 transition duration-300 js-open-team-modal"
               style="{{ $loop->index >= 4 ? 'display: none;' : '' }}"
-              onclick="openTeamModal('{{ $member->name }}', '{{ $member->designation ?? $member->position }}', '{{ $member->photo ? asset($member->photo) : '' }}', '{{ e($member->bio) }}', '{{ $member->facebook }}', '{{ $member->linkedin }}', '{{ $member->instagram }}')">
+              data-name="{{ $member->name }}"
+              data-designation="{{ $member->designation ?? $member->position }}"
+              data-photo="{{ $member->photo ? asset('storage/' . $member->photo) : '' }}"
+              data-bio="{{ $member->bio }}"
+              data-facebook="{{ $member->facebook }}"
+              data-linkedin="{{ $member->linkedin }}"
+              data-instagram="{{ $member->instagram }}">
               <div class="team-image">
                 @if($member->photo)
-                  <img src="{{ asset($member->photo) }}" alt="{{ $member->name }}">
+                  <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->name }}">
                 @else
                   <div class="image-placeholder team-placeholder">
                     <span>{{ strtoupper(substr($member->name, 0, 1)) }}</span>
@@ -578,6 +584,26 @@
   @endif
 
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const teamGrid = document.querySelector('.team-grid');
+      if (teamGrid) {
+        teamGrid.addEventListener('click', function(e) {
+          const card = e.target.closest('.js-open-team-modal');
+          if (card) {
+            const name = card.getAttribute('data-name');
+            const designation = card.getAttribute('data-designation');
+            const photo = card.getAttribute('data-photo');
+            const bio = card.getAttribute('data-bio');
+            const facebook = card.getAttribute('data-facebook');
+            const linkedin = card.getAttribute('data-linkedin');
+            const instagram = card.getAttribute('data-instagram');
+            
+            openTeamModal(name, designation, photo, bio, facebook, linkedin, instagram);
+          }
+        });
+      }
+    });
+
     function openTeamModal(name, designation, photo, bio, facebook, linkedin, instagram) {
       document.getElementById('modal-team-name').innerText = name;
       document.getElementById('modal-team-name-display').innerText = name;

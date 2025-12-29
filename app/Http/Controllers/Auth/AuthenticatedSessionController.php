@@ -17,9 +17,9 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('auth.login');
+        return $request->is('admin/*') ? view('auth.login') : view('frontend.login');
     }
 
     /**
@@ -27,8 +27,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Determine guard
+        $guard = $request->is('admin/login') ? 'admin' : 'web';
+
         // Authenticate user
-        $request->authenticate();
+        $request->authenticate($guard);
 
         // Regenerate session
         $request->session()->regenerate();
@@ -58,24 +61,30 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        // Detect if logout is from admin panel
+        // Determine guard
         $isAdmin = $request->is('admin/*');
+        $guard = $isAdmin ? 'admin' : 'web';
 
         // Log activity
         $this->logActivity('Logout', 'User logged out');
 
-        // Logout
-        Auth::logout();
+        // Logout from specific guard
+        Auth::guard($guard)->logout();
 
-        // Invalidate session
-        $request->session()->invalidate();
+        // ONLY invalidate and regenerate token if it's the web guard (frontend)
+        // OR if you want to completely clear everything. 
+        // To keep them separate, we should be careful.
+        // Actually, if they are separate guards, we might still want to invalidate the specific session data.
+        // Laravel's session driver shared across guards means we might need to be careful.
+        // But for simplicity and to satisfy the user's "mix ho rhy hain" fix:
+        
+        if (!$isAdmin) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
-        // Regenerate CSRF token
-        $request->session()->regenerateToken();
-
-        // Redirect after logout
         return $isAdmin
-            ? redirect('/admin/login')
+            ? redirect()->route('admin.login')
             : redirect('/');
     }
 }

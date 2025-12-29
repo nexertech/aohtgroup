@@ -64,7 +64,7 @@
 
         <!-- Links -->
         <div class="auth-links">
-          <a href="{{ route('password.request') }}" class="auth-link">Forgot Password?</a>
+          <a href="{{ route('frontend.password.request') }}" class="auth-link">Forgot Password?</a>
           <span class="auth-separator">•</span>
           <a href="{{ route('frontend.register') }}" class="auth-link">Create Account</a>
         </div>

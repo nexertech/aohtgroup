@@ -49,20 +49,7 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('admin.certificates.index') }}"
-                        class="flex items-center p-4 bg-gray-50 hover:bg-yellow-50 rounded-lg transition-colors border border-gray-200 hover:border-yellow-200 group">
-                        <div
-                            class="h-10 w-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mr-3 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="font-medium text-gray-900">Certifications</div>
-                            <div class="text-xs text-gray-500">Achievements</div>
-                        </div>
-                    </a>
+
                 </div>
             </div>
 
@@ -87,7 +74,7 @@
                                 <div class="shrink-0">
                                     @if($companyInfo->about_image)
                                         <img class="h-16 w-16 object-cover rounded-md border border-gray-200" 
-                                             src="{{ asset($companyInfo->about_image) }}" 
+                                             src="{{ \Illuminate\Support\Str::startsWith($companyInfo->about_image, ['http', 'https']) ? $companyInfo->about_image : asset('storage/' . $companyInfo->about_image) }}" 
                                              alt="Current Image">
                                     @else
                                         <span class="inline-block h-16 w-16 rounded-md overflow-hidden bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400">

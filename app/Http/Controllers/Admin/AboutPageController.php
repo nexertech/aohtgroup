@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class AboutPageController extends Controller
 {
+    use \App\Traits\ImageUploadTrait;
+
     public function index()
     {
         // Assuming singleton pattern for CompanyInfo
@@ -35,15 +37,7 @@ class AboutPageController extends Controller
 
         // Handle Image Upload
         if ($request->hasFile('about_image')) {
-            // Delete old image if exists
-            if ($companyInfo && $companyInfo->about_image && file_exists(public_path($companyInfo->about_image))) {
-                @unlink(public_path($companyInfo->about_image));
-            }
-
-            // Upload new image
-            $imageName = time() . '_about.' . $request->about_image->extension();
-            $request->about_image->move(public_path('images/company'), $imageName);
-            $data['about_image'] = 'images/company/' . $imageName;
+            $data['about_image'] = $this->updateImage($request->file('about_image'), 'company', $companyInfo ? $companyInfo->about_image : null);
         }
 
         if (!$companyInfo) {
