@@ -543,11 +543,6 @@
           </div>
         </div>
 
-        <div class="bg-gray-50 px-6 py-4 flex justify-end">
-          <button type="button"
-            class="inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:text-sm"
-            onclick="closeTeamModal()">Close</button>
-        </div>
       </div>
     </div>
   </div>

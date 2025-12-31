@@ -32,107 +32,27 @@
                     @if($company->mission)
                         <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-indigo-500">
                             <h3 class="text-xl font-bold text-gray-800 mb-3">Our Mission</h3>
-                            <p class="text-gray-600 leading-relaxed">{{ $company->mission }}</p>
+                            <div class="text-gray-600 leading-relaxed">{!! $company->mission !!}</div>
                         </div>
                     @endif
                     @if($company->vision)
                         <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-cyan-500">
                             <h3 class="text-xl font-bold text-gray-800 mb-3">Our Vision</h3>
-                            <p class="text-gray-600 leading-relaxed">{{ $company->vision }}</p>
+                            <div class="text-gray-600 leading-relaxed">{!! $company->vision !!}</div>
                         </div>
                     @endif
                 </div>
             @endif
 
-            <!-- History Timeline Section -->
+            <!-- History Section -->
             @if($company->history)
-                <style>
-                    .timeline-container {
-                        position: relative;
-                        padding-left: 3rem;
-                        margin-top: 2rem;
-                    }
-                    .timeline-container::before {
-                        content: '';
-                        position: absolute;
-                        left: 0.75rem;
-                        top: 0;
-                        bottom: 0;
-                        width: 2px;
-                        background: linear-gradient(to bottom, #7c3aed, #06b6d4);
-                        border-radius: 1px;
-                        opacity: 0.3;
-                    }
-                    .timeline-event {
-                        position: relative;
-                        margin-bottom: 2.5rem;
-                    }
-                    .timeline-dot {
-                        position: absolute;
-                        left: -2.25rem;
-                        top: 0.25rem;
-                        width: 1.5rem;
-                        height: 1.5rem;
-                        background: white;
-                        border: 3px solid #7c3aed;
-                        border-radius: 50%;
-                        z-index: 10;
-                        box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
-                        transition: all 0.3s ease;
-                    }
-                    .timeline-event:hover .timeline-dot {
-                        transform: scale(1.2);
-                        background: #7c3aed;
-                    }
-                    .timeline-card {
-                        background: white;
-                        padding: 1.5rem;
-                        border-radius: 1rem;
-                        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-                        border: 1px solid #f3f4f6;
-                        transition: all 0.3s ease;
-                    }
-                    .timeline-event:hover .timeline-card {
-                        border-color: #7c3aed;
-                        transform: translateX(8px);
-                    }
-                </style>
                 <div class="mb-20">
                     <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">Our Journey & History</h2>
                     <div class="max-w-4xl mx-auto">
-                        <div class="timeline-container">
-                            @php
-                                $historyContent = strip_tags($company->history, '<p><br>');
-                                // Splitting by year using regex
-                                $historyItems = preg_split('/(?=\b(19|20)\d{2}\s*[-–:])/', $historyContent, -1, PREG_SPLIT_NO_EMPTY);
-                                
-                                if(count($historyItems) <= 1) {
-                                    $historyItems = array_filter(explode("\n", str_replace(["\r\n", "\r"], "\n", $historyContent)));
-                                }
-                            @endphp
-                            
-                            @foreach($historyItems as $item)
-                                @php
-                                    $item = trim(strip_tags($item));
-                                    if(empty($item)) continue;
-                                    
-                                    $parts = preg_split('/\s*[-–:]\s*/', $item, 2);
-                                    $year = count($parts) > 1 ? trim($parts[0]) : '';
-                                    $desc = count($parts) > 1 ? trim($parts[1]) : $item;
-                                @endphp
-                                <div class="timeline-event">
-                                    <div class="timeline-dot"></div>
-                                    <div class="timeline-card">
-                                        @if($year)
-                                            <div class="text-indigo-600 font-bold text-xs uppercase tracking-widest mb-2 flex items-center gap-2">
-                                                <span class="px-2 py-0.5 bg-indigo-50 rounded">{{ $year }}</span>
-                                                <div class="h-px bg-indigo-100 flex-grow"></div>
-                                            </div>
-                                        @endif
-                                        <div class="text-gray-700 leading-relaxed font-medium text-sm md:text-base">{{ $desc }}</div>
-                                    </div>
-                                </div>
-                            @endforeach
+                        <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 border-l-8 border-indigo-600">
+                             <div class="prose max-w-none text-gray-700 leading-relaxed text-lg italic">
+                                {!! $company->history !!}
+                             </div>
                         </div>
                     </div>
                 </div>
@@ -145,9 +65,15 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         @foreach($teamMembers as $member)
                             <div
-                                class="team-card-about bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 cursor-pointer"
+                                class="team-card-about bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 cursor-pointer js-open-team-modal"
                                 style="{{ $loop->index >= 4 ? 'display: none;' : '' }}"
-                                onclick="openTeamModal('{{ $member->name }}', '{{ $member->position }}', '{{ $member->photo ? asset('storage/' . $member->photo) : '' }}', '{{ e(strip_tags($member->bio)) }}', '{{ $member->facebook }}', '{{ $member->linkedin }}', '{{ $member->instagram }}')">
+                                data-name="{{ $member->name }}"
+                                data-designation="{{ $member->position }}"
+                                data-photo="{{ $member->photo ? asset('storage/' . $member->photo) : '' }}"
+                                data-bio="{{ $member->bio }}"
+                                data-facebook="{{ $member->facebook }}"
+                                data-linkedin="{{ $member->linkedin }}"
+                                data-instagram="{{ $member->instagram }}">
                                 <div class="h-64 bg-gray-200 overflow-hidden">
                                     @if($member->photo)
                                         <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->name }}"
@@ -197,6 +123,25 @@
                                         } else {
                                             items.forEach(el => el.style.display = '');
                                             this.innerText = 'Show Less Team';
+                                        }
+                                    });
+                                }
+
+                                // Event Delegation for Team Modals
+                                const teamGrid = document.querySelector('.grid'); // Fixed to target the card container
+                                if (teamGrid) {
+                                    teamGrid.addEventListener('click', function(e) {
+                                        const card = e.target.closest('.js-open-team-modal');
+                                        if (card) {
+                                            const name = card.getAttribute('data-name');
+                                            const designation = card.getAttribute('data-designation');
+                                            const photo = card.getAttribute('data-photo');
+                                            const bio = card.getAttribute('data-bio');
+                                            const facebook = card.getAttribute('data-facebook');
+                                            const linkedin = card.getAttribute('data-linkedin');
+                                            const instagram = card.getAttribute('data-instagram');
+                                            
+                                            openTeamModal(name, designation, photo, bio, facebook, linkedin, instagram);
                                         }
                                     });
                                 }
@@ -258,11 +203,6 @@
                     </div>
                 </div>
 
-                <div class="bg-gray-50 px-6 py-4 flex justify-end">
-                    <button type="button"
-                        class="inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:text-sm"
-                        onclick="closeTeamModal()">Close</button>
-                </div>
             </div>
         </div>
     </div>

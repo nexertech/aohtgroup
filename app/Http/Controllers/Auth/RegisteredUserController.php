@@ -49,11 +49,21 @@ class RegisteredUserController extends Controller
 
         Auth::guard($guard)->login($user);
 
-        return $isAdmin
-            ? redirect()->route('admin.dashboard')
-            : redirect(route('frontend.login')); // Redirect to login after registration or home? 
-            // Actually, Breeze usually redirects to 'home'.
-            // But if they are logged in, they can go home.
-            // Let's stick to 'home' as before, but ensure 'home' is valid.
+        // Clear session data from other guards to ensure isolation during login
+        if ($isAdmin) {
+            Auth::guard('web')->logout();
+        } else {
+            Auth::guard('admin')->logout();
+        }
+
+        if ($isAdmin) {
+            return Route::has('admin.dashboard') 
+                ? redirect()->route('admin.dashboard') 
+                : redirect('/admin/dashboard');
+        }
+
+        return Route::has('home') 
+            ? redirect()->route('home') 
+            : redirect('/');
     }
 }

@@ -14,15 +14,26 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectTo(
             guests: function ($request) {
                 if ($request->is('admin') || $request->is('admin/*')) {
-                    return route('admin.login');
+                    return \Illuminate\Support\Facades\Route::has('admin.login') 
+                        ? route('admin.login') 
+                        : url('/admin/login');
                 }
-                return route('frontend.login');
+                return \Illuminate\Support\Facades\Route::has('frontend.login') 
+                    ? route('frontend.login') 
+                    : url('/login');
             },
             users: function ($request) {
                 if ($request->is('admin') || $request->is('admin/*')) {
-                    return route('admin.dashboard');
+                    if (\Illuminate\Support\Facades\Auth::guard('admin')->check()) {
+                        return route('admin.dashboard');
+                    }
+                } else {
+                    if (\Illuminate\Support\Facades\Auth::guard('web')->check()) {
+                        return route('home');
+                    }
                 }
-                return route('home');
+                // If not authenticated in the specific guard, don't redirect (let them see the guest page)
+                return null; 
             }
         );
     })
