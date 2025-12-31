@@ -62,7 +62,7 @@
             @if($teamMembers->count() > 0)
                 <div class="mb-12">
                     <h2 class="text-3xl font-bold text-center text-gray-900 mb-8 team-section-header" id="team">Meet Our Team</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 team-grid-about">
                         @foreach($teamMembers as $member)
                             <div
                                 class="team-card-about bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 cursor-pointer js-open-team-modal"
@@ -128,7 +128,7 @@
                                 }
 
                                 // Event Delegation for Team Modals
-                                const teamGrid = document.querySelector('.grid'); // Fixed to target the card container
+                                const teamGrid = document.querySelector('.team-grid-about'); 
                                 if (teamGrid) {
                                     teamGrid.addEventListener('click', function(e) {
                                         const card = e.target.closest('.js-open-team-modal');
@@ -199,8 +199,24 @@
                     </div>
 
                     <div class="prose max-w-none text-gray-600 text-center">
-                        <p id="modal-team-bio"></p>
+                        <div id="modal-team-bio"></div>
                     </div>
+
+                    <style>
+                        #modal-team-bio b, #modal-team-bio strong {
+                            font-weight: bold !important;
+                        }
+                        #modal-team-bio ul {
+                            list-style-type: disc !important;
+                            margin-left: 1.5rem !important;
+                            text-align: left !important;
+                        }
+                        #modal-team-bio ol {
+                            list-style-type: decimal !important;
+                            margin-left: 1.5rem !important;
+                            text-align: left !important;
+                        }
+                    </style>
                 </div>
 
             </div>
@@ -227,7 +243,7 @@
                 initials.innerText = name.charAt(0).toUpperCase();
             }
 
-            document.getElementById('modal-team-bio').innerText = bio || 'No biography available.';
+            document.getElementById('modal-team-bio').innerHTML = bio || 'No biography available.';
 
             const fbLink = document.getElementById('modal-team-facebook');
             if (facebook) { fbLink.href = facebook; fbLink.classList.remove('hidden'); } else { fbLink.classList.add('hidden'); }

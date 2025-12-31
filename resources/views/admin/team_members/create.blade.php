@@ -110,3 +110,11 @@
         </div>
     </div>
 </x-admin-layout>
+
+@push('scripts')
+    <script>
+        if (typeof CKEDITOR !== 'undefined') {
+            CKEDITOR.replace('bio');
+        }
+    </script>
+@endpush

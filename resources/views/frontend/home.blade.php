@@ -452,6 +452,20 @@
               </div>
             </div>
           @endforeach
+
+          <style>
+              #modal-team-bio b, #modal-team-bio strong {
+                  font-weight: bold !important;
+              }
+              #modal-team-bio ul {
+                  list-style-type: disc !important;
+                  margin-left: 1.5rem !important;
+              }
+              #modal-team-bio ol {
+                  list-style-type: decimal !important;
+                  margin-left: 1.5rem !important;
+              }
+          </style>
         </div>
 
         @if($teamMembers->count() > 4)
@@ -539,7 +553,7 @@
           </div>
 
           <div class="prose max-w-none text-gray-600 text-justify">
-            <p id="modal-team-bio"></p>
+            <div id="modal-team-bio"></div>
           </div>
         </div>
 
@@ -619,10 +633,9 @@
         initials.innerText = name.charAt(0).toUpperCase();
       }
 
-      // Handle Bio (interpret HTML entities roughly, but bio is usually simple text here)
-      const textarea = document.createElement('textarea');
-      textarea.innerHTML = bio;
-      document.getElementById('modal-team-bio').innerHTML = textarea.value; // Use innerHTML to render HTML tags if any
+      // Handle Bio
+      const modalBio = document.getElementById('modal-team-bio');
+      modalBio.innerHTML = bio;
 
       // Handle Social Links
       const fbLink = document.getElementById('modal-team-facebook');
