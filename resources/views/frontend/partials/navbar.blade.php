@@ -3,14 +3,16 @@
     <div class="navbar-wrapper">
       <!-- Left: Logo -->
       <div class="navbar-left">
-        @if(isset($company) && $company->logo)
-          <img src="{{ asset('assets/logo.jpg') }}" class="logo-img"
-            alt="{{ $company->company_name ?? 'AOHT' }}">
-        @elseif(file_exists(public_path('assets/logo.jpg')))
-          <img src="{{ asset('assets/logo.jpg') }}" class="logo-img" alt="AOHT Group">
-        @else
-          <div class="logo-img" style="font-size: 1.5rem; font-weight: 800; color: var(--accent-1);">AOHT GROUP</div>
-        @endif
+        <a href="{{ route('home') }}">
+          @if(isset($company) && $company->logo)
+            <img src="{{ asset('assets/logo.jpg') }}" class="logo-img"
+              alt="{{ $company->company_name ?? 'AOHT' }}">
+          @elseif(file_exists(public_path('assets/logo.jpg')))
+            <img src="{{ asset('assets/logo.jpg') }}" class="logo-img" alt="AOHT Group">
+          @else
+            <div class="logo-img" style="font-size: 1.5rem; font-weight: 800; color: var(--accent-1);">AOHT GROUP</div>
+          @endif
+        </a>
       </div>
 
       <!-- Center: Navigation Links -->

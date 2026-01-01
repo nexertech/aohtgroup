@@ -1018,7 +1018,7 @@
 
     .team-image {
       width: 100%;
-      height: 250px;
+      height: 430px;
       overflow: hidden;
       background: #f3f4f6;
     }

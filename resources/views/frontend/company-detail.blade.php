@@ -47,12 +47,12 @@
             </div>
         </div>
 
-        <div class="container-custom -mt-10 relative z-20">
+        <div class="container-custom mt-20 relative z-20">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Main Content -->
-                <div class="lg:col-span-2 space-y-8">
-                    <!-- About Section -->
-                    <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
+                <!-- Row 1: Overview and Contact -->
+                <!-- Overview -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100 h-full">
                         <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                             <span class="w-2 h-8 bg-indigo-600 rounded-full mr-4"></span>
                             Company Overview
@@ -61,149 +61,11 @@
                             {!! $targetCompany->about ?? 'Profile content coming soon.' !!}
                         </div>
                     </div>
-
-                    <!-- Mission & Vision -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        @if($targetCompany->mission)
-                            <div
-                                class="bg-gradient-to-br from-indigo-50 to-white rounded-2xl p-8 border border-indigo-100 shadow-sm">
-                                <div
-                                    class="w-12 h-12 bg-indigo-600 text-white rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-indigo-200">
-                                    <i class="fas fa-bullseye text-xl"></i>
-                                </div>
-                                <h3 class="text-xl font-bold text-indigo-900 mb-4">Our Mission</h3>
-                                <p class="text-indigo-800/80 leading-relaxed">{!! $targetCompany->mission !!}</p>
-                            </div>
-                        @endif
-
-                        @if($targetCompany->vision)
-                            <div
-                                class="bg-gradient-to-br from-blue-50 to-white rounded-2xl p-8 border border-blue-100 shadow-sm">
-                                <div
-                                    class="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-blue-200">
-                                    <i class="fa-solid fa-eye text-xl"></i>
-                                </div>
-                                <h3 class="text-xl font-bold text-blue-900 mb-4">Our Vision</h3>
-                                <p class="text-blue-800/80 leading-relaxed">{!! $targetCompany->vision !!}</p>
-                            </div>
-                        @endif
-                    </div>
-
-                    <!-- History Section -->
-                    @if($targetCompany->history)
-                        <style>
-                            .timeline-wrapper {
-                                position: relative;
-                                padding-left: 2.5rem;
-                            }
-
-                            .timeline-wrapper::before {
-                                content: '';
-                                position: absolute;
-                                left: 0.5rem;
-                                top: 0;
-                                bottom: 0;
-                                width: 2px;
-                                background: linear-gradient(to bottom, #4f46e5 0%, #06b6d4 100%);
-                                border-radius: 1px;
-                                opacity: 0.2;
-                            }
-
-                            .timeline-item {
-                                position: relative;
-                                margin-bottom: 1rem;
-                            }
-
-                            .timeline-item::before {
-                                content: '';
-                                position: absolute;
-                                left: -2.4rem;
-                                top: 0.5rem;
-                                width: 1.25rem;
-                                height: 1.25rem;
-                                background: white;
-                                border: 3px solid #4f46e5;
-                                border-radius: 50%;
-                                z-index: 10;
-                                box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.05);
-                            }
-
-                            .timeline-item:hover::before {
-                                background: #4f46e5;
-                                transform: scale(1.1);
-                                transition: all 0.3s ease;
-                            }
-
-                            .timeline-card-glass {
-                                background: #ffffff;
-                                border: 1px solid #f3f4f6;
-                                border-radius: 1rem;
-                                padding: 0.75rem 1.25rem;
-                                transition: all 0.3s ease;
-                                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-                            }
-
-                            .timeline-item:hover .timeline-card-glass {
-                                transform: translateX(8px);
-                                border-color: #4f46e5;
-                                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-                            }
-                        </style>
-                        <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center">
-                                <span class="w-1.5 h-7 bg-indigo-600 rounded-full mr-4"></span>
-                                Our Journey & History
-                            </h2>
-                            <div class="timeline-wrapper">
-                                @php
-                                    $historyContent = strip_tags($targetCompany->history, '<p><br>');
-                                    // Use regex to split by years (e.g., 2005, 2010) if they are used as headers
-                                    // This regex looks for a 4-digit year starting with 19 or 20 followed by some space/dash/colon
-                                    $historyItems = preg_split('/(?=\b(19|20)\d{2}\s*[-–:])/', $historyContent, -1, PREG_SPLIT_NO_EMPTY);
-
-                                    // If regex split didn't yield multiple items, fallback to newline split
-                                    if (count($historyItems) <= 1) {
-                                        $historyItems = array_filter(explode("\n", str_replace(["\r\n", "\r"], "\n", $historyContent)));
-                                    }
-                                @endphp
-
-                                @foreach($historyItems as $item)
-                                    @php
-                                        $item = trim(strip_tags($item));
-                                        if (empty($item))
-                                            continue;
-
-                                        // Try to separate year from description
-                                        $parts = preg_split('/\s*[-–:]\s*/', $item, 2);
-                                        $year = count($parts) > 1 ? trim($parts[0]) : '';
-                                        $desc = count($parts) > 1 ? trim($parts[1]) : $item;
-                                    @endphp
-                                    <div class="timeline-item">
-                                        <div class="timeline-card-glass">
-                                            @if($year)
-                                                <div class="flex items-center gap-2 mb-2">
-                                                    <span
-                                                        class="px-3 py-1 bg-indigo-100 text-indigo-700 text-sm font-bold rounded-lg uppercase tracking-wider">
-                                                        {{ $year }}
-                                                    </span>
-                                                    <div class="h-px bg-indigo-100 flex-grow"></div>
-                                                </div>
-                                            @endif
-                                            <p class="text-gray-600 leading-relaxed font-medium">
-                                                {{ $desc }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
                 </div>
 
-                <!-- Sidebar -->
-                <div class="space-y-8">
-                    <!-- Contact Info Card -->
-                    <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                <!-- Contact Details -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 h-full">
                         <h3 class="text-xl font-bold text-gray-900 mb-6">Contact Details</h3>
                         <div class="space-y-6">
                             @if($targetCompany->email)
@@ -251,9 +113,40 @@
                             @endif
                         </div>
                     </div>
+                </div>
 
-                    <!-- Navigation Card -->
-                    <div class="bg-indigo-900 rounded-2xl shadow-xl p-8 text-white">
+                <!-- Row 2: Mission, Vision, and Quick Actions -->
+                <!-- Mission -->
+                <div class="lg:col-span-1">
+                    @if($targetCompany->mission)
+                        <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl h-full">
+                            <div
+                                class="w-12 h-12 bg-indigo-600 text-white rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-indigo-200">
+                                <i class="fas fa-bullseye text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">Our Mission</h3>
+                            <div class="text-gray-600 leading-relaxed">{!! $targetCompany->mission !!}</div>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Vision -->
+                <div class="lg:col-span-1">
+                    @if($targetCompany->vision)
+                        <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-xl h-full">
+                            <div
+                                class="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-blue-200">
+                                <i class="fa-solid fa-eye text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">Our Vision</h3>
+                            <div class="text-gray-600 leading-relaxed">{!! $targetCompany->vision !!}</div>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="lg:col-span-1">
+                    <div class="bg-indigo-900 rounded-2xl shadow-xl p-8 text-white h-full">
                         <h3 class="text-xl font-bold mb-6">Quick Actions</h3>
                         <div class="space-y-4">
                             <a href="{{ route('home') }}"
@@ -270,6 +163,20 @@
                     </div>
                 </div>
             </div>
+
+            <!-- History Section (Full Width) -->
+            @if($targetCompany->history)
+                <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 mt-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center">
+                        <span class="w-1.5 h-7 bg-indigo-600 rounded-full mr-4"></span>
+                        Our Journey & History
+                    </h2>
+                    <div class="prose prose-lg max-w-none text-gray-600 leading-relaxed">
+                        {!! $targetCompany->history !!}
+                    </div>
+                </div>
+            @endif
+        </div>
         </div>
     </div>
 @endsection
