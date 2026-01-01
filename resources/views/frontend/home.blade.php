@@ -447,7 +447,7 @@
                 <h3 class="team-name">{{ $member->name }}</h3>
                 <p class="team-position">{{ $member->designation ?? $member->position }}</p>
                 @if($member->bio)
-                  <p class="team-bio">{{ \Illuminate\Support\Str::limit(strip_tags($member->bio), 100) }}</p>
+                  <p class="team-bio">{!! strip_tags($member->bio, '<strong><b>') !!}</p>
                 @endif
               </div>
             </div>
@@ -591,6 +591,8 @@
       </div>
     </section>
   @endif
+
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {

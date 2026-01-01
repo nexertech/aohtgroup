@@ -256,9 +256,9 @@
                     <div class="bg-indigo-900 rounded-2xl shadow-xl p-8 text-white">
                         <h3 class="text-xl font-bold mb-6">Quick Actions</h3>
                         <div class="space-y-4">
-                            <a href="{{ route('frontend.companies') }}"
+                            <a href="{{ route('home') }}"
                                 class="flex items-center justify-between p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-all border border-white/5 group">
-                                <span>All Companies</span>
+                                <span>Back to Home</span>
                                 <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                             </a>
                             <a href="{{ route('frontend.contact') }}"

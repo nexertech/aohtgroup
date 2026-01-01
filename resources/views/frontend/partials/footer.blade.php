@@ -3,15 +3,14 @@
     <div class="grid">
 
       <div>
-        @if(isset($company) && $company->logo)
-          <img src="{{ asset('storage/' . $company->logo) }}" style="width:110px; margin-bottom:0.5rem;"
-            alt="{{ $company->company_name ?? 'AOHT' }}">
-        @else
-          <div style="font-size: 1.1rem; font-weight: 800; color: white; margin-bottom: 0.5rem;">AOHT GROUP</div>
-        @endif
-        <p style="line-height: 1.5; font-size: 0.85rem; opacity: 0.9;">
-          {!! $company->about ?? 'AOHT Group provides integrated business solutions with over a decade of excellence and innovation.' !!}
+        <a href="{{ url('/') }}">
+          <img src="{{ asset('assets/footerlogo.png') }}" style="max-width: 200px; height: auto; margin-bottom: 0.75rem;"
+            alt="{{ $company->company_name ?? 'AOHT Group' }}">
+        </a>
+        <p style="line-height: 1.6; font-size: 0.85rem; opacity: 0.9; margin-bottom: 1rem;">
+          A-One Home Textile Group is a leading textile company dedicated to producing premium quality fabrics and garments.
         </p>
+
         <div class="social-links" style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
           <a href="#" class="social-icon" style="color: white; opacity: 0.8; transition: opacity 0.3s;"><svg
               xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

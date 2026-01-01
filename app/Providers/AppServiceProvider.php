@@ -31,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('frontend.*', function ($view) {
             $view->with('mainCategories', ProductCategory::whereNull('parent_id')->with('children.children')->orderBy('sequence')->get());
+            $view->with('services', \App\Models\Service::orderBy('service_name')->get());
+            $view->with('company', \App\Models\CompanyInfo::first());
         });
     }
 }
