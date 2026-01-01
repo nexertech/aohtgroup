@@ -70,21 +70,23 @@ class AuthenticatedSessionController extends Controller
         // Logout from specific guard
         Auth::guard($guard)->logout();
 
-        // Invalidate and regenerate token for the current session
-        // This is safe even for separate guards as it clears transient data
+        // If it's a web/frontend logout, we might want to also ensure admin is logged out 
+        // if they share a session (though they shouldn't with separate guards)
+        if (!$isAdmin) {
+             // Optional: Auth::guard('admin')->logout(); 
+        }
+
+        // Invalidate the session and regenerate the CSRF token
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         if ($isAdmin) {
-            // Check if admin.login route exists to prevent RouteNotFoundException
             return Route::has('admin.login') 
                 ? redirect()->route('admin.login') 
                 : redirect('/admin/login');
         }
 
-        // Default frontend redirect
-        return Route::has('home') 
-            ? redirect()->route('home') 
-            : redirect('/');
+        // Default frontend redirect - use route name to ensure it stays on the correct domain/base path
+        return redirect()->route('home');
     }
 }

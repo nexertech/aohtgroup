@@ -33,13 +33,13 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 @if($company->mission)
                     <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-indigo-500">
-                        <h3 class="text-xl font-bold text-gray-800 mb-3">Our Mission</h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3 border-b-2 border-indigo-500 w-fit pb-1">Our Mission</h3>
                         <div class="text-gray-600 leading-relaxed">{!! $company->mission !!}</div>
                     </div>
                 @endif
                 @if($company->vision)
-                    <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-cyan-500">
-                        <h3 class="text-xl font-bold text-gray-800 mb-3">Our Vision</h3>
+                    <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-indigo-500">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3 border-b-2 border-indigo-500 w-fit pb-1">Our Vision</h3>
                         <div class="text-gray-600 leading-relaxed">{!! $company->vision !!}</div>
                     </div>
                 @endif
