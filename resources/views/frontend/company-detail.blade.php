@@ -58,7 +58,24 @@
                             Company Overview
                         </h2>
                         <div class="prose prose-lg max-w-none text-gray-600 leading-relaxed">
-                            {!! $targetCompany->about ?? 'Profile content coming soon.' !!}
+                            @php
+                                $about = $targetCompany->about ?? 'Profile content coming soon.';
+                                $strippedAbout = strip_tags($about);
+                                $shortAbout = \Illuminate\Support\Str::words($about, 135, '...');
+                            @endphp
+
+                            @if(str_word_count($strippedAbout) > 135)
+                                <div class="expandable-text">
+                                    <div class="short-text">{!! $shortAbout !!}</div>
+                                    <div class="full-text hidden">{!! $about !!}</div>
+                                    <button class="toggle-btn text-indigo-600 font-bold hover:text-indigo-800 transition-colors mt-4 flex items-center">
+                                        <span>Read More</span>
+                                        <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                                    </button>
+                                </div>
+                            @else
+                                {!! $about !!}
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -125,7 +142,26 @@
                                 <i class="fas fa-bullseye text-xl"></i>
                             </div>
                             <h3 class="text-xl font-bold text-gray-900 mb-4">Our Mission</h3>
-                            <div class="text-gray-600 leading-relaxed">{!! $targetCompany->mission !!}</div>
+                            <div class="text-gray-600 leading-relaxed">
+                                @php
+                                    $mission = $targetCompany->mission;
+                                    $missionWords = str_word_count(strip_tags($mission));
+                                    $shortMission = \Illuminate\Support\Str::words($mission, 55, '...');
+                                @endphp
+
+                                @if(str_word_count(strip_tags($mission)) > 55)
+                                    <div class="expandable-text">
+                                        <div class="short-text">{!! $shortMission !!}</div>
+                                        <div class="full-text hidden">{!! $mission !!}</div>
+                                        <button class="toggle-btn text-indigo-600 font-bold hover:text-indigo-800 transition-colors mt-2 flex items-center">
+                                            <span>Read More</span>
+                                            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                                        </button>
+                                    </div>
+                                @else
+                                    {!! $mission !!}
+                                @endif
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -139,7 +175,25 @@
                                 <i class="fa-solid fa-eye text-xl"></i>
                             </div>
                             <h3 class="text-xl font-bold text-gray-900 mb-4">Our Vision</h3>
-                            <div class="text-gray-600 leading-relaxed">{!! $targetCompany->vision !!}</div>
+                            <div class="text-gray-600 leading-relaxed">
+                                @php
+                                    $vision = $targetCompany->vision;
+                                    $shortVision = \Illuminate\Support\Str::words($vision, 45, '...');
+                                @endphp
+
+                                @if(str_word_count(strip_tags($vision)) > 45)
+                                    <div class="expandable-text">
+                                        <div class="short-text">{!! $shortVision !!}</div>
+                                        <div class="full-text hidden">{!! $vision !!}</div>
+                                        <button class="toggle-btn text-indigo-600 font-bold hover:text-indigo-800 transition-colors mt-2 flex items-center">
+                                            <span>Read More</span>
+                                            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                                        </button>
+                                    </div>
+                                @else
+                                    {!! $vision !!}
+                                @endif
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -180,3 +234,34 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleButtons = document.querySelectorAll('.toggle-btn');
+        
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const container = this.closest('.expandable-text');
+                const shortText = container.querySelector('.short-text');
+                const fullText = container.querySelector('.full-text');
+                const isExpanded = !fullText.classList.contains('hidden');
+                
+                if (isExpanded) {
+                    // Show Less
+                    fullText.classList.add('hidden');
+                    shortText.classList.remove('hidden');
+                    this.querySelector('span').textContent = 'Read More';
+                    this.querySelector('i').classList.replace('fa-chevron-up', 'fa-chevron-down');
+                } else {
+                    // Read More
+                    fullText.classList.remove('hidden');
+                    shortText.classList.add('hidden');
+                    this.querySelector('span').textContent = 'Show Less';
+                    this.querySelector('i').classList.replace('fa-chevron-down', 'fa-chevron-up');
+                }
+            });
+        });
+    });
+</script>
+@endpush
