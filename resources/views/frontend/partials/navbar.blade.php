@@ -23,7 +23,7 @@
           <a class="nav-link {{ request()->routeIs('frontend.about') ? 'active' : '' }}"
             href="{{ route('frontend.about') }}">About</a>
           <a class="nav-link {{ request()->routeIs('frontend.company.show') ? 'active' : '' }}"
-            href="{{ route('frontend.company.show', 1) }}">Companies</a>
+            href="{{ route('frontend.company.show') }}">Companies</a>
 
 
           <div class="nav-item-dropdown">
