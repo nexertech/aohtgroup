@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Storage;
 
 class SliderController extends Controller
 {
+    use \App\Traits\ImageUploadTrait;
+
     /**
      * Display a listing of the resource.
      */
@@ -34,7 +36,7 @@ class SliderController extends Controller
         $request->validate([
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'button_text' => 'nullable|string|max:100',
             'button_link' => 'nullable|string|max:255',
             'sequence' => 'required|integer',
@@ -44,7 +46,7 @@ class SliderController extends Controller
         $data = $request->except('image');
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('sliders', 'public');
+            $data['image'] = $this->uploadImage($request->file('image'), 'sliders');
         }
 
         Slider::create($data);
@@ -76,7 +78,7 @@ class SliderController extends Controller
         $request->validate([
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'button_text' => 'nullable|string|max:100',
             'button_link' => 'nullable|string|max:255',
             'sequence' => 'required|integer',
@@ -86,11 +88,7 @@ class SliderController extends Controller
         $data = $request->except('image');
 
         if ($request->hasFile('image')) {
-            // Delete old image
-            if ($slider->image) {
-                Storage::disk('public')->delete($slider->image);
-            }
-            $data['image'] = $request->file('image')->store('sliders', 'public');
+            $data['image'] = $this->updateImage($request->file('image'), 'sliders', $slider->image);
         }
 
         $slider->update($data);
@@ -103,9 +101,7 @@ class SliderController extends Controller
      */
     public function destroy(Slider $slider)
     {
-        if ($slider->image) {
-            Storage::disk('public')->delete($slider->image);
-        }
+            $this->deleteImage($slider->image);
 
         $slider->delete();
 

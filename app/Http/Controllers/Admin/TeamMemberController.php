@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class TeamMemberController extends Controller
 {
+    use \App\Traits\ImageUploadTrait;
+
     /**
      * Display a listing of the resource.
      */
@@ -34,12 +36,16 @@ class TeamMemberController extends Controller
             'name' => 'required|string|max:150',
             'designation' => 'nullable|string|max:150',
             'bio' => 'nullable|string',
-            'photo' => 'nullable|string|max:255', // Assuming photo URL or path input for now
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'facebook' => 'nullable|string|max:255',
             'linkedin' => 'nullable|string|max:255',
             'instagram' => 'nullable|string|max:255',
             'sequence' => 'integer',
         ]);
+
+        if ($request->hasFile('photo')) {
+            $validatedData['photo'] = $this->uploadImage($request->file('photo'), 'team');
+        }
 
         TeamMember::create($validatedData);
 
@@ -71,12 +77,16 @@ class TeamMemberController extends Controller
             'name' => 'required|string|max:150',
             'designation' => 'nullable|string|max:150',
             'bio' => 'nullable|string',
-            'photo' => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:3072',
             'facebook' => 'nullable|string|max:255',
             'linkedin' => 'nullable|string|max:255',
             'instagram' => 'nullable|string|max:255',
             'sequence' => 'integer',
         ]);
+
+        if ($request->hasFile('photo')) {
+            $validatedData['photo'] = $this->updateImage($request->file('photo'), 'team', $teamMember->photo);
+        }
 
         $teamMember->update($validatedData);
 
@@ -88,6 +98,7 @@ class TeamMemberController extends Controller
      */
     public function destroy(TeamMember $teamMember)
     {
+        $this->deleteImage($teamMember->photo);
         $teamMember->delete();
 
         return redirect()->route('admin.team-members.index')->with('success', 'Team Member deleted successfully.');

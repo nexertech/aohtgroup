@@ -24,10 +24,11 @@
                     <thead>
                         <tr class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 font-semibold">
                             <th class="px-6 py-4">ID</th>
-                            <th class="px-6 py-4">Image</th>
+                            <th class="px-6 py-4">Thumbnail</th>
                             <th class="px-6 py-4">Name</th>
                             <th class="px-6 py-4">Category</th>
-                            <th class="px-6 py-4">Client</th>
+                            <th class="px-6 py-4">Subcategory</th>
+                            <th class="px-6 py-4 text-center">Gallery Img</th>
                             <th class="px-6 py-4">Status</th>
                             <th class="px-6 py-4 text-right">Actions</th>
                         </tr>
@@ -38,8 +39,8 @@
                                 <td class="px-6 py-4 text-gray-500 font-mono text-sm">#{{ $product->id }}</td>
                                 <td class="px-6 py-4">
                                     @if($product->main_image)
-                                        <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}"
-                                            class="w-12 h-12 rounded object-cover">
+                                        <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}"
+                                            class="w-12 h-12 rounded-full object-cover">
                                     @else
                                         <div class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-gray-400">
                                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,8 +51,26 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-700">{{ $product->product_name }}</td>
-                                <td class="px-6 py-4 text-gray-600">{{ $product->category->category_name ?? 'N/A' }}</td>
-                                <td class="px-6 py-4 text-gray-600">{{ $product->client ?? '-' }}</td>
+                                <td class="px-6 py-4 text-gray-600">
+                                    <div class="text-sm">{{ $product->category->category_name ?? 'N/A' }}</div>
+                                </td>
+                                <td class="px-6 py-4 text-gray-600">
+                                    <div class="text-xs text-gray-500">
+                                        @if($product->childSubcategory)
+                                            {{ $product->childSubcategory->category_name }}
+                                        @elseif($product->subcategory)
+                                            {{ $product->subcategory->category_name }}
+                                        @else
+                                            -
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span
+                                        class="inline-flex items-center px-2 py-1 rounded-md text-xs font-bold {{ $product->galleries_count > 0 ? 'bg-indigo-50 text-indigo-700' : 'bg-gray-100 text-gray-400' }}">
+                                        {{ $product->galleries_count }} imgs
+                                    </span>
+                                </td>
                                 <td class="px-6 py-4">
                                     @if($product->status)
                                         <span
@@ -100,7 +119,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                                <td colspan="7" class="px-6 py-8 text-center text-gray-500">
                                     <div class="flex flex-col items-center justify-center">
                                         <svg class="w-12 h-12 mb-3 text-gray-300" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
@@ -164,10 +183,10 @@
 
                 <!-- Modal Footer -->
                 <!-- <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                <button type="button"
-                                    class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                    onclick="closeViewModal()">Close</button>
-                            </div> -->
+                                                    <button type="button"
+                                                        class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                                                        onclick="closeViewModal()">Close</button>
+                                                </div> -->
             </div>
         </div>
     </div>
@@ -183,13 +202,13 @@
 
             // Show loading state
             content.innerHTML = `
-                                <div class="flex justify-center py-10">
-                                    <svg class="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                </div>
-                            `;
+                                                    <div class="flex justify-center py-10">
+                                                        <svg class="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                        </svg>
+                                                    </div>
+                                                `;
 
             // Fetch Data
             fetch(`/admin/products/${projectId}`)

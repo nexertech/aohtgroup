@@ -8,10 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -52,5 +54,22 @@ class User extends Authenticatable
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Check if user has specific permission
+     */
+    public function hasPermission(string $permissionKey): bool
+    {
+        if (!$this->role) {
+            return false;
+        }
+
+        static $permissions = [];
+        if (!isset($permissions[$this->id])) {
+            $permissions[$this->id] = $this->role->permissions()->pluck('permission_key')->toArray();
+        }
+
+        return in_array($permissionKey, $permissions[$this->id]);
     }
 }

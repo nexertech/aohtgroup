@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class CompanyInfoController extends Controller
 {
+    use \App\Traits\ImageUploadTrait;
     /**
      * Display a listing of the resource.
      */
@@ -76,13 +77,28 @@ class CompanyInfoController extends Controller
             'mission' => 'nullable|string',
             'vision' => 'nullable|string',
             'history' => 'nullable|string',
-            'logo' => 'nullable|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'about_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:100',
             'address' => 'nullable|string',
         ]);
 
-        $companyInfo->update($validatedData);
+        $data = $validatedData;
+
+        if ($request->hasFile('logo')) {
+            $data['logo'] = $this->updateImage($request->file('logo'), 'company', $companyInfo->logo);
+        } else {
+            unset($data['logo']); // Keep old logo if not uploaded
+        }
+
+        if ($request->hasFile('about_image')) {
+            $data['about_image'] = $this->updateImage($request->file('about_image'), 'company', $companyInfo->about_image);
+        } else {
+            unset($data['about_image']); // Keep old about_image if not uploaded
+        }
+
+        $companyInfo->update($data);
 
         return redirect()->route('admin.company-info.index')->with('success', 'Company Info updated successfully.');
     }

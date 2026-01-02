@@ -4,12 +4,12 @@
     <div class="container-fluid p-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-semibold text-gray-800">Job Applications</h1>
-            <a href="{{ route('admin.job-applications.create') }}"
+            {{-- <a href="{{ route('admin.job-applications.create') }}"
                 class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg> Add Application
-            </a>
+            </a> --}}
         </div>
 
         @if(session('success'))
@@ -63,14 +63,14 @@
                                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
                                         </button>
-                                        <a href="{{ route('admin.job-applications.edit', $app->id) }}"
-                                            class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition duration-200"
-                                            title="Edit">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                        </a>
+                                        <!-- <a href="{{ route('admin.job-applications.edit', $app->id) }}"
+                                                                    class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition duration-200"
+                                                                    title="Edit">
+                                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                                    </svg>
+                                                                </a> -->
 
                                         @if($app->cv_file)
                                             <a href="{{ asset('storage/' . $app->cv_file) }}" target="_blank"
@@ -196,7 +196,7 @@
             document.getElementById('modalAppEmail').innerText = app.email;
             document.getElementById('modalAppPhone').innerText = app.phone || 'N/A';
             document.getElementById('modalAppPosition').innerText = app.job ? app.job.title : 'Position Deleted';
-            document.getElementById('modalAppCover').innerText = app.cover_letter || 'No Cover Letter Provided.';
+            document.getElementById('modalAppCover').innerHTML = app.cover_letter || 'No Cover Letter Provided.';
 
             const cvLink = document.getElementById('modalAppCV');
             if (app.cv_file) {

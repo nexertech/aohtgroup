@@ -110,4 +110,25 @@
             </div>
         </div>
     </div>
+    </div>
+
+    <script>
+        document.getElementById('service_name').addEventListener('keyup', function () {
+            const name = this.value;
+            const slug = name.toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/[\s_-]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            document.getElementById('slug').value = slug;
+        });
+    </script>
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                if (typeof CKEDITOR !== 'undefined') {
+                    CKEDITOR.replace('description');
+                }
+            });
+        </script>
+    @endpush
 </x-admin-layout>

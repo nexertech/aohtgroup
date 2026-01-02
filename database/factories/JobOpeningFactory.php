@@ -24,7 +24,7 @@ class JobOpeningFactory extends Factory
             'description' => $this->faker->paragraphs(2, true),
             'responsibilities' => $this->faker->paragraphs(2, true),
             'qualifications' => $this->faker->paragraphs(2, true),
-            'status' => $this->faker->randomElement(['open', 'closed']),
+            'status' => $this->faker->numberBetween(0, 1),
         ];
     }
 }

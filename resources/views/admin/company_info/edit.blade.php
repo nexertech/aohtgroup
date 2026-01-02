@@ -8,7 +8,8 @@
             </h2>
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg border border-gray-100">
                 <div class="p-8 text-gray-900">
-                    <form method="POST" action="{{ route('admin.company-info.update', $companyInfo->id) }}">
+                    <form method="POST" action="{{ route('admin.company-info.update', $companyInfo->id) }}"
+                        enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -83,6 +84,63 @@
                             @enderror
                         </div>
 
+                        <!-- About Image -->
+                        <div class="mb-8">
+                            <label for="about_image" class="block text-sm font-medium text-gray-700 mb-2">About
+                                Image</label>
+                            <div class="flex items-center space-x-6">
+                                <div class="shrink-0">
+                                    @if($companyInfo->about_image)
+                                        <img id="about_image_preview"
+                                            class="h-24 w-32 object-cover rounded-md border border-gray-200 bg-white p-1"
+                                            src="{{ \Illuminate\Support\Str::startsWith($companyInfo->about_image, ['http', 'https']) ? $companyInfo->about_image : asset('storage/' . $companyInfo->about_image) }}"
+                                            alt="About image">
+                                    @else
+                                        <div id="about_image_placeholder"
+                                            class="h-24 w-32 rounded-md bg-gray-100 flex items-center justify-center text-gray-400 border border-gray-200">
+                                            <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <img id="about_image_preview"
+                                            class="h-24 w-32 object-cover rounded-md border border-gray-200 bg-white p-1 hidden"
+                                            src="#" alt="New about image preview">
+                                    @endif
+                                </div>
+                                <label class="block">
+                                    <span class="sr-only">Choose about image</span>
+                                    <input type="file" name="about_image" id="about_image"
+                                        onchange="previewAboutImage(this)" class="block w-full text-sm text-slate-500
+                                        file:mr-4 file:py-2 file:px-4
+                                        file:rounded-full file:border-0
+                                        file:text-sm file:font-semibold
+                                        file:bg-violet-50 file:text-violet-700
+                                        hover:file:bg-violet-100
+                                    " />
+                                </label>
+                            </div>
+                            @error('about_image')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <script>
+                            function previewAboutImage(input) {
+                                if (input.files && input.files[0]) {
+                                    var reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        document.getElementById('about_image_preview').src = e.target.result;
+                                        document.getElementById('about_image_preview').classList.remove('hidden');
+                                        const placeholder = document.getElementById('about_image_placeholder');
+                                        if (placeholder) placeholder.classList.add('hidden');
+                                    }
+                                    reader.readAsDataURL(input.files[0]);
+                                }
+                            }
+                        </script>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <!-- Mission -->
                             <div>
@@ -116,15 +174,60 @@
                             @enderror
                         </div>
 
-                        <!-- Logo URL -->
+                        <!-- Logo -->
                         <div class="mb-8">
                             <label for="logo" class="block text-sm font-medium text-gray-700 mb-2">Logo</label>
-                            <input type="text" name="logo" id="logo" value="{{ old('logo', $companyInfo->logo) }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 bg-gray-50 focus:bg-white transition-colors duration-200">
+                            <div class="flex items-center space-x-6">
+                                <div class="shrink-0">
+                                    @if($companyInfo->logo)
+                                        <img id="logo_preview"
+                                            class="h-16 w-16 object-contain rounded-full border border-gray-200 bg-white p-1"
+                                            src="{{ \Illuminate\Support\Str::startsWith($companyInfo->logo, ['http', 'https']) ? $companyInfo->logo : asset('storage/' . $companyInfo->logo) }}"
+                                            alt="Current profile photo">
+                                    @else
+                                        <div id="logo_placeholder"
+                                            class="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 border border-gray-200">
+                                            <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <img id="logo_preview"
+                                            class="h-16 w-16 object-contain rounded-full border border-gray-200 bg-white p-1 hidden"
+                                            src="#" alt="New logo preview">
+                                    @endif
+                                </div>
+                                <label class="block">
+                                    <span class="sr-only">Choose profile photo</span>
+                                    <input type="file" name="logo" id="logo" onchange="previewLogo(this)" class="block w-full text-sm text-slate-500
+                                        file:mr-4 file:py-2 file:px-4
+                                        file:rounded-full file:border-0
+                                        file:text-sm file:font-semibold
+                                        file:bg-violet-50 file:text-violet-700
+                                        hover:file:bg-violet-100
+                                    " />
+                                </label>
+                            </div>
                             @error('logo')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        <script>
+                            function previewLogo(input) {
+                                if (input.files && input.files[0]) {
+                                    var reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        document.getElementById('logo_preview').src = e.target.result;
+                                        document.getElementById('logo_preview').classList.remove('hidden');
+                                        const placeholder = document.getElementById('logo_placeholder');
+                                        if (placeholder) placeholder.classList.add('hidden');
+                                    }
+                                    reader.readAsDataURL(input.files[0]);
+                                }
+                            }
+                        </script>
 
 
                         <div class="flex justify-end pt-4 border-t border-gray-100">
@@ -142,4 +245,14 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            if (typeof CKEDITOR !== 'undefined') {
+                CKEDITOR.replace('about');
+                CKEDITOR.replace('mission');
+                CKEDITOR.replace('vision');
+                CKEDITOR.replace('history');
+            }
+        </script>
+    @endpush
 </x-admin-layout>

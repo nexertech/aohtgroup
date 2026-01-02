@@ -46,28 +46,33 @@
                                 @endif
                             </div>
                             <div>
-                                <p class="text-sm font-medium text-gray-500 mb-1">Client</p>
-                                <p class="text-gray-900">{{ $product->client ?? 'N/A' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 mb-1">Location</p>
-                                <p class="text-gray-900">{{ $product->location ?? 'N/A' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 mb-1">Start Date</p>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Price</p>
                                 <p class="text-gray-900">
-                                    {{ $product->start_date ? \Carbon\Carbon::parse($product->start_date)->format('M d, Y') : 'N/A' }}
-                                </p>
+                                    {{ $product->price ? '$' . number_format($product->price, 2) : 'N/A' }}</p>
                             </div>
                             <div>
-                                <p class="text-sm font-medium text-gray-500 mb-1">End Date</p>
-                                <p class="text-gray-900">
-                                    {{ $product->end_date ? \Carbon\Carbon::parse($product->end_date)->format('M d, Y') : 'N/A' }}
-                                </p>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Color</p>
+                                <p class="text-gray-900">{{ $product->color ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Size</p>
+                                <p class="text-gray-900">{{ $product->size ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Special Effects</p>
+                                <p class="text-gray-900">{{ $product->special_effects ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Washing & Dyeing Category</p>
+                                <p class="text-gray-900">{{ $product->washing_dyeing_category ?? 'N/A' }}</p>
                             </div>
                             <div>
                                 <p class="text-sm font-medium text-gray-500 mb-1">Category</p>
                                 <p class="text-gray-900">{{ $product->category->category_name ?? 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Subcategory</p>
+                                <p class="text-gray-900">{{ $product->subcategory->category_name ?? 'N/A' }}</p>
                             </div>
                             <div>
                                 <p class="text-sm font-medium text-gray-500 mb-1">Created At</p>
@@ -83,7 +88,7 @@
                     </div>
                     <div class="p-6">
                         <div class="prose max-w-none text-gray-600">
-                            {{ $product->description ?? 'No description provided.' }}
+                            {!! $product->description ?? 'No description provided.' !!}
                         </div>
                     </div>
                 </div>
@@ -96,19 +101,44 @@
                         <h2 class="text-lg font-semibold text-gray-800">Main Image</h2>
                     </div>
                     <div class="p-6">
-                        @if( $product->main_image)
-                            <img src="{{ asset($product->main_image) }}" alt="{{ $product->product_name }}"
+                        @if($product->main_image)
+                            <img src="{{ asset('storage/' . $product->main_image) }}" alt="{{ $product->product_name }}"
                                 class="w-full h-auto rounded-lg shadow-sm">
                         @else
                             <div class="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
                                 <div class="text-center">
-                                    <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
                                     <p>No image uploaded</p>
                                 </div>
                             </div>
                         @endif
                     </div>
                 </div>
+
+                @if($product->galleries->count() > 0)
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="p-6 border-b border-gray-100">
+                            <h2 class="text-lg font-semibold text-gray-800">Product Gallery</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                @foreach($product->galleries as $gallery)
+                                    <div class="relative group">
+                                        <img src="{{ asset('storage/' . $gallery->image_path) }}"
+                                            class="w-full h-24 object-cover rounded-lg border border-gray-100 shadow-sm transition-transform duration-300 group-hover:scale-105"
+                                            alt="Gallery Image">
+                                        <div
+                                            class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 rounded-lg">
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

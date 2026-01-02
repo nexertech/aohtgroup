@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ContactMessage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactReplyMail;
 
 class ContactMessageController extends Controller
 {
@@ -92,5 +94,35 @@ class ContactMessageController extends Controller
     {
         $contactMessage->delete();
         return redirect()->route('admin.contact-messages.index')->with('success', 'Message deleted successfully.');
+    }
+
+    /**
+     * Mark the specified resource as replied.
+     */
+    /**
+     * Send reply email and save it.
+     */
+    public function sendReply(Request $request, $id)
+    {
+        $request->validate([
+            'reply_message' => 'required|string',
+        ]);
+
+        $message = ContactMessage::findOrFail($id);
+
+        // Update database
+        $message->update([
+            'reply_message' => $request->reply_message,
+            'replied_at' => now(),
+        ]);
+
+        // Send Email
+        try {
+            Mail::to($message->email)->send(new ContactReplyMail($message, $request->reply_message));
+        } catch (\Exception $e) {
+            // Log error or ignore if mail is not configured
+        }
+
+        return redirect()->back()->with('success', 'Reply sent successfully.');
     }
 }
