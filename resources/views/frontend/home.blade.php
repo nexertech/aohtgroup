@@ -447,11 +447,25 @@
                 <h3 class="team-name">{{ $member->name }}</h3>
                 <p class="team-position">{{ $member->designation ?? $member->position }}</p>
                 @if($member->bio)
-                  <p class="team-bio">{{ \Illuminate\Support\Str::limit(strip_tags($member->bio), 100) }}</p>
+                  <p class="team-bio">{!! strip_tags($member->bio, '<strong><b>') !!}</p>
                 @endif
               </div>
             </div>
           @endforeach
+
+          <style>
+              #modal-team-bio b, #modal-team-bio strong {
+                  font-weight: bold !important;
+              }
+              #modal-team-bio ul {
+                  list-style-type: disc !important;
+                  margin-left: 1.5rem !important;
+              }
+              #modal-team-bio ol {
+                  list-style-type: decimal !important;
+                  margin-left: 1.5rem !important;
+              }
+          </style>
         </div>
 
         @if($teamMembers->count() > 4)
@@ -539,15 +553,10 @@
           </div>
 
           <div class="prose max-w-none text-gray-600 text-justify">
-            <p id="modal-team-bio"></p>
+            <div id="modal-team-bio"></div>
           </div>
         </div>
 
-        <div class="bg-gray-50 px-6 py-4 flex justify-end">
-          <button type="button"
-            class="inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:text-sm"
-            onclick="closeTeamModal()">Close</button>
-        </div>
       </div>
     </div>
   </div>
@@ -582,6 +591,8 @@
       </div>
     </section>
   @endif
+
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -624,10 +635,9 @@
         initials.innerText = name.charAt(0).toUpperCase();
       }
 
-      // Handle Bio (interpret HTML entities roughly, but bio is usually simple text here)
-      const textarea = document.createElement('textarea');
-      textarea.innerHTML = bio;
-      document.getElementById('modal-team-bio').innerHTML = textarea.value; // Use innerHTML to render HTML tags if any
+      // Handle Bio
+      const modalBio = document.getElementById('modal-team-bio');
+      modalBio.innerHTML = bio;
 
       // Handle Social Links
       const fbLink = document.getElementById('modal-team-facebook');

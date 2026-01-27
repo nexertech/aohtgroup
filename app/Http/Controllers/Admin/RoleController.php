@@ -5,10 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\Permission;
+use App\Services\PermissionService;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
+    protected $permissionService;
+
+    public function __construct(PermissionService $permissionService)
+    {
+        $this->permissionService = $permissionService;
+    }
     public function index()
     {
         $roles = Role::with('permissions')->paginate(10);
@@ -17,6 +24,7 @@ class RoleController extends Controller
 
     public function create()
     {
+        $this->permissionService->syncPermissions();
         $permissions = Permission::all();
         return view('admin.roles.create', compact('permissions'));
     }
@@ -52,6 +60,7 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
+        $this->permissionService->syncPermissions();
         $permissions = Permission::all();
         return view('admin.roles.edit', compact('role', 'permissions'));
     }

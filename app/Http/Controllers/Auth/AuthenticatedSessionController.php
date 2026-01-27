@@ -8,6 +8,7 @@ use App\Traits\LogsActivity;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -39,20 +40,18 @@ class AuthenticatedSessionController extends Controller
         // Log activity
         $this->logActivity('Login', 'User logged in successfully');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Admin vs Frontend Redirect
-        |--------------------------------------------------------------------------
-        | Laravel 10/11 has no RouteServiceProvider::HOME
-        | So we control redirect manually
-        */
+        // Strict Guard Separation: Logout from the other guard
+        if ($guard === 'admin') {
+            Auth::guard('web')->logout();
+        } else {
+            Auth::guard('admin')->logout();
+        }
 
-        // If login request is from admin panel
+        // Redirect based on request path
         if ($request->is('admin/login')) {
             return redirect()->route('admin.dashboard');
         }
 
-        // Default frontend redirect
         return redirect()->route('home');
     }
 
@@ -61,30 +60,33 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        // Determine guard
-        $isAdmin = $request->is('admin/*');
+        // Determine if this is an admin logout request
+        $isAdmin = $request->is('admin/*') || $request->routeIs('admin.*');
         $guard = $isAdmin ? 'admin' : 'web';
 
-        // Log activity
-        $this->logActivity('Logout', 'User logged out');
+        // Log activity before session is cleared
+        $this->logActivity('Logout', ($isAdmin ? 'Admin' : 'User') . ' logged out');
 
         // Logout from specific guard
         Auth::guard($guard)->logout();
 
-        // ONLY invalidate and regenerate token if it's the web guard (frontend)
-        // OR if you want to completely clear everything. 
-        // To keep them separate, we should be careful.
-        // Actually, if they are separate guards, we might still want to invalidate the specific session data.
-        // Laravel's session driver shared across guards means we might need to be careful.
-        // But for simplicity and to satisfy the user's "mix ho rhy hain" fix:
-        
+        // If it's a web/frontend logout, we might want to also ensure admin is logged out 
+        // if they share a session (though they shouldn't with separate guards)
         if (!$isAdmin) {
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+             // Optional: Auth::guard('admin')->logout(); 
         }
 
-        return $isAdmin
-            ? redirect()->route('admin.login')
-            : redirect('/');
+        // Invalidate the session and regenerate the CSRF token
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        if ($isAdmin) {
+            return Route::has('admin.login') 
+                ? redirect()->route('admin.login') 
+                : redirect('/admin/login');
+        }
+
+        // Default frontend redirect - use route name to ensure it stays on the correct domain/base path
+        return redirect()->route('home');
     }
 }

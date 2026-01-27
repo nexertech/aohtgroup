@@ -276,7 +276,7 @@
       overflow: hidden;
       /* margin-top: 80px; Removed because main has padding-top now */
       width: 100%;
-      height: 500px;
+      height: 400px;
     }
 
     .slides {
@@ -590,7 +590,7 @@
     .category-image {
       flex: 1;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       padding: 0;
       width: 100%;
@@ -601,6 +601,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: top center;
       transition: transform 0.6s ease;
       /* mix-blend-mode: multiply; removed request to keep original image clear */
     }
@@ -1017,7 +1018,7 @@
 
     .team-image {
       width: 100%;
-      height: 250px;
+      height: 430px;
       overflow: hidden;
       background: #f3f4f6;
     }
@@ -1026,6 +1027,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center top;
       transition: transform 0.4s;
     }
 
@@ -1066,6 +1068,15 @@
       color: #6b7280;
       line-height: 1.6;
       font-size: 0.875rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .team-bio b, .team-bio strong,
+    .team-card-about-bio b, .team-card-about-bio strong {
+      font-weight: bold !important;
     }
 
     /* CTA SECTION */
@@ -1457,7 +1468,7 @@
       }
 
       .hero-slider {
-        height: 400px;
+        height: 300px;
       }
 
       .cta-section .container-custom {
@@ -1519,6 +1530,7 @@
     })();
   </script>
 
+  @stack('scripts')
 </body>
 
 </html>

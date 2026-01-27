@@ -1,9 +1,9 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-    <div class="bg-gray-50 py-16">
+    <div class="bg-gray-50 py-10">
         <div class="container-custom">
-            <div class="text-center mb-16">
+            <div class="text-center mb-8">
                 <h1 class="text-5xl font-extrabold text-gray-900 mb-6">Contact Us</h1>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                     A One Home Textile Group is committed to excellence in quality and innovation.
@@ -12,95 +12,138 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-                <!-- Contact Form (Now on Left) -->
-                <div class="bg-white rounded-3xl shadow-2xl p-10 border border-gray-100">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-                        <svg class="h-8 w-8 text-indigo-600 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        Send a Message
-                    </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <!-- Left Column (Form and Hours) -->
+                <div class="flex flex-col h-full space-y-8">
+                    <!-- Contact Form Card -->
+                    <div class="bg-white rounded-3xl shadow-2xl p-10 border border-gray-100">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+                            <svg class="h-8 w-8 text-indigo-600 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            Send a Message
+                        </h2>
 
-                    @if(session('success'))
-                        <div class="mb-8 p-5 bg-green-50 border-l-4 border-green-500 text-green-800 rounded-r-lg shadow-sm">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                            clip-rule="evenodd" />
+                        @if(session('success'))
+                            <div class="mb-8 p-5 bg-green-50 border-l-4 border-green-500 text-green-800 rounded-r-lg shadow-sm">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium">{{ session('success') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+                        <form action="{{ route('frontend.contact.store') }}" method="POST" class="space-y-6">
+                            @csrf
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                                    <input type="text" name="name" id="name" value="{{ old('name') }}" autocomplete="name"
+                                        class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-4 px-5 bg-gray-50 border transition-all duration-200 @error('name') border-red-500 @enderror"
+                                        placeholder="John Doe" required>
+                                    @error('name') <p class="mt-2 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email
+                                        Address</label>
+                                    <input type="email" name="email" id="email" value="{{ old('email') }}" autocomplete="email"
+                                        class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-4 px-5 bg-gray-50 border transition-all duration-200 @error('email') border-red-500 @enderror"
+                                        placeholder="john@example.com" required>
+                                    @error('email') <p class="mt-2 text-xs text-red-500 font-medium">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Phone Number
+                                    (Optional)</label>
+                                <input type="text" name="phone" id="phone" value="{{ old('phone') }}"
+                                    class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-4 px-5 bg-gray-50 border transition-all duration-200"
+                                    placeholder="+92 300 0000000">
+                                @error('phone') <p class="mt-2 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
+                                <label for="subject" class="block text-sm font-semibold text-gray-700 mb-2">Subject</label>
+                                <input type="text" name="subject" id="subject" value="{{ old('subject') }}"
+                                    class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-4 px-5 bg-gray-50 border transition-all duration-200"
+                                    placeholder="How can we help?">
+                                @error('subject') <p class="mt-2 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
+                                <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">Your Message</label>
+                                <textarea id="message" name="message" rows="5"
+                                    class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-4 px-5 bg-gray-50 border transition-all duration-200 @error('message') border-red-500 @enderror"
+                                    placeholder="Write your message here..." required>{{ old('message') }}</textarea>
+                                @error('message') <p class="mt-2 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
+                                <button type="submit"
+                                    class="w-full inline-flex justify-center items-center py-4 px-8 border border-transparent shadow-lg text-lg font-bold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 transform hover:-translate-y-1">
+                                    Send Message
+                                    <svg class="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                     </svg>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Business Hours Card -->
+                    <div
+                        class="bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-xl overflow-hidden relative group flex-grow">
+                        <div
+                            class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-indigo-100 transition-colors duration-500">
+                        </div>
+                        <div class="relative z-10 h-full flex flex-col">
+                            <h3 class="text-2xl font-black text-gray-900 mb-8 tracking-tight flex items-center">
+                                <span
+                                    class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center mr-4 text-indigo-600">
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </span>
+                                Operational Hours
+                            </h3>
+                            <div class="space-y-4 mt-auto">
+                                <div
+                                    class="flex justify-between items-center p-5 bg-gray-50/50 rounded-2xl border border-gray-100 hover:border-indigo-100 hover:bg-white transition-all duration-300">
+                                    <span class="text-gray-500 font-bold uppercase text-[10px] tracking-[0.2em]">Mon —
+                                        Fri</span>
+                                    <span class="text-indigo-600 font-black text-sm">09:00 AM — 06:00 PM</span>
                                 </div>
-                                <div class="ml-3">
-                                    <p class="text-sm font-medium">{{ session('success') }}</p>
+                                <div
+                                    class="flex justify-between items-center p-5 bg-gray-50/50 rounded-2xl border border-gray-100 hover:border-indigo-100 hover:bg-white transition-all duration-300">
+                                    <span
+                                        class="text-gray-500 font-bold uppercase text-[10px] tracking-[0.2em]">Saturday</span>
+                                    <span class="text-indigo-400 font-black text-sm">09:00 AM — 02:00 PM</span>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center p-5 bg-red-50/30 rounded-2xl border border-red-50">
+                                    <span
+                                        class="text-red-600 font-bold uppercase text-[10px] tracking-[0.2em]">Sunday</span>
+                                    <span class="text-red-500 font-black text-sm">Closed</span>
                                 </div>
                             </div>
                         </div>
-                    @endif
-
-                    <form action="{{ route('frontend.contact.store') }}" method="POST" class="space-y-6">
-                        @csrf
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div>
-                                <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
-                                <input type="text" name="name" id="name" value="{{ old('name') }}" autocomplete="name"
-                                    class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-4 px-5 bg-gray-50 border transition-all duration-200 @error('name') border-red-500 @enderror"
-                                    placeholder="John Doe" required>
-                                @error('name') <p class="mt-2 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email
-                                    Address</label>
-                                <input type="email" name="email" id="email" value="{{ old('email') }}" autocomplete="email"
-                                    class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-4 px-5 bg-gray-50 border transition-all duration-200 @error('email') border-red-500 @enderror"
-                                    placeholder="john@example.com" required>
-                                @error('email') <p class="mt-2 text-xs text-red-500 font-medium">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">Phone Number
-                                (Optional)</label>
-                            <input type="text" name="phone" id="phone" value="{{ old('phone') }}"
-                                class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-4 px-5 bg-gray-50 border transition-all duration-200"
-                                placeholder="+92 300 0000000">
-                            @error('phone') <p class="mt-2 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
-                        </div>
-
-                        <div>
-                            <label for="subject" class="block text-sm font-semibold text-gray-700 mb-2">Subject</label>
-                            <input type="text" name="subject" id="subject" value="{{ old('subject') }}"
-                                class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-4 px-5 bg-gray-50 border transition-all duration-200"
-                                placeholder="How can we help?">
-                            @error('subject') <p class="mt-2 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
-                        </div>
-
-                        <div>
-                            <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">Your Message</label>
-                            <textarea id="message" name="message" rows="5"
-                                class="block w-full rounded-xl border-gray-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-4 px-5 bg-gray-50 border transition-all duration-200 @error('message') border-red-500 @enderror"
-                                placeholder="Write your message here..." required>{{ old('message') }}</textarea>
-                            @error('message') <p class="mt-2 text-xs text-red-500 font-medium">{{ $message }}</p> @enderror
-                        </div>
-
-                        <div>
-                            <button type="submit"
-                                class="w-full inline-flex justify-center items-center py-4 px-8 border border-transparent shadow-lg text-lg font-bold rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 transform hover:-translate-y-1">
-                                Send Message
-                                <svg class="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                </svg>
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
 
                 <!-- Right Column: Contact Cards & Info -->
-                <div class="space-y-8">
+                <div class="space-y-8 h-full">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <!-- Main HQ Card (Solid Color Fallback + Gradient) -->
                         <div class="group relative bg-indigo-900 bg-gradient-to-br from-indigo-800 to-indigo-950 rounded-[2.5rem] p-8 shadow-xl transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-white/10"
@@ -254,45 +297,6 @@
                         @endforeach
                     </div>
 
-                    <!-- Business Hours -->
-                    <div
-                        class="bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-xl overflow-hidden relative group">
-                        <div
-                            class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-indigo-100 transition-colors duration-500">
-                        </div>
-                        <div class="relative z-10">
-                            <h3 class="text-2xl font-black text-gray-900 mb-8 tracking-tight flex items-center">
-                                <span
-                                    class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center mr-4 text-indigo-600">
-                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </span>
-                                Operational Hours
-                            </h3>
-                            <div class="space-y-4">
-                                <div
-                                    class="flex justify-between items-center p-5 bg-gray-50/50 rounded-2xl border border-gray-100 hover:border-indigo-100 hover:bg-white transition-all duration-300">
-                                    <span class="text-gray-500 font-bold uppercase text-[10px] tracking-[0.2em]">Mon —
-                                        Fri</span>
-                                    <span class="text-indigo-600 font-black text-sm">09:00 AM — 06:00 PM</span>
-                                </div>
-                                <div
-                                    class="flex justify-between items-center p-5 bg-gray-50/50 rounded-2xl border border-gray-100 hover:border-indigo-100 hover:bg-white transition-all duration-300">
-                                    <span
-                                        class="text-gray-500 font-bold uppercase text-[10px] tracking-[0.2em]">Saturday</span>
-                                    <span class="text-indigo-400 font-black text-sm">09:00 AM — 02:00 PM</span>
-                                </div>
-                                <div
-                                    class="flex justify-between items-center p-5 bg-red-50/30 rounded-2xl border border-red-50">
-                                    <span
-                                        class="text-red-600 font-bold uppercase text-[10px] tracking-[0.2em]">Sunday</span>
-                                    <span class="text-red-500 font-black text-sm">Closed</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

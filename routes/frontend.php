@@ -23,12 +23,14 @@ Route::name('frontend.')->group(function () {
         Route::get('register', [RegisteredUserController::class, 'create'])
             ->name('register');
 
-        Route::post('register', [RegisteredUserController::class, 'store']);
+        Route::post('register', [RegisteredUserController::class, 'store'])
+            ->name('register.store');
 
         Route::get('login', [AuthenticatedSessionController::class, 'create'])
             ->name('login');
 
-        Route::post('login', [AuthenticatedSessionController::class, 'store']);
+        Route::post('login', [AuthenticatedSessionController::class, 'store'])
+            ->name('login.store');
 
         Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
             ->name('password.request');
@@ -58,19 +60,21 @@ Route::name('frontend.')->group(function () {
         Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
             ->name('password.confirm');
 
-        Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+        Route::post('confirm-password', [ConfirmablePasswordController::class, 'store'])
+            ->name('password.confirm.store');
 
         Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
             ->name('logout');
+        Route::get('logout', [AuthenticatedSessionController::class, 'destroy']);
     });
 });
 
 // Dynamic Pages Routes
 Route::get('/about', [HomeController::class, 'about'])->name('frontend.about');
 
-Route::get('/companies/{id}', [HomeController::class, 'companyShow'])->name('frontend.company.show');
+Route::get('/companies/{id?}', [HomeController::class, 'companyShow'])->name('frontend.company.show');
 Route::get('/category/{slug}', [HomeController::class, 'categoryDetail'])->name('frontend.category.detail');
 Route::get('/services', [HomeController::class, 'services'])->name('frontend.services');
 Route::get('/services/{slug}', [HomeController::class, 'serviceDetail'])->name('frontend.services.detail');

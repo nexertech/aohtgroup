@@ -83,10 +83,19 @@ class HomeController extends Controller
     }
 
 
-    public function companyShow($id)
+    public function companyShow($id = null)
     {
         $company = CompanyInfo::first(); // Layout data
-        $targetCompany = CompanyInfo::findOrFail($id);
+        
+        if ($id) {
+            $targetCompany = CompanyInfo::findOrFail($id);
+        } else {
+            $targetCompany = $company; // Default to first company
+            if (!$targetCompany) {
+                return redirect()->route('home'); // Or handle empty state
+            }
+        }
+        
         return view('frontend.company-detail', compact('company', 'targetCompany'));
     }
 

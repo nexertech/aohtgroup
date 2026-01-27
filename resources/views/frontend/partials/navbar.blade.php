@@ -3,14 +3,16 @@
     <div class="navbar-wrapper">
       <!-- Left: Logo -->
       <div class="navbar-left">
-        @if(isset($company) && $company->logo)
-          <img src="{{ asset('assets/logo.jpg') }}" class="logo-img"
-            alt="{{ $company->company_name ?? 'AOHT' }}">
-        @elseif(file_exists(public_path('assets/logo.jpg')))
-          <img src="{{ asset('assets/logo.jpg') }}" class="logo-img" alt="AOHT Group">
-        @else
-          <div class="logo-img" style="font-size: 1.5rem; font-weight: 800; color: var(--accent-1);">AOHT GROUP</div>
-        @endif
+        <a href="{{ route('home') }}">
+          @if(isset($company) && $company->logo)
+            <img src="{{ asset('assets/logo.jpg') }}" class="logo-img"
+              alt="{{ $company->company_name ?? 'AOHT' }}">
+          @elseif(file_exists(public_path('assets/logo.jpg')))
+            <img src="{{ asset('assets/logo.jpg') }}" class="logo-img" alt="AOHT Group">
+          @else
+            <div class="logo-img" style="font-size: 1.5rem; font-weight: 800; color: var(--accent-1);">AOHT GROUP</div>
+          @endif
+        </a>
       </div>
 
       <!-- Center: Navigation Links -->
@@ -20,6 +22,8 @@
           <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
           <a class="nav-link {{ request()->routeIs('frontend.about') ? 'active' : '' }}"
             href="{{ route('frontend.about') }}">About</a>
+          <a class="nav-link {{ request()->routeIs('frontend.company.show') ? 'active' : '' }}"
+            href="{{ route('frontend.company.show') }}">Companies</a>
 
 
           <div class="nav-item-dropdown">
@@ -98,7 +102,7 @@
             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible transition-all duration-200 z-50">
             @auth
                 {{-- Dashboard link removed as per request --}}
-                <form method="POST" action="{{ route('frontend.logout') }}">
+                <form method="POST" action="{{ route('frontend.logout') }}" id="logout-form">
                     @csrf
                     <button type="submit"
                       class="w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors rounded-lg">
